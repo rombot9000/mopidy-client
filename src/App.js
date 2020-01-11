@@ -1,26 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Button } from '@rmwc/button';
+//import { GridList } from '@rmwc/grid-list';
+import MopidyHandler from './MopidyHandler';
 
 function App() {
+
+  const handler = new MopidyHandler();
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <Button onClick={() => {}}>Connect</Button>
+        <Button onClick={() => handler.getAlbums()}>Library</Button>
       </header>
     </div>
   );
+
 }
 
 export default App;
