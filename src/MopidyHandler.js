@@ -1,4 +1,5 @@
-import Mopidy from 'mopidy';
+import EventEmitter from "events";
+import Mopidy from "mopidy";
 
 /** 
  * Mopidy reference object
@@ -59,15 +60,23 @@ const mopidy = new Mopidy({
     webSocketUrl: "ws://raspberrypi.fritz.box:6680/mopidy/ws/"
 });
 
-class MopidyHandler {
+class MopidyHandler extends EventEmitter {
     constructor() {
+        super();
+
         /** @type {mpd_album[]} */
         this.albums = [];
         /** @type {Object.<string,mpd_track[]>} */
         this.album_uri_to_tracks = {};
         /** @type {Object.<string,mpd_image[]>} */
         this.album_uri_to_artwork = {};
-        return;
+
+        this._socketOpen = false;
+        mopidy.on("state:online", () => {this._socketOpen = true;});
+        mopidy.on("state:online", this._getAlbums.bind(this));
+
+        mopidy.on("state:offline", () => {this._socketOpen = false;});
+
     }
 
     /**
@@ -100,16 +109,37 @@ class MopidyHandler {
     /**
      * Get all albums, tracks and artwork from library
      */
-    async getAlbums() {
-        this.albums = await this._browseLibrary("local:directory?type=album");
-        console.log(this.albums);
-        
-        this.album_uri_to_tracks = await this._lookupLibrary(this.albums.map(ref => ref.uri));
-        console.log(this.album_uri_to_tracks);
+    async _getAlbums() {
+        if(this._gettingAlbums) return;
+        this._gettingAlbums = true;
 
-        this.album_uri_to_artwork = await this._getImages(this.albums.map(ref => ref.uri));
-        console.log(this.album_uri_to_artwork);
+        try {
+
+            let albums = await this._browseLibrary("local:directory?type=album");
+            
+            this.album_uri_to_tracks = await this._lookupLibrary(albums.map(ref => ref.uri));
+    
+            this.album_uri_to_artwork = await this._getImages(albums.map(ref => ref.uri));
+
+            this.albums = albums
+            this.emit("state", "state:albums_fetched");
+
+            // albums.forEach(a => {
+            //     console.log(a);
+            //     console.log(this.album_uri_to_tracks[a.uri]);
+            //     console.log(this.album_uri_to_artwork[a.uri]);
+            // });
+
+        } catch(err) {
+
+            console.error(`Caught exception: ${err}`);
+
+        }
+
+        this._gettingAlbums = false;
     }
 };
 
-export default MopidyHandler;
+/** Mopidy handler singleton */
+const instance = new MopidyHandler();
+export default instance;
