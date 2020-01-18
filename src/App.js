@@ -1,33 +1,100 @@
 import React from "react";
-import PropTypes from "prop-types";
 
-import { GridList, GridTile, GridTilePrimary, GridTilePrimaryContent } from "@rmwc/grid-list";
-import "@material/grid-list/dist/mdc.grid-list.css";
-
-import { Card, CardPrimaryAction, CardMediaContent } from "@rmwc/card";
-import "@material/card/dist/mdc.card.css";
-import "@material/button/dist/mdc.button.css";
-import "@material/icon-button/dist/mdc.icon-button.css";
-
-import {List, ListItem, ListItemGraphic, ListItemMeta} from "@rmwc/list";
-import '@material/list/dist/mdc.list.css';
+import { CssBaseline } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core"
+import { GridList, GridListTile } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { PlayArrow } from "@material-ui/icons";
 
 import Modal from "./Modal";
-
 import MopidyHandler from "./MopidyHandler/MopidyHandler";
 
-class AlbumGrid extends React.Component {
-    static propTypes = {
-        albums: PropTypes.array,
-        album_to_artwork: PropTypes.object,
+const useStyles = makeStyles(theme => ({
+    root: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.paper,
+    },
+    gridList: {
+        width: '90vw',
+        height: '100vh'
+    },
+}));
+
+function AlbumGrid(props) {
+    const classes = useStyles();
+    return (
+        <div className={classes.root}>
+            <GridList
+                className={classes.gridList}
+                cellHeight={100}
+                cols={3}
+            >{props.albums.map((a,i) => (
+                <div key={i}>
+                    <AlbumGridTile artwork={props.album_to_artwork[a.uri]}/>
+                </div>
+            ))}
+            </GridList>
+        </div>
+    );
+};
+
+function AlbumGridTile(props) {
+    let artwork_src;
+    if(props.artwork != null && props.artwork.length > 0) {
+        artwork_src = `http://raspberrypi.fritz.box:6680${props.artwork[0].uri}`;
+    } else {
+        console.warn(`No artwork...`);
     }
 
+    console.log("Rendering tile...")
+    return (
+        <GridListTile>
+            <img
+                src={artwork_src}
+                alt="No cover for you"
+            />
+        </GridListTile>
+    );
+};
+
+class AlbumDetails extends React.Component {
+    constructor(props) {
+        super(props);
+        /** @type {string} */
+        this.artwork_src = null;
+        /** @type {import("./MopidyHandler/MopidyHandler").mpd_track[]} */
+        this.tracks = [];
+    } 
+    render() {
+        console.log("Rendering Album detail...")
+        if(this.props.uri) {
+            this.artwork_src = MopidyHandler.album_uri_to_artwork[this.props.uri];
+            this.tracks = MopidyHandler.album_uri_to_tracks[this.props.uri];
+        }
+        return (
+            <List>{this.tracks.map((track,i) => (
+                <ListItem key={i} onClick={() => {MopidyHandler.playTrack(track)}}>
+                    <ListItemIcon>
+                        <PlayArrow/>
+                    </ListItemIcon>
+                    <ListItemText>{track.name}</ListItemText>
+                </ListItem>
+            ))}
+            </List>
+        );
+    }
+}
+
+class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showDetails: false,
-            uriDetails: null
-        };
+            mpdState: null
+        }
+        MopidyHandler.on("state", (state) => this.setState({mpdState: state}));
     }
 
     /**
@@ -46,96 +113,13 @@ class AlbumGrid extends React.Component {
     render() {
         console.log("Rendering...");
         return (
-            <div>
-                <GridList tileAspect="1x1">
-                    {this.props.albums.map((a,i) => (
-                        <div key={i} onClick={this.openDetailsModal.bind(this, a.uri)}>
-                            <AlbumGridTile artwork={this.props.album_to_artwork[a.uri]}/>
-                        </div>
-                    ))}
-                </GridList>
+            <React.Fragment>
+                <CssBaseline/>
+                <AlbumGrid albums={MopidyHandler.albums} album_to_artwork={MopidyHandler.album_uri_to_artwork}/>
                 <Modal show={this.state.showDetails} handleClose={this.closeDetailsModal.bind(this)}>
                     <AlbumDetails uri={this.state.uriDetails}/>
                 </Modal>
-            </div>
-        )
-    }
-};
-
-class AlbumGridTile extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-        if(this.props.artwork != null && this.props.artwork.length > 0) {
-            this.state.artwork_src = `http://raspberrypi.fritz.box:6680${this.props.artwork[0].uri}`;
-        } else {
-            console.warn(`No artwork...`);
-        }
-    }
-
-    render() {
-        console.log("Rendering tile...")
-        return (
-            <GridTile>
-                <GridTilePrimary>
-                    <GridTilePrimaryContent
-                        width={100}
-                        height={100}
-                        src={this.state.artwork_src}
-                        alt="No cover for you"
-                    />
-                </GridTilePrimary>
-            </GridTile>
-        );
-    }
-};
-
-class AlbumDetails extends React.Component {
-    constructor(props) {
-        super(props);
-        /** @type {string} */
-        this.artwork_src = null;
-        /** @type {import("./MopidyHandler/MopidyHandler").mpd_track[]} */
-        this.tracks = [];
-    } 
-    render() {
-        console.log("Rendering Album detail...")
-        if(this.props.uri) {
-            this.artwork_src = MopidyHandler.album_uri_to_artwork[this.props.uri];
-            this.tracks = MopidyHandler.album_uri_to_tracks[this.props.uri];
-        }
-        return (
-            <Card>
-                <CardPrimaryAction>
-                    <CardMediaContent src={this.artwork_src}/>
-                    <List>{this.tracks.map((track,i) => (
-                        <ListItem key={i} onClick={() => {MopidyHandler.playTrack(track)}}>
-                            <ListItemGraphic icon={track.track_no}/>
-                            {track.name}
-                            <ListItemMeta>{track.length}</ListItemMeta>
-                        </ListItem>
-                    ))}</List>
-                </CardPrimaryAction>
-            </Card>
-        );
-    }
-}
-
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            mpdState: null
-        }
-        MopidyHandler.on("state", (state) => this.setState({mpdState: state}));
-    }
-
-    render() {
-        console.log("Rendering...");
-        return (
-            <div className="App">
-                <AlbumGrid albums={MopidyHandler.albums} album_to_artwork={MopidyHandler.album_uri_to_artwork}/>
-            </div>
+            </React.Fragment>
         );
     }
 };
