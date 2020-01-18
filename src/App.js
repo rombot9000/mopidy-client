@@ -4,14 +4,17 @@ import PropTypes from "prop-types";
 import { GridList, GridTile, GridTilePrimary, GridTilePrimaryContent } from "@rmwc/grid-list";
 import "@material/grid-list/dist/mdc.grid-list.css";
 
-import { Card } from "@rmwc/card";
+import { Card, CardPrimaryAction, CardMediaContent } from "@rmwc/card";
 import "@material/card/dist/mdc.card.css";
 import "@material/button/dist/mdc.button.css";
 import "@material/icon-button/dist/mdc.icon-button.css";
 
+import {List, ListItem, ListItemGraphic, ListItemMeta} from "@rmwc/list";
+import '@material/list/dist/mdc.list.css';
+
 import Modal from "./Modal";
 
-import MopidyHandler from "./MopidyHandler";
+import MopidyHandler from "./MopidyHandler/MopidyHandler";
 
 class AlbumGrid extends React.Component {
     static propTypes = {
@@ -88,9 +91,32 @@ class AlbumGridTile extends React.Component {
 };
 
 class AlbumDetails extends React.Component {
+    constructor(props) {
+        super(props);
+        /** @type {string} */
+        this.artwork_src = null;
+        /** @type {import("./MopidyHandler/MopidyHandler").mpd_track[]} */
+        this.tracks = [];
+    } 
     render() {
+        console.log("Rendering Album detail...")
+        if(this.props.uri) {
+            this.artwork_src = MopidyHandler.album_uri_to_artwork[this.props.uri];
+            this.tracks = MopidyHandler.album_uri_to_tracks[this.props.uri];
+        }
         return (
-            <Card>Album Details</Card>
+            <Card>
+                <CardPrimaryAction>
+                    <CardMediaContent src={this.artwork_src}/>
+                    <List>{this.tracks.map((track,i) => (
+                        <ListItem key={i} onClick={() => {MopidyHandler.playTrack(track)}}>
+                            <ListItemGraphic icon={track.track_no}/>
+                            {track.name}
+                            <ListItemMeta>{track.length}</ListItemMeta>
+                        </ListItem>
+                    ))}</List>
+                </CardPrimaryAction>
+            </Card>
         );
     }
 }
