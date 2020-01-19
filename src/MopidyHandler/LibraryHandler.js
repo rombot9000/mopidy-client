@@ -33,8 +33,8 @@
  * @property {string} name
  * @property {string} uri
  * @property {mpd_album} album 
- * @property {mpd_artist} artists 
- * @property {mpd_artist} composers
+ * @property {mpd_artist[]} artists 
+ * @property {mpd_artist[]} composers
  * @property {string} date
  * @property {string} genre
  * @property {number} length
