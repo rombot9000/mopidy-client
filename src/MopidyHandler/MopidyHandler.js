@@ -27,12 +27,26 @@ class MopidyHandler extends EventEmitter {
 
         mopidy.on("state:online", this._getAlbums.bind(this));
     }
+
+    /**
+     * 
+     * @param {Object.<string,import('./LibraryHandler').mpd_image[]>} uri_to_artwork_list 
+     */
+    _getPrimaryAlbumArtwork(uri_to_artwork_list) {
+        let album_uri_to_artwork_uri = [];
+        Object.entries(uri_to_artwork_list).forEach(([uri, artworklist]) => {
+            if(artworklist.length === 0) return;
+            album_uri_to_artwork_uri[uri] = `http://raspberrypi.fritz.box:6680${artworklist[0].uri}`;
+        });
+        return album_uri_to_artwork_uri;
+    }
     
     /**
      * Get all albums, tracks and artwork from library
      */
     async _getAlbums() {
         if(this._gettingAlbums) return;
+        
         this._gettingAlbums = true;
 
         try {
@@ -41,7 +55,9 @@ class MopidyHandler extends EventEmitter {
             
             this.album_uri_to_tracks = await this._library.lookup(this.albums.map(ref => ref.uri));
     
-            this.album_uri_to_artwork = await this._library.getImages(this.albums.map(ref => ref.uri));
+            this._uri_to_artwork_list = await this._library.getImages(this.albums.map(ref => ref.uri));
+
+            this.album_uri_to_artwork_uri = this._getPrimaryAlbumArtwork(this._uri_to_artwork_list);
 
             this.emit("state", "state:albums_fetched");
 

@@ -23,40 +23,78 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+/**
+ * 
+ * @param {Object} props
+ * @param {import('./MopidyHandler/LibraryHandler').mpd_album[]} props.albums
+ */
 function AlbumGrid(props) {
+    // calc classes
     const classes = useStyles();
+    
+    // calc number of cols and height
+    const ref = React.useRef(null);
+    const [dims, setDims] = React.useState({size: 200, cols: 3});
+
+    // effect runs on each render, unless dependecy list if given
+    React.useEffect(() => {
+        function handleResize() {
+            const minSize = 150;
+            const width = ref.current ? ref.current.offsetWidth : 0;
+            
+            const cols = Math.floor(width / minSize);
+            const size = Math.floor(width / cols);
+            
+            setDims({
+                cols: cols,
+                size: size
+            });
+        }
+        // resize once manually 
+        handleResize();
+        // add listener for window resize
+        window.addEventListener('resize', handleResize);
+        // return remove, why?
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        }
+    }, [ref]); // prevents call on each render
+
     return (
         <div className={classes.root}>
             <GridList
+                ref={ref}
                 className={classes.gridList}
-                cellHeight={100}
-                cols={3}
+                cellHeight={dims.size}
+                cols={dims.cols}
             >{props.albums.map((a,i) => (
-                <div key={i}>
-                    <AlbumGridTile artwork={props.album_to_artwork[a.uri]}/>
-                </div>
+                <GridListTile key={i}>
+                    <AlbumGridTile
+                        album={a}
+                        size={dims.size}
+                    />
+                </GridListTile>
             ))}
             </GridList>
         </div>
     );
 };
 
+/**
+ * 
+ * @param {Object} props
+ * @param {import('./MopidyHandler/LibraryHandler').mpd_album} props.album
+ * @param {number} props.size
+ */
 function AlbumGridTile(props) {
-    let artwork_src;
-    if(props.artwork != null && props.artwork.length > 0) {
-        artwork_src = `http://raspberrypi.fritz.box:6680${props.artwork[0].uri}`;
-    } else {
-        console.warn(`No artwork...`);
-    }
-
-    console.log("Rendering tile...")
+    let src = MopidyHandler.album_uri_to_artwork_uri[props.album.uri];
     return (
-        <GridListTile>
-            <img
-                src={artwork_src}
-                alt="No cover for you"
-            />
-        </GridListTile>
+        <img
+            width={props.size}
+            height={props.size}
+            src={src}
+            alt="No cover for you"
+        />
     );
 };
 
@@ -115,7 +153,9 @@ class App extends React.Component {
         return (
             <React.Fragment>
                 <CssBaseline/>
-                <AlbumGrid albums={MopidyHandler.albums} album_to_artwork={MopidyHandler.album_uri_to_artwork}/>
+                <AlbumGrid
+                    albums={MopidyHandler.albums}
+                />
                 <Modal show={this.state.showDetails} handleClose={this.closeDetailsModal.bind(this)}>
                     <AlbumDetails uri={this.state.uriDetails}/>
                 </Modal>
