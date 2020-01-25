@@ -1,7 +1,7 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core"
-import { GridList, GridListTile } from "@material-ui/core";
+import { GridList } from "@material-ui/core";
 
 import AlbumGridTile from "./AlbumGridTile"
 

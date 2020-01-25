@@ -46,7 +46,7 @@ function TrackListItem(props) {
         <TableRow
             onClick={(e) => {
                 e.stopPropagation();
-                MopidyHandler.playTrack(props.track)
+                MopidyHandler.playAlbumTrack(props.track);
             }}
             onMouseEnter={(e) => {
                 setIcon(<PlayArrowRounded fontSize="inherit"/>);

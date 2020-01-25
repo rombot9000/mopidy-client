@@ -1,11 +1,9 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core";
-import { Typography } from "@material-ui/core";
 import { GridListTile, GridListTileBar } from "@material-ui/core";
 
 import MopidyHandler from "MopidyHandler/MopidyHandler"
-import { func } from "prop-types";
 
 const useStyles = makeStyles(theme => ({
     paper: {
