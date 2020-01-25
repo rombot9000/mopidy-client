@@ -5,10 +5,17 @@ import LibraryHandler from "./LibraryHandler";
 import TracklistHandler from "./TracklistHandler";
 import { PlaybackHandler, PlaybackCmds } from "./PlaybackHandler"
 
+var MPD_ARGS = {}
+var SERVER_IP = "";
+if(process.env.NODE_ENV !== "production") {
+    MPD_ARGS = {
+        webSocketUrl: "ws://raspberrypi.fritz.box:8080/mopidy/ws/"
+    }
+    SERVER_IP = "http://raspberrypi.fritz.box:8080"
+}
+
  /** Instance of mopidy connector object */
-const mopidy = new Mopidy({
-    webSocketUrl: "ws://raspberrypi.fritz.box:8080/mopidy/ws/"
-});
+const mopidy = new Mopidy(MPD_ARGS);
 
 class MopidyHandler extends EventEmitter {
     constructor() {
@@ -38,8 +45,7 @@ class MopidyHandler extends EventEmitter {
         let album_uri_to_artwork_uri = [];
         Object.entries(uri_to_artwork_list).forEach(([uri, artworklist]) => {
             if(artworklist.length === 0) return;
-            album_uri_to_artwork_uri[uri] = `http://raspberrypi.fritz.box:8080${artworklist[0].uri}`;
-            //album_uri_to_artwork_uri[uri] = artworklist[0].uri;
+            album_uri_to_artwork_uri[uri] = `${SERVER_IP}${artworklist[0].uri}`;
         });
         return album_uri_to_artwork_uri;
     }
