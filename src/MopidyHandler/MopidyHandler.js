@@ -3,15 +3,15 @@ import Mopidy from "mopidy";
 
 import LibraryHandler from "./LibraryHandler";
 import TracklistHandler from "./TracklistHandler";
-import { PlaybackHandler, PlaybackCmds } from "./PlaybackHandler"
+import { PlaybackHandler, PlaybackCmds } from "./PlaybackHandler";
 
-var MPD_ARGS = {}
+var MPD_ARGS = {};
 var SERVER_IP = "";
 if(process.env.NODE_ENV !== "production") {
     MPD_ARGS = {
         webSocketUrl: "ws://raspberrypi.fritz.box:8080/mopidy/ws/"
-    }
-    SERVER_IP = "http://raspberrypi.fritz.box:8080"
+    };
+    SERVER_IP = "http://raspberrypi.fritz.box:8080";
 }
 
  /** Instance of mopidy connector object */
@@ -35,6 +35,7 @@ class MopidyHandler extends EventEmitter {
         this.album_uri_to_artwork = {};
 
         mopidy.on("state:online", this._getAlbums.bind(this));
+        mopidy.on("event", console.log);
     }
 
     /**

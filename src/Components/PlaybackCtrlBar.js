@@ -1,7 +1,8 @@
 import React from "react";
 
-import {makeStyles} from "@material-ui/core"
-import {AppBar} from "@material-ui/core"
+import {makeStyles} from "@material-ui/core";
+import {Typography} from "@material-ui/core";
+import {AppBar, Toolbar} from "@material-ui/core";
 import {ButtonGroup, IconButton} from "@material-ui/core";
 import {PlayArrow, Pause, SkipNext, SkipPrevious} from "@material-ui/icons";
 
@@ -17,22 +18,57 @@ const useStyles = makeStyles(theme => ({
 
 function PlaybackCtrlBar() {
     const classes = useStyles();
+
+    const [state, setState] = React.useState({
+        /** @type {string} */
+        artist: null,
+        /** @type {string} */
+        album: null,
+        /** @type {string} */
+        track: null
+    });
+   
+
+    React.useEffect(() => {
+        function onTrackInfoUpdate() {
+            if(MopidyHandler.playback.tl_track != null) {
+                setState({
+                    artist: MopidyHandler.playback.tl_track.track.artists[0].name,
+                    album: MopidyHandler.playback.tl_track.track.album.name,
+                    track: MopidyHandler.playback.tl_track.track.name
+                });
+            }
+        }
+        MopidyHandler.playback.on("trackInfoUpdated", onTrackInfoUpdate);
+        // return remove, why?
+        return () => {
+            MopidyHandler.playback.removeListener("trackInfoUpdated", onTrackInfoUpdate);
+        }
+    }, []); // prevents call on each render
+
+
     return (
         <AppBar position="fixed" color="primary" className={classes.appBar}>
-            <ButtonGroup>
-                <IconButton onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.PREV)}>
-                    <SkipPrevious/>
-                </IconButton>
-                <IconButton onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE)}>
-                    <Pause/>
-                </IconButton>
-                <IconButton onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME)}>
-                    <PlayArrow/>
-                </IconButton>
-                <IconButton onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.NEXT)}>
-                    <SkipNext/>
-                </IconButton>
-            </ButtonGroup>
+            <Toolbar>
+                <ButtonGroup>
+                    <IconButton color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.PREV)}>
+                        <SkipPrevious/>
+                    </IconButton>
+                    <IconButton  color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE)}>
+                        <Pause/>
+                    </IconButton>
+                    <IconButton  color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME)}>
+                        <PlayArrow/>
+                    </IconButton>
+                    <IconButton  color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.NEXT)}>
+                        <SkipNext/>
+                    </IconButton>
+                </ButtonGroup>
+                <div>
+                    <Typography variant="body1" color="inherit">{state.track}</Typography>
+                    <Typography variant="body2" color="inherit">{state.artist}</Typography>
+                </div>
+            </Toolbar>
         </AppBar>
     );
 };
