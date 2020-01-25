@@ -25,7 +25,8 @@ const useStyles = makeStyles(theme => ({
     },
     cover: {
         width: '60vh',
-        height: '80vh'
+        height: '80vh',
+        objectFit: 'cover'
     },
     content: {
     },

@@ -21,15 +21,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /**
- * @callback onTileClick
- * @param {import('MopidyHandler/LibraryHandler').mpd_album} album
- */
-
-/**
  * @function AlbumGrid
  * @param {Object} props
  * @param {import('./MopidyHandler/LibraryHandler').mpd_album[]} props.albums
- * @param {onTileClick} props.onTileClick
+ * @param {import('./AlbumGridTile').onTileClick} props.onTileClick
  */
 function AlbumGrid(props) {
     // calc classes
