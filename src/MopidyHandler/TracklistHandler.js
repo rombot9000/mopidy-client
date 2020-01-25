@@ -48,7 +48,21 @@ class TracklistHandler {
     }
 
     /**
-     * Play track
+     * 
+     * @param {import('./LibraryHandler').mpd_track} track
+     * @returns {number} id of tracklist item
+     */
+    getTrackId(track) {
+        let tl_item = this._currentTracklist.find(ti => ti.track.uri === track.uri);
+
+        if(tl_item == null) throw new Error(`Track '${track.name}' not in current tracklist!`);
+
+        return tl_item.tlid;
+    }
+
+    /**
+     * Play track of current playlist
+     * NOTE: this mixes two mopidy APIs, maybe split this up?
      * @param {import('./LibraryHandler').mpd_track} track 
      */
     async play(track) {

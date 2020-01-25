@@ -3,6 +3,7 @@ import Mopidy from "mopidy";
 
 import LibraryHandler from "./LibraryHandler";
 import TracklistHandler from "./TracklistHandler";
+import { PlaybackHandler, PlaybackCmds } from "./PlaybackHandler"
 
  /** Instance of mopidy connector object */
 const mopidy = new Mopidy({
@@ -16,7 +17,8 @@ class MopidyHandler extends EventEmitter {
         // Init api handlers
         this._library = new LibraryHandler(mopidy);
         this._tracklist = new TracklistHandler(mopidy);
-
+        // make playback api public
+        this.playback = new PlaybackHandler(mopidy);
 
         /** @type {import('./LibraryHandler').mpd_album[]} */
         this.albums = [];
@@ -75,12 +77,14 @@ class MopidyHandler extends EventEmitter {
      * Play track, reset playlist if necessary
      * @param {import('./LibraryHandler').mpd_track} track 
      */
-    async playTrack(track) {
+    async playAlbumTrack(track) {
         try {
 
             await this._tracklist.set(this.album_uri_to_tracks[track.album.uri]);
             
-            this._tracklist.play(track);
+            let tlid = this._tracklist.getTrackId(track);
+
+            await this.playback.sendCmd(PlaybackCmds.PLAY, {tlid: tlid});
 
         } catch(err) {
 
