@@ -6,7 +6,7 @@ import TracklistHandler from "./TracklistHandler";
 
  /** Instance of mopidy connector object */
 const mopidy = new Mopidy({
-    webSocketUrl: "ws://raspberrypi.fritz.box:6680/mopidy/ws/"
+    webSocketUrl: "ws://raspberrypi.fritz.box:8080/mopidy/ws/"
 });
 
 class MopidyHandler extends EventEmitter {
@@ -36,7 +36,8 @@ class MopidyHandler extends EventEmitter {
         let album_uri_to_artwork_uri = [];
         Object.entries(uri_to_artwork_list).forEach(([uri, artworklist]) => {
             if(artworklist.length === 0) return;
-            album_uri_to_artwork_uri[uri] = `http://raspberrypi.fritz.box:6680${artworklist[0].uri}`;
+            album_uri_to_artwork_uri[uri] = `http://raspberrypi.fritz.box:8080${artworklist[0].uri}`;
+            //album_uri_to_artwork_uri[uri] = artworklist[0].uri;
         });
         return album_uri_to_artwork_uri;
     }

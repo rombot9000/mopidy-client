@@ -42,7 +42,7 @@ function AlbumGrid(props) {
     // effect runs on each render, unless dependecy list if given
     React.useEffect(() => {
         function handleResize() {
-            const minSize = 150;
+            const minSize = 250;
             const width = ref.current ? ref.current.offsetWidth : 0;
             
             const cols = Math.floor(width / minSize);
@@ -69,16 +69,15 @@ function AlbumGrid(props) {
             <GridList
                 ref={ref}
                 className={classes.gridList}
-                cellHeight={dims.size}
+                cellHeight={1.4*dims.size}
                 cols={dims.cols}
             >{props.albums.map((a,i) => (
-                <GridListTile key={i}>
-                    <AlbumGridTile
-                        album={a}
-                        size={dims.size}
-                        onClick={props.onTileClick} 
-                    />
-                </GridListTile>
+                <AlbumGridTile
+                    key={i}
+                    album={a}
+                    size={dims.size}
+                    onClick={props.onTileClick} 
+                />
             ))}
             </GridList>
         </div>

@@ -1,7 +1,8 @@
 import React from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Table, TableBody, TableRow, TableCell, TableContainer, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
+import { Table, TableBody, TableRow, TableCell, TableContainer } from "@material-ui/core";
 import { Card, CardContent, CardMedia} from "@material-ui/core";
 import { PlayArrowRounded } from "@material-ui/icons";
 
