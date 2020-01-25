@@ -37,6 +37,12 @@ function PlaybackCtrlBar() {
                     album: MopidyHandler.playback.tl_track.track.album.name,
                     track: MopidyHandler.playback.tl_track.track.name
                 });
+            } else {
+                setState({
+                    artist: null,
+                    album: null,
+                    track: null
+                });
             }
         }
         MopidyHandler.playback.on("trackInfoUpdated", onTrackInfoUpdate);
@@ -54,13 +60,13 @@ function PlaybackCtrlBar() {
                     <IconButton color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.PREV)}>
                         <SkipPrevious/>
                     </IconButton>
-                    <IconButton  color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE)}>
+                    <IconButton color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE)}>
                         <Pause/>
                     </IconButton>
-                    <IconButton  color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME)}>
+                    <IconButton color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME)}>
                         <PlayArrow/>
                     </IconButton>
-                    <IconButton  color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.NEXT)}>
+                    <IconButton color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.NEXT)}>
                         <SkipNext/>
                     </IconButton>
                 </ButtonGroup>

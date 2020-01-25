@@ -34,6 +34,8 @@ export class PlaybackHandler extends EventEmitter {
 
         /** @type {import('./TracklistHandler').mpd_tracklist_item} */
         this.tl_track = null;
+        /** @type {import('./LibraryHandler').mpd_track} */
+        this.track = null;
         /** @type {string} */
         this.state = null;
 
@@ -71,6 +73,7 @@ export class PlaybackHandler extends EventEmitter {
         if(this.state !== PlaybackStates.STOPPED) {
             this.tl_track = await this._mopidy.playback.getCurrentTlTrack({});
             this.time_position = await this._mopidy.playback.getTimePosition({});
+            this.track = this.tl_track.track;
         }
 
         this.emit("trackInfoUpdated");
@@ -93,12 +96,16 @@ export class PlaybackHandler extends EventEmitter {
             case "trackPlaybackResumed":
             case "trackPlaybackPaused":            
                 this.tl_track = args.tl_track;
+                this.track = args.tl_track.track;
                 this.emit("trackInfoUpdated");
             break;
 
             case "trackPlaybackEnded":
             case "trackPlaybackStopped":
-                if(this.state === PlaybackStates.STOPPED) this.tl_track = null;
+                if(this.state === PlaybackStates.STOPPED) {
+                    this.tl_track = null;
+                    this.track = null;
+                }
                 this.emit("trackInfoUpdated");
             break;
 
