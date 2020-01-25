@@ -38,6 +38,10 @@ export class PlaybackHandler extends EventEmitter {
         this.track = null;
         /** @type {string} */
         this.state = null;
+        /** @type {number} */
+        this._timePosition = 0;
+        /** @type {number} */
+        this._timePositionUpdated = 0;
 
         // handle state changes
         this._mopidy.on("state", this._onStateChange.bind(this));
@@ -72,10 +76,9 @@ export class PlaybackHandler extends EventEmitter {
 
         if(this.state !== PlaybackStates.STOPPED) {
             this.tl_track = await this._mopidy.playback.getCurrentTlTrack({});
-            this.time_position = await this._mopidy.playback.getTimePosition({});
+            this.updateTimePosition(await this._mopidy.playback.getTimePosition({}));
             this.track = this.tl_track.track;
         }
-
         this.emit("trackInfoUpdated");
     }
 
@@ -93,11 +96,15 @@ export class PlaybackHandler extends EventEmitter {
             break;
             
             case "trackPlaybackStarted":
-            case "trackPlaybackResumed":
-            case "trackPlaybackPaused":            
+                this.updateTimePosition(0);     
                 this.tl_track = args.tl_track;
                 this.track = args.tl_track.track;
                 this.emit("trackInfoUpdated");
+            break;
+
+            case "trackPlaybackResumed":
+            case "trackPlaybackPaused":
+                this.updateTimePosition(args.time_position);     
             break;
 
             case "trackPlaybackEnded":
@@ -105,13 +112,41 @@ export class PlaybackHandler extends EventEmitter {
                 if(this.state === PlaybackStates.STOPPED) {
                     this.tl_track = null;
                     this.track = null;
+                    this.emit("trackInfoUpdated");
                 }
-                this.emit("trackInfoUpdated");
             break;
 
             default:
                 console.debug(`Event not handled here: ${event}`);
         }
+    }
+
+    /**
+     * @param {number} timePosition 
+     */
+    updateTimePosition(timePosition) {
+        this._timePositionUpdated = Date.now();
+        this._timePosition = timePosition;
+    }
+
+
+    get timePosition() {
+
+        switch(this.state) {
+            case PlaybackStates.PLAYING:
+                return this._timePosition + Date.now() - this._timePositionUpdated;
+
+            case PlaybackStates.PAUSED:
+                return this._timePosition;
+
+            case PlaybackStates.STOPPED:
+                return null;
+
+            default:
+                console.warn(`Unknown playback state: ${this.state}`);
+                return null;
+        }
+
     }
 
     /**

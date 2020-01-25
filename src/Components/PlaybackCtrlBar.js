@@ -46,7 +46,7 @@ function PlaybackCtrlBar() {
             }
         }
         MopidyHandler.playback.on("trackInfoUpdated", onTrackInfoUpdate);
-        // return remove, why?
+        // return clean up function
         return () => {
             MopidyHandler.playback.removeListener("trackInfoUpdated", onTrackInfoUpdate);
         }

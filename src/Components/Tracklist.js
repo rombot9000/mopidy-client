@@ -5,6 +5,7 @@ import { Table, TableBody, TableRow, TableCell, TableContainer } from "@material
 import { PlayArrow, Pause } from "@material-ui/icons";
 
 import MopidyHandler from "MopidyHandler/MopidyHandler";
+import { PlaybackStates, PlaybackCmds } from "MopidyHandler/PlaybackHandler";
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -20,22 +21,52 @@ const useStyles = makeStyles(theme => ({
  * 
  * @param {Object} props
  * @param {import('MopidyHandler/LibraryHandler').mpd_track} props.track
- * @param {bool} props.playing
+ * @param {bool} props.isCurrentTrack
  */
 function TracklistItem(props) {
     const classes = useStyles();
 
+    // show icon on hover
     const [icon, setIcon] = React.useState(props.track.track_no);
-    const seconds = Math.floor(props.track.length/1000);
+    
+    // set styles when active
+    const [seconds, setSeconds] = React.useState(Math.floor(props.track.length/1000));
+    
+    React.useEffect(() => {
+        let interval = null;
+
+        if(props.isCurrentTrack) {
+            setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000));
+            interval = setInterval(() => setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000)), 1000);
+        } else {
+            setSeconds(Math.floor(props.track.length/1000));
+        }
+
+        // return clean up function
+        return () => {
+            if(interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [props.isCurrentTrack, props.track.length]); // prevents call on each render
+
 
     return (
-        <TableRow
+        <TableRow selected={props.isCurrentTrack}
             onClick={(e) => {
                 e.stopPropagation();
-                MopidyHandler.playAlbumTrack(props.track);
+                if(props.isCurrentTrack) {
+                    if(MopidyHandler.playback.state === PlaybackStates.PLAYING){
+                        MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE);
+                    } else {
+                        MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME);
+                    }
+                } else {
+                    MopidyHandler.playAlbumTrack(props.track);
+                }
             }}
             onMouseEnter={(e) => {
-                setIcon(props.playing ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
+                setIcon(props.isCurrentTrack ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
             }}
             onMouseLeave={(e) => {
                 setIcon(props.track.track_no);
@@ -61,9 +92,9 @@ function Tracklist(props) {
         function onTrackInfoUpdate() {
             setCurrentTrack(MopidyHandler.playback.track);
         }
-
         MopidyHandler.playback.on("trackInfoUpdated", onTrackInfoUpdate);
 
+        // return clean up method
         return () => {
             MopidyHandler.playback.removeListener("trackInfoUpdated", onTrackInfoUpdate);
         }
@@ -77,7 +108,7 @@ function Tracklist(props) {
                     <TracklistItem
                         key={i}
                         track={track}
-                        playing={currentTrack ? track.uri === currentTrack.uri : false}
+                        isCurrentTrack={currentTrack ? track.uri === currentTrack.uri : false}
                     />
                     ))}
                 </TableBody>
