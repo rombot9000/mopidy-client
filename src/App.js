@@ -7,6 +7,7 @@ import MopidyHandler from "MopidyHandler/MopidyHandler";
 import Modal from "./Modal";
 import AlbumGrid from "Components/AlbumGrid"
 import AlbumDetails from "Components/AlbumDetails"
+import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
 
 class App extends React.Component {
     constructor(props) {
@@ -46,6 +47,7 @@ class App extends React.Component {
         return (
             <React.Fragment>
                 <CssBaseline/>
+                <PlaybackCtrlBar/>
                 <AlbumGrid
                     albums={MopidyHandler.albums}
                     onTileClick={this._openDetailsModal}
