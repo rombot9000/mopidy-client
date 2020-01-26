@@ -48,7 +48,7 @@ function TracklistItem(props) {
                 clearInterval(interval);
             }
         };
-    }, [props.isCurrentTrack, props.track.length]); // prevents call on each render
+    }, [props.isCurrentTrack, props.track.length]);
 
 
     return (
