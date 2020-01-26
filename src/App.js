@@ -1,6 +1,6 @@
 import React from "react";
 
-import { CssBaseline, Box } from '@material-ui/core';
+import { CssBaseline, Box, makeStyles } from '@material-ui/core';
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 
 import Modal from "Components/Modal";
@@ -8,8 +8,16 @@ import AlbumGrid from "Components/AlbumGrid"
 import AlbumDetails from "Components/AlbumDetails"
 import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
 
+const useStyles = makeStyles(theme => ({
+    rootBox: {
+        width: '100%',
+        height: '100%',
+    },
+}));
+
 
 function App() {
+    const classes = useStyles();
 
     const [state, setState] = React.useState({
         mpdState: null,
@@ -60,7 +68,7 @@ function App() {
     return (
         <React.Fragment>
             <CssBaseline/>
-            <Box pb={`${state.ctrlBarHeight}px`}>
+            <Box mb={`${state.ctrlBarHeight}px`} className={classes.rootBox}>
                 <AlbumGrid
                     albums={MopidyHandler.albums}
                     onTileClick={openDetailsModal}

@@ -6,16 +6,10 @@ import { GridList } from "@material-ui/core";
 import AlbumGridTile from "./AlbumGridTile"
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        overflow: 'hidden',
-        backgroundColor: theme.palette.background.paper,
-    },
     gridList: {
-        width: '100vw',
-        height: '100vh',
+        overflow: 'scroll',
+        width: '100%',
+        height: '100%',
         transform: 'translateZ(0)'
     },
 }));
@@ -60,22 +54,20 @@ function AlbumGrid(props) {
 
     console.debug("Rendering Grid...")
     return (
-        <div className={classes.root}>
-            <GridList
-                ref={gridListRef}
-                className={classes.gridList}
-                cellHeight={1.4*dims.size}
-                cols={dims.cols}
-            >{props.albums.map((a,i) => (
-                <AlbumGridTile
-                    key={i}
-                    album={a}
-                    size={dims.size}
-                    onClick={props.onTileClick} 
-                />
-            ))}
-            </GridList>
-        </div>
+        <GridList
+            ref={gridListRef}
+            className={classes.gridList}
+            cellHeight={1.4*dims.size}
+            cols={dims.cols}
+        >{props.albums.map((a,i) => (
+            <AlbumGridTile
+                key={i}
+                album={a}
+                size={dims.size}
+                onClick={props.onTileClick} 
+            />
+        ))}
+        </GridList>
     );
 };
 
