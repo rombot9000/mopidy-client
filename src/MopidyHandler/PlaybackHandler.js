@@ -12,6 +12,7 @@ export const PlaybackCmds = {
     NEXT: "next",
     PREV: "previous"
 };
+Object.freeze(PlaybackCmds);
 
 /**
  * Enum for mopidy playback states
@@ -22,6 +23,8 @@ export const PlaybackStates = {
     PAUSED: "paused",
     STOPPED: "stopped"
 }
+Object.freeze(PlaybackStates);
+
 
 export class PlaybackHandler extends EventEmitter {
     /**
@@ -77,7 +80,7 @@ export class PlaybackHandler extends EventEmitter {
         if(this.state !== PlaybackStates.STOPPED) {
             this.tl_track = await this._mopidy.playback.getCurrentTlTrack({});
             this.updateTimePosition(await this._mopidy.playback.getTimePosition({}));
-            this.track = this.tl_track.track;
+            this.track = this.tl_track ? this.tl_track.track : null;
         }
         this.emit("trackInfoUpdated");
     }
@@ -130,6 +133,10 @@ export class PlaybackHandler extends EventEmitter {
     }
 
 
+    /**
+     * @readonly
+     * @type {number} The time postion of the current track
+     */
     get timePosition() {
 
         switch(this.state) {
