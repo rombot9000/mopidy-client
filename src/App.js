@@ -4,58 +4,62 @@ import { CssBaseline } from '@material-ui/core';
 
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 
-import Modal from "./Modal";
+import Modal from "Components/Modal";
 import AlbumGrid from "Components/AlbumGrid"
 import AlbumDetails from "Components/AlbumDetails"
 import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            mpdState: null,
-            componentCount: 0
-        }
-        MopidyHandler.on("state", (state) => this.setState({mpdState: state}));
-        
-        /** @type {Object.<string, JSX.Element>} */
-        this._components = {};
+function App() {
 
-        this._openDetailsModal = this._openDetailsModal.bind(this);
-    }
+    const [state, setState] = React.useState({
+        mpdState: null,
+    });
+
+    const [components, setComponents] = React.useState({
+        /** @type {Object.<string, JSX.Element>} */
+        "components": {}
+    });
+
+    React.useEffect(() => {
+        const listener = MopidyHandler.on("state", (state) => setState({mpdState: state}));
+        return () => {
+            MopidyHandler.removeListener("state", listener);
+        };
+    },[]);
 
     /**
      * 
      * @param {import('./MopidyHandler/LibraryHandler').mpd_album} album 
      */
-    _openDetailsModal(album) {
-        this._components["detailsModal"] = (
-            <Modal key="detailsModal" show={true} handleClose={this._closeDetailsModal.bind(this)}>
+    function openDetailsModal(album) {
+        function closeDetailsModal() {
+            delete components.components["detailsModal"];
+            setComponents(components);
+        }
+        console.log("openDetailsModal", album);
+        components.components["detailsModal"] = (
+            <Modal key="detailsModal" show={true} handleClose={closeDetailsModal}>
                 <AlbumDetails uri={album.uri}/>
             </Modal>
         );
-        this.setState({componentCount: Object.keys(this._components).length});
+        setComponents({
+            "components": components.components
+        });
+        console.log(components);
     }
 
-    _closeDetailsModal() {
-        delete this._components["detailsModal"];
-        this.setState({componentCount: Object.keys(this._components).length});
-    }
 
-    render() {
-        console.debug("Rendering App...");
-        return (
-            <React.Fragment>
-                <CssBaseline/>
-                <PlaybackCtrlBar/>
-                <AlbumGrid
-                    albums={MopidyHandler.albums}
-                    onTileClick={this._openDetailsModal}
+    return (
+        <React.Fragment>
+            <CssBaseline/>
+            <AlbumGrid
+                albums={MopidyHandler.albums}
+                onTileClick={openDetailsModal}
                 />
-                {Object.values(this._components)}
-            </React.Fragment>
-        );
-    }
+            {Object.values(components.components)}
+            <PlaybackCtrlBar/>
+        </React.Fragment>
+    );
 };
 
 export default App;
