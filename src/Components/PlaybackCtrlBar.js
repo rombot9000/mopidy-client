@@ -16,6 +16,24 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+/**
+ * 
+ * @param {Object} props
+ * @param {string} cmd
+ */
+function PlaybackButton(props) {
+
+    // remove warning msg
+    const { to, fullWidth, ...filteredProps } = props;
+    filteredProps.fullwidth = props.fullWidth.toString();
+    
+    return (
+        <IconButton {...filteredProps} color="secondary" onClick={() => MopidyHandler.playback.sendCmd(props.cmd)}>
+            {props.children}
+        </IconButton>
+    );
+};
+
 function PlaybackCtrlBar() {
     const classes = useStyles();
 
@@ -57,18 +75,18 @@ function PlaybackCtrlBar() {
         <AppBar position="fixed" color="primary" className={classes.appBar}>
             <Toolbar>
                 <ButtonGroup>
-                    <IconButton color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.PREV)}>
+                    <PlaybackButton cmd={PlaybackCmds.PREV}>
                         <SkipPrevious/>
-                    </IconButton>
-                    <IconButton color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE)}>
+                    </PlaybackButton>
+                    <PlaybackButton cmd={PlaybackCmds.PAUSE}>
                         <Pause/>
-                    </IconButton>
-                    <IconButton color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME)}>
+                    </PlaybackButton>
+                    <PlaybackButton cmd={PlaybackCmds.RESUME}>
                         <PlayArrow/>
-                    </IconButton>
-                    <IconButton color="secondary" onClick={() => MopidyHandler.playback.sendCmd(PlaybackCmds.NEXT)}>
+                    </PlaybackButton>
+                    <PlaybackButton cmd={PlaybackCmds.NEXT}>
                         <SkipNext/>
-                    </IconButton>
+                    </PlaybackButton>
                 </ButtonGroup>
                 <div>
                     <Typography variant="body1" color="inherit">{state.track}</Typography>
