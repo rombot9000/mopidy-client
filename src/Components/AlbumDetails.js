@@ -37,7 +37,6 @@ function AlbumDetails(props) {
     const artwork_src = MopidyHandler.album_uri_to_artwork_uri[props.uri];
     const tracks = MopidyHandler.album_uri_to_tracks[props.uri];
 
-    console.debug("Rendering Album detail...")
     return (
         <Card className={classes.card}>
             <CardMedia className={classes.cover} image={artwork_src}/>
