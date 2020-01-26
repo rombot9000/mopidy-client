@@ -26,20 +26,23 @@ const useStyles = makeStyles(theme => ({
 function TracklistItem(props) {
     const classes = useStyles();
 
+    // filter props
+    const {to, track, isCurrentTrack, ...tableRowProps} = props;
+
     // show icon on hover
-    const [icon, setIcon] = React.useState(props.track.track_no);
+    const [icon, setIcon] = React.useState(track.track_no);
     
     // set styles when active
-    const [seconds, setSeconds] = React.useState(Math.floor(props.track.length/1000));
+    const [seconds, setSeconds] = React.useState(Math.floor(track.length/1000));
     
     React.useEffect(() => {
         let interval = null;
 
-        if(props.isCurrentTrack) {
+        if(isCurrentTrack) {
             setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000));
             interval = setInterval(() => setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000)), 1000);
         } else {
-            setSeconds(Math.floor(props.track.length/1000));
+            setSeconds(Math.floor(track.length/1000));
         }
 
         // return clean up function
@@ -48,32 +51,33 @@ function TracklistItem(props) {
                 clearInterval(interval);
             }
         };
-    }, [props.isCurrentTrack, props.track.length]);
+    }, [isCurrentTrack, track.length]);
 
 
     return (
-        <TableRow selected={props.isCurrentTrack}
+        <TableRow
+            {...tableRowProps}
             onClick={(e) => {
                 e.stopPropagation();
-                if(props.isCurrentTrack) {
+                if(isCurrentTrack) {
                     if(MopidyHandler.playback.state === PlaybackStates.PLAYING){
                         MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE);
                     } else {
                         MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME);
                     }
                 } else {
-                    MopidyHandler.playAlbumTrack(props.track);
+                    MopidyHandler.playAlbumTrack(track);
                 }
             }}
             onMouseEnter={(e) => {
-                setIcon(props.isCurrentTrack ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
+                setIcon(isCurrentTrack ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
             }}
             onMouseLeave={(e) => {
-                setIcon(props.track.track_no);
+                setIcon(track.track_no);
             }}
         >
             <TableCell className={classes.iconcell} align="right">{icon}</TableCell>
-            <TableCell align="left">{props.track.name}</TableCell>
+            <TableCell align="left">{track.name}</TableCell>
             <TableCell align="right">{Math.floor(seconds/60)}:{`00${seconds%60}`.slice(-2)}</TableCell>
         </TableRow>
     );

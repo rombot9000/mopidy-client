@@ -46,7 +46,6 @@ function App() {
 
 
     /**
-     * 
      * @param {import('./MopidyHandler/LibraryHandler').mpd_album} album 
      */
     function openDetailsModal(album) {

@@ -43,22 +43,26 @@ function checkProps(prevProps, nextProps) {
  */
 const AlbumGridTile = React.memo(props => {
     const classes = useStyles();
-    const src = MopidyHandler.album_uri_to_artwork_uri[props.album.uri];
-    const artist = MopidyHandler.album_uri_to_tracks[props.album.uri][0].artists[0].name;
-    const onClick = () => props.onClick(props.album);
-    console.debug("Renderng tile...");
+
+    // filter props and set consts
+    const {to, album, size, onClick, ...gridListTileProps} = props;
+    const src = MopidyHandler.album_uri_to_artwork_uri[album.uri];
+    const artist = MopidyHandler.album_uri_to_tracks[album.uri][0].artists[0].name;
+    
     return (
-        <GridListTile>
+        <GridListTile
+            {...gridListTileProps}
+            >
             <img
                 className={classes.cover}
-                width={props.size}
-                height={props.size}
+                width={size}
+                height={size}
                 src={src}
                 alt="No cover for you!"
-                onClick={onClick}
+                onClick={() => onClick(album)}
             />
             <GridListTileBar
-                title={props.album.name}
+                title={album.name}
                 subtitle={artist}
             />
         </GridListTile>

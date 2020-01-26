@@ -28,6 +28,12 @@ class MopidyHandler extends EventEmitter {
         this.playback = new PlaybackHandler(mopidy);
 
         /** @type {import('./LibraryHandler').mpd_album[]} */
+        this._fullAlbumList = [];
+
+        /** @type {Object.<string, import('./LibraryHandler').mpd_album[]>} */
+        this._tokenToAlbumList = {}
+
+        /** @type {import('./LibraryHandler').mpd_album[]} */
         this.albums = [];
         /** @type {Object.<string,import('./LibraryHandler').mpd_track[]>} */
         this.album_uri_to_tracks = {};
@@ -35,7 +41,6 @@ class MopidyHandler extends EventEmitter {
         this.album_uri_to_artwork = {};
 
         mopidy.on("state:online", this._getAlbums.bind(this));
-        mopidy.on("event", console.log);
     }
 
     /**
@@ -61,11 +66,15 @@ class MopidyHandler extends EventEmitter {
 
         try {
 
-            this.albums = await this._library.browse("local:directory?type=album");
+            this._fullAlbumList = await this._library.browse("local:directory?type=album");
+
+            this._tokenToAlbumList = {};
+
+            this.albums = this._fullAlbumList;
             
-            this.album_uri_to_tracks = await this._library.lookup(this.albums.map(ref => ref.uri));
+            this.album_uri_to_tracks = await this._library.lookup(this._fullAlbumList.map(ref => ref.uri));
     
-            this._uri_to_artwork_list = await this._library.getImages(this.albums.map(ref => ref.uri));
+            this._uri_to_artwork_list = await this._library.getImages(this._fullAlbumList.map(ref => ref.uri));
 
             this.album_uri_to_artwork_uri = this._getPrimaryAlbumArtwork(this._uri_to_artwork_list);
 
@@ -98,6 +107,36 @@ class MopidyHandler extends EventEmitter {
             console.error(`Caught exception: ${err}`);
 
         }
+    }
+
+    /**
+     * 
+     * @param {string|RegExp} token 
+     */
+    async filterAlbums(token) {
+        const time_start = Date.now();
+        if(!token || token === "") {
+            this.albums = this._fullAlbumList;
+            this.emit("state", "state:albums_not_filtered");
+            return;
+        }
+
+        console.log(token);
+        // check for cashed search results
+        const lowerCaseToken = token.toLowerCase();
+        if(!this._tokenToAlbumList[lowerCaseToken]){
+
+            this._tokenToAlbumList[lowerCaseToken] = this.albums.filter(a => {
+                return a.name.toLowerCase().search(lowerCaseToken) !== -1;
+            });
+
+        }
+
+        this.albums = this._tokenToAlbumList[lowerCaseToken];
+        this.emit("state", "state:albums_filtered");
+        
+        const time_end = Date.now();
+        console.log("Filtering time: ", time_end - time_start);
     }
 };
 

@@ -52,12 +52,12 @@ function AlbumGrid(props) {
         }
     }, [gridListRef]); // prevents call on each render
 
-    console.debug("Rendering Grid...")
+    console.debug(`Rendering Grid with height ${dims.size} and ${dims.cols} columns ...`);
     return (
         <GridList
             ref={gridListRef}
             className={classes.gridList}
-            cellHeight={1.4*dims.size}
+            cellHeight={dims.size}
             cols={dims.cols}
         >{props.albums.map((a,i) => (
             <AlbumGridTile
