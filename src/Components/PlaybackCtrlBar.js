@@ -7,7 +7,7 @@ import {AppBar, Toolbar, Box} from "@material-ui/core";
 import {ButtonGroup, IconButton} from "@material-ui/core";
 import {PlayArrow, Pause, SkipNext, SkipPrevious} from "@material-ui/icons";
 
-import {TextField, FormControl, Input, InputAdornment} from "@material-ui/core";
+import {FormControl, Input, InputAdornment} from "@material-ui/core";
 import {Search} from "@material-ui/icons";
 
 import MopidyHandler from "MopidyHandler/MopidyHandler";

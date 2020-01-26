@@ -46,13 +46,12 @@ function AlbumGrid(props) {
         handleResize();
         // add listener for window resize
         window.addEventListener('resize', handleResize);
-        // return remove, why?
+        // clean up
         return () => {
             window.removeEventListener('resize', handleResize);
         }
     }, [gridListRef]); // prevents call on each render
 
-    console.debug(`Rendering Grid with height ${dims.size} and ${dims.cols} columns ...`);
     return (
         <GridList
             ref={gridListRef}

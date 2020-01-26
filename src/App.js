@@ -63,7 +63,6 @@ function App() {
         });
     }
 
-    console.log(state);
     return (
         <React.Fragment>
             <CssBaseline/>
