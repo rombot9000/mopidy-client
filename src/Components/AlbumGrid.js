@@ -31,14 +31,14 @@ function AlbumGrid(props) {
     const classes = useStyles();
     
     // calc number of cols and height
-    const ref = React.useRef(null);
+    const gridListRef = React.useRef(null);
     const [dims, setDims] = React.useState({size: 200, cols: 3});
 
     // effect runs on each render, unless dependecy list if given
     React.useEffect(() => {
         function handleResize() {
             const minSize = 250;
-            const width = ref.current ? ref.current.offsetWidth : 0;
+            const width = gridListRef.current ? gridListRef.current.offsetWidth : 0;
             
             const cols = Math.floor(width / minSize);
             const size = Math.floor(width / cols);
@@ -56,13 +56,13 @@ function AlbumGrid(props) {
         return () => {
             window.removeEventListener('resize', handleResize);
         }
-    }, [ref]); // prevents call on each render
+    }, [gridListRef]); // prevents call on each render
 
     console.debug("Rendering Grid...")
     return (
         <div className={classes.root}>
             <GridList
-                ref={ref}
+                ref={gridListRef}
                 className={classes.gridList}
                 cellHeight={1.4*dims.size}
                 cols={dims.cols}

@@ -1,7 +1,6 @@
 import React from "react";
 
-import { CssBaseline } from '@material-ui/core';
-
+import { CssBaseline, Box } from '@material-ui/core';
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 
 import Modal from "Components/Modal";
@@ -9,10 +8,12 @@ import AlbumGrid from "Components/AlbumGrid"
 import AlbumDetails from "Components/AlbumDetails"
 import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
 
+
 function App() {
 
     const [state, setState] = React.useState({
         mpdState: null,
+        ctrlBarHeight: 0
     });
 
     const [components, setComponents] = React.useState({
@@ -20,12 +21,21 @@ function App() {
         "components": {}
     });
 
+    // setup listener
     React.useEffect(() => {
-        const listener = MopidyHandler.on("state", (state) => setState({mpdState: state}));
+        // Listen for changes from mopidy handler
+        const mdpListener = MopidyHandler.on("state", (mpdState) => setState(prev => ({...prev, mpdState: mpdState})));
         return () => {
-            MopidyHandler.removeListener("state", listener);
+            MopidyHandler.removeListener("state", mdpListener);
         };
     },[]);
+
+    const ctrlBarRef = React.useRef(null);
+    React.useEffect(() => {
+        const height = ctrlBarRef.current ? ctrlBarRef.current.offsetHeight : 0;
+        setState(prev => ({...prev, ctrlBarHeight: height}));
+    }, [ctrlBarRef]);
+
 
     /**
      * 
@@ -36,7 +46,6 @@ function App() {
             delete components.components["detailsModal"];
             setComponents(components);
         }
-        console.log("openDetailsModal", album);
         components.components["detailsModal"] = (
             <Modal key="detailsModal" show={true} handleClose={closeDetailsModal}>
                 <AlbumDetails uri={album.uri}/>
@@ -45,19 +54,20 @@ function App() {
         setComponents({
             "components": components.components
         });
-        console.log(components);
     }
 
-
+    console.log(state);
     return (
         <React.Fragment>
             <CssBaseline/>
-            <AlbumGrid
-                albums={MopidyHandler.albums}
-                onTileClick={openDetailsModal}
-                />
-            {Object.values(components.components)}
-            <PlaybackCtrlBar/>
+            <Box pb={`${state.ctrlBarHeight}px`}>
+                <AlbumGrid
+                    albums={MopidyHandler.albums}
+                    onTileClick={openDetailsModal}
+                    />
+                {Object.values(components.components)}
+            </Box>
+            <PlaybackCtrlBar ref={ctrlBarRef}/>
         </React.Fragment>
     );
 };

@@ -34,7 +34,7 @@ function PlaybackButton(props) {
     );
 };
 
-function PlaybackCtrlBar() {
+const PlaybackCtrlBar = React.forwardRef((props, ref) => {
     const classes = useStyles();
 
     const [state, setState] = React.useState({
@@ -72,7 +72,7 @@ function PlaybackCtrlBar() {
 
 
     return (
-        <AppBar position="fixed" color="primary" className={classes.appBar}>
+        <AppBar ref={ref} position="fixed" color="primary" className={classes.appBar}>
             <Toolbar>
                 <ButtonGroup>
                     <PlaybackButton cmd={PlaybackCmds.PREV}>
@@ -95,6 +95,6 @@ function PlaybackCtrlBar() {
             </Toolbar>
         </AppBar>
     );
-};
+});
 
 export default PlaybackCtrlBar;
