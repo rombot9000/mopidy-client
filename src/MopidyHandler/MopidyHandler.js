@@ -110,29 +110,55 @@ class MopidyHandler extends EventEmitter {
     }
 
     /**
-     * 
-     * @param {string|RegExp} token 
+     * Internal search function, uses cached results
+     * @param {string} lowerCaseToken 
+     */
+    _filterAlbumsByLowercaseToken(lowerCaseToken) {
+
+        if(!lowerCaseToken || lowerCaseToken === "") return this._fullAlbumList;
+
+        if(!this._tokenToAlbumList[lowerCaseToken]) {
+
+            // Use prev search result as basis
+            this._tokenToAlbumList[lowerCaseToken] = this._filterAlbumsByLowercaseToken(lowerCaseToken.slice(0,-1)).filter(album => {
+
+                // check album name
+                if(album.name.toLowerCase().search(lowerCaseToken) !== -1) return true;
+
+                // check album artists
+                for(let track of this.album_uri_to_tracks[album.uri]) {
+                    for(let artist of track.artists) {
+                        if(artist.name.toLowerCase().search(lowerCaseToken) === -1) continue
+                        return true;
+                    }
+                };
+
+                // No match found
+                return false;
+
+            });
+        }
+
+        return this._tokenToAlbumList[lowerCaseToken];
+    }
+
+    /**
+     * Filter albums using the token string
+     * Matching album name and artists
+     * NOTE: search takes a couple of ms with 100+ albums, thus no optimization necessary atm
+     * @param {string} token 
      */
     async filterAlbums(token) {
-        const time_start = Date.now();
+        
         if(!token || token === "") {
             this.albums = this._fullAlbumList;
             this.emit("state", "state:albums_not_filtered");
             return;
         }
-
-        console.log(token);
-        // check for cashed search results
-        const lowerCaseToken = token.toLowerCase();
-        if(!this._tokenToAlbumList[lowerCaseToken]){
-
-            this._tokenToAlbumList[lowerCaseToken] = this.albums.filter(a => {
-                return a.name.toLowerCase().search(lowerCaseToken) !== -1;
-            });
-
-        }
-
-        this.albums = this._tokenToAlbumList[lowerCaseToken];
+        
+        const time_start = Date.now();
+        
+        this.albums = this._filterAlbumsByLowercaseToken(token.toLowerCase());
         this.emit("state", "state:albums_filtered");
         
         const time_end = Date.now();
