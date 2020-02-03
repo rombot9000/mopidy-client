@@ -7,8 +7,7 @@ import {AppBar, Toolbar, Box} from "@material-ui/core";
 import {ButtonGroup, IconButton} from "@material-ui/core";
 import {PlayArrow, Pause, SkipNext, SkipPrevious} from "@material-ui/icons";
 
-import {FormControl, Input, InputAdornment} from "@material-ui/core";
-import {Search} from "@material-ui/icons";
+import SearchField from "./SearchField";
 
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 import {PlaybackCmds} from "MopidyHandler/PlaybackHandler";
@@ -74,9 +73,6 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
         }
     }, []); // prevents call on each render
 
-    const [showSearch, setShowSearch] = React.useState(false);
-
-
     return (
         <AppBar {...props} ref={ref} position="fixed" color="primary" className={classes.appBar}>
             <Toolbar>
@@ -94,25 +90,13 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
                         <SkipNext/>
                     </PlaybackButton>
                 </ButtonGroup>
-                <Box flexGrow={1}>
+                <Box flexGrow={2}>
                     <Typography variant="body1" color="inherit">{state.track}</Typography>
                     <Typography variant="body2" color="inherit">{state.artist}</Typography>
                 </Box>
-                <FormControl className={classes.margin}>
-                    <Input
-                        disableUnderline={true}
-                        startAdornment={
-                            <InputAdornment
-                                position="start"
-                                color="secondary"
-                                onClick={() => setShowSearch(!showSearch)}
-                                >
-                                <Search />
-                            </InputAdornment>
-                        }
-                        onInput={e => MopidyHandler.filterAlbums(e.target.value)}
-                    />
-                </FormControl>
+                <Box flexShrink={1}>
+                    <SearchField/>
+                </Box>
             </Toolbar>
         </AppBar>
     );
