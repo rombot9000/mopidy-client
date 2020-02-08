@@ -25,9 +25,55 @@ class TracklistHandler {
         this._currentTracklist = [];
         /** @type {import('./LibraryHandler').mpd_album} */
         this._currentAlbum = null;
+        
+        // handle state changes
+        this._mopidy.on("state", this._onStateChange.bind(this));
+
+        // handle events
+        this._mopidy.on("event", this._onEvent.bind(this));
     }
 
+    /**
+     * @param {string} state 
+     * @param {any} args 
+     */
+    _onStateChange(state, args) {
+        const [,stateType] = state.split(':');
 
+        switch(stateType) {
+            case "online":
+                this._getTracklist();
+            break;
+
+            default:
+                console.debug(`State not handled here: ${state}`);
+        }
+    }
+
+    /**
+     * @param {string} event 
+     * @param {any} args 
+     */
+    _onEvent(event, args) {
+
+        const [,eventType] = event.split(':');
+
+        switch(eventType) {
+            case "tracklistChanged":
+                this._getTracklist();
+            break;
+            
+            default:
+                console.debug("Event not handled here:", eventType);
+        }
+    }
+
+    /**
+     * Get current tracklist from server and store in member var
+     */
+    async _getTracklist() {
+        this._currentTracklist = await this._mopidy.tracklist.getTlTracks({});
+    }
     
     /**
      * Sets tracklist on server to album
@@ -58,6 +104,15 @@ class TracklistHandler {
         if(tl_item == null) throw new Error(`Track '${track.name}' not in current tracklist!`);
 
         return tl_item.tlid;
+    }
+
+    /**
+     * Get current tracklist
+     * @readonly
+     * @type {mpd_tracklist}
+     */
+    get currentTracklist() {
+        return this._currentTracklist;
     }
 };
 

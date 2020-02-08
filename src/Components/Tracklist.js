@@ -1,21 +1,22 @@
 import React from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Table, TableBody, TableRow, TableCell, TableContainer } from "@material-ui/core";
-import { PlayArrow, Pause } from "@material-ui/icons";
+import { TableContainer, Table, TableBody, TableRow, TableCell } from "@material-ui/core";
+import { PlayArrow, Pause, Equalizer } from "@material-ui/icons";
 
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 import { PlaybackStates, PlaybackCmds } from "MopidyHandler/PlaybackHandler";
 
 const useStyles = makeStyles(theme => ({
-    table: {
-        height: '50vh',
+    container: {
+        maxHeight: '100%',
         backgroundColor: theme.palette.background.paper,
     },
     iconcell: {
         width: '3em'
     }
 }));
+
 
 /**
  * 
@@ -28,9 +29,6 @@ function TracklistItem(props) {
 
     // filter props
     const {to, track, isCurrentTrack, ...tableRowProps} = props;
-
-    // show icon on hover
-    const [icon, setIcon] = React.useState(track.track_no);
     
     // set styles when active
     const [seconds, setSeconds] = React.useState(Math.floor(track.length/1000));
@@ -53,30 +51,49 @@ function TracklistItem(props) {
         };
     }, [isCurrentTrack, track.length]);
 
+    /**
+     * @param {MouseEvent} event 
+     */
+    function handleClick(event) {
+        event.stopPropagation();
+        if(isCurrentTrack) {
+            if(MopidyHandler.playback.state === PlaybackStates.PLAYING){
+                MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE);
+            } else {
+                MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME);
+            }
+        } else {
+            MopidyHandler.playAlbumTrack(track);
+        }
+    }
+
+    // show icon on hover
+    const [firstCell, setFirstCell] = React.useState(isCurrentTrack ? <Equalizer fontSize="inherit"/> : track.track_no);
+
+    /**
+     * @param {MouseEvent} event 
+     */
+    function showTrackNo(event) {
+        setFirstCell(isCurrentTrack ? <Equalizer fontSize="inherit"/> : track.track_no);
+    }
+    
+    /**
+     * @param {MouseEvent} event 
+     */
+    function showIcon(event) {
+        setFirstCell(isCurrentTrack ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
+    }
+
 
     return (
         <TableRow
             {...tableRowProps}
-            onClick={(e) => {
-                e.stopPropagation();
-                if(isCurrentTrack) {
-                    if(MopidyHandler.playback.state === PlaybackStates.PLAYING){
-                        MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE);
-                    } else {
-                        MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME);
-                    }
-                } else {
-                    MopidyHandler.playAlbumTrack(track);
-                }
-            }}
-            onMouseEnter={(e) => {
-                setIcon(isCurrentTrack ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
-            }}
-            onMouseLeave={(e) => {
-                setIcon(track.track_no);
-            }}
+            selected={isCurrentTrack}
+            onClick={handleClick}
+            onMouseEnter={showIcon}
+            onMouseLeave={showTrackNo}
         >
-            <TableCell className={classes.iconcell} align="right">{icon}</TableCell>
+            <TableCell className={classes.iconcell} align="right">{firstCell}</TableCell>
             <TableCell align="left">{track.name}</TableCell>
             <TableCell align="right">{Math.floor(seconds/60)}:{`00${seconds%60}`.slice(-2)}</TableCell>
         </TableRow>
@@ -85,7 +102,7 @@ function TracklistItem(props) {
 
 /**
  * @param {Object} props
- * @param {import('MopidyHandler/LibraryHandler').mpd_track[]} tracks 
+ * @param {import('MopidyHandler/LibraryHandler').mpd_track[]} props.tracks 
  */
 function Tracklist(props) {
     const classes = useStyles();
@@ -106,7 +123,7 @@ function Tracklist(props) {
     }, []); // prevents call on each render
 
     return (
-        <TableContainer className={classes.table}>
+        <TableContainer className={classes.container}>
             <Table size="small">
                 <TableBody>{props.tracks.map((track,i) => (
                     <TracklistItem

@@ -164,6 +164,14 @@ class MopidyHandler extends EventEmitter {
         const time_end = Date.now();
         console.log("Filtering time: ", time_end - time_start);
     }
+
+    /**
+     * @readonly
+     * @type {import('./LibraryHandler').mpd_track[]} The current tracklist
+     */
+    get currentTracklist() {
+        return this._tracklist.currentTracklist.map(tl_track => tl_track.track);
+    }
 };
 
 /** Mopidy handler singleton */
