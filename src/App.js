@@ -16,11 +16,12 @@ const useStyles = makeStyles(theme => ({
         height: '100%',
     },
     searchBar: {
-        zIndex: 2000,
+        zIndex: 1100,
         position: "fixed",
-        top: "1vh",
-        left: "1vh",
-        maxWidth: 500,
+        width: 500,
+        top: "1vw",
+        left: "1vw",
+        maxWidth: "98vw"
     }
 }));
 

@@ -11,8 +11,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: "center"
     },
     input: {
-        flex: 1,
-        width: "80vw"
+        flexGrow: 1,
     }
 }));
 
