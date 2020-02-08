@@ -25,6 +25,34 @@ function SearchBar(props) {
 
     const classes = useStyles();
     const inputRef = React.useRef(null);
+    const [inputValue, setInputValue] = React.useState("")
+
+    /**
+     * Special key press handling
+     * @param {KeyboardEvent} event 
+     */
+    function handleKeyDown(event) {
+        if(event.key === "Escape") {
+            event.preventDefault();
+            setInputValue("");
+            MopidyHandler.filterAlbums("");
+        } else if(event.key === "Backspace") {
+            // Is faster than onInput-Callback!
+            event.preventDefault();
+            setInputValue(inputValue.slice(0,-1));
+            MopidyHandler.filterAlbums(inputValue.slice(0,-1));
+        }
+    }
+
+    /**
+     * Is slower than onKeyDown :-/
+     * @param {InputEvent} event 
+     */
+    function handleInput(event) {
+        event.preventDefault();
+        MopidyHandler.filterAlbums(event.target.value);
+        setInputValue(event.target.value);
+    }
     
     return (
         <Container
@@ -42,8 +70,10 @@ function SearchBar(props) {
                     className={classes.input}
                     inputRef={inputRef}
                     disableUnderline={true}
-                    onInput={e => MopidyHandler.filterAlbums(e.target.value)}
+                    value={inputValue}
                     placeholder="Search for Albums or Artists..."
+                    onInput={handleInput}
+                    onKeyDown={handleKeyDown}
                 />
                 <IconButton onClick={() => inputRef.current.focus()}>
                     <Search fontSize="inherit"/>
