@@ -1,8 +1,8 @@
 import React from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
-import { TableContainer, Table, TableBody, TableRow, TableCell } from "@material-ui/core";
-import { PlayArrow, Pause, Equalizer } from "@material-ui/icons";
+import { TableContainer, Table, TableBody, TableRow, TableCell, SvgIcon } from "@material-ui/core";
+import { PlayArrow, Pause } from "@material-ui/icons";
 
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 import { PlaybackStates, PlaybackCmds } from "MopidyHandler/PlaybackHandler";
@@ -17,6 +17,23 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+/**
+ * Animated eq icon
+ * @param {import("@material-ui/core").SvgIconProps} props 
+ */
+const AnimatedEq = (props) => (
+    <SvgIcon {...props} viewBox="0 0 24 24">
+        <line x1="3" x2="3" y1="24" y2="0" strokeWidth="6" stroke="black">
+            <animate attributeName="y2" values="0;6;12;18;24;0" dur="1s" repeatCount="indefinite" />
+        </line>
+        <line x1="12" x2="12" y1="24" y2="0" strokeWidth="6" stroke="black">
+            <animate attributeName="y2" values="18;24;0;6;12;18" dur="1s" repeatCount="indefinite" />
+        </line>
+        <line x1="21" x2="21" y1="24" y2="0" strokeWidth="6" stroke="black">
+            <animate attributeName="y2" values="6;12;18;24;0;6" dur="1s" repeatCount="indefinite" />
+        </line>
+    </SvgIcon>
+)
 
 /**
  * 
@@ -32,10 +49,17 @@ function TracklistItem(props) {
     
     // set styles when active
     const [seconds, setSeconds] = React.useState(Math.floor(track.length/1000));
-    
-    React.useEffect(() => {
-        let interval = null;
 
+    // set first cell content
+    const [firstCell, setFirstCell] = React.useState(isCurrentTrack ? <AnimatedEq fontSize="inherit"/> : track.track_no);
+    
+    // React to track changes
+    React.useEffect(() => {
+        // eq icon
+        setFirstCell(isCurrentTrack ? <AnimatedEq fontSize="inherit"/> : track.track_no);
+
+        // track length or counter
+        let interval = null;
         if(isCurrentTrack) {
             setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000));
             interval = setInterval(() => setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000)), 1000);
@@ -67,14 +91,11 @@ function TracklistItem(props) {
         }
     }
 
-    // show icon on hover
-    const [firstCell, setFirstCell] = React.useState(isCurrentTrack ? <Equalizer fontSize="inherit"/> : track.track_no);
-
     /**
      * @param {MouseEvent} event 
      */
     function showTrackNo(event) {
-        setFirstCell(isCurrentTrack ? <Equalizer fontSize="inherit"/> : track.track_no);
+        setFirstCell(isCurrentTrack ? <AnimatedEq fontSize="inherit"/> : track.track_no);
     }
     
     /**
