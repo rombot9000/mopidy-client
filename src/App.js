@@ -1,18 +1,27 @@
 import React from "react";
 
-import { CssBaseline, Box, makeStyles } from '@material-ui/core';
+import { Box } from '@material-ui/core';
+import { CssBaseline, makeStyles } from '@material-ui/core';
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 
 import Modal from "Components/Modal";
 import AlbumGrid from "Components/AlbumGrid"
 import AlbumDetails from "Components/AlbumDetails"
 import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
+import SearchBar from "Components/SearchBar";
 
 const useStyles = makeStyles(theme => ({
     rootBox: {
         width: '100%',
         height: '100%',
     },
+    searchBar: {
+        zIndex: 2000,
+        position: "fixed",
+        top: "1vh",
+        left: "1vh",
+        maxWidth: 500,
+    }
 }));
 
 
@@ -63,9 +72,14 @@ function App() {
         });
     }
 
+    function openSideMenu() {
+        console.log("Open menu...")
+    }
+
     return (
         <React.Fragment>
             <CssBaseline/>
+            <SearchBar className={classes.searchBar} onMenuIconClick={openSideMenu}/>
             <Box mb={`${state.ctrlBarHeight}px`} className={classes.rootBox}>
                 <AlbumGrid
                     albums={MopidyHandler.albums}

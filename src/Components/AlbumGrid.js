@@ -10,7 +10,6 @@ const useStyles = makeStyles(theme => ({
         overflow: 'scroll',
         width: '100%',
         height: '100%',
-        transform: 'translateZ(0)'
     },
 }));
 
@@ -31,7 +30,7 @@ function AlbumGrid(props) {
     // effect runs on each render, unless dependecy list if given
     React.useEffect(() => {
         function handleResize() {
-            const minSize = 250;
+            const minSize = 200;
             const width = gridListRef.current ? gridListRef.current.offsetWidth : 0;
             
             const cols = Math.floor(width / minSize);
