@@ -37,7 +37,7 @@ function PlaybackButton(props) {
 const PlaybackCtrlBar = React.forwardRef((props, ref) => {
     const classes = useStyles();
 
-    const [state, setState] = React.useState({
+    const [track, setTrack] = React.useState({
         /** @type {string} */
         artist: null,
         /** @type {string} */
@@ -45,22 +45,25 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
         /** @type {string} */
         track: null
     });
+    const [playbackState, setPlaybackState] = React.useState(MopidyHandler.playback.state);
+
+    console.log(MopidyHandler.playback.state);
+    console.log(playbackState);
    
 
     React.useEffect(() => {
         /**
-         * 
          * @param {import('MopidyHandler/LibraryHandler').mpd_track} track 
          */
         function onTrackInfoUpdate(track) {
             if(track) {
-                setState({
+                setTrack({
                     artist: track.artists[0].name,
                     album: track.album.name,
                     track: track.name
                 });
             } else {
-                setState({
+                setTrack({
                     artist: null,
                     album: null,
                     track: null
@@ -68,9 +71,14 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
             }
         }
         MopidyHandler.playback.on("trackInfoUpdated", onTrackInfoUpdate);
+
+        const onPlaybackStateChanged = setPlaybackState.bind(this);
+        MopidyHandler.playback.on("playbackStateChanged", onPlaybackStateChanged);
+
         // return clean up function
         return () => {
             MopidyHandler.playback.removeListener("trackInfoUpdated", onTrackInfoUpdate);
+            MopidyHandler.playback.removeListener("playbackStateChanged", onPlaybackStateChanged);
         }
     }, []); // prevents call on each render
 
@@ -81,19 +89,16 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
                     <PlaybackButton cmd="previous">
                         <SkipPrevious/>
                     </PlaybackButton>
-                    <PlaybackButton cmd="pause">
-                        <Pause/>
-                    </PlaybackButton>
-                    <PlaybackButton cmd="resume">
-                        <PlayArrow/>
+                    <PlaybackButton cmd={playbackState === "playing" ? "pause" : "resume"}>
+                        {playbackState === "playing" ? <Pause/> : <PlayArrow/>}
                     </PlaybackButton>
                     <PlaybackButton cmd="next">
                         <SkipNext/>
                     </PlaybackButton>
                 </ButtonGroup>
                 <Box flexGrow={2}>
-                    <Typography variant="body1" color="inherit">{state.track}</Typography>
-                    <Typography variant="body2" color="inherit">{state.artist}</Typography>
+                    <Typography variant="body1" color="inherit">{track.track}</Typography>
+                    <Typography variant="body2" color="inherit">{track.artist}</Typography>
                 </Box>
             </Toolbar>
         </AppBar>

@@ -70,6 +70,7 @@ class PlaybackHandler extends EventEmitter {
      */
     async _getPlaybackInfo() {
         this._state = await this._mopidy.playback.getState({});
+        this.emit("playbackStateChanged", this._state);
 
         if(this._state !== "stopped") {
             this.tl_track = await this._mopidy.playback.getCurrentTlTrack({});
