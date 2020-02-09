@@ -7,16 +7,16 @@ import PlaybackHandler from "./PlaybackHandler";
 
 import { UnknownPlaybackStateError } from "./Errors";
 
-/** @typedef {"state:online"} mpd_state */
+import { Album, Track } from "Model";
+
+/** @typedef {"state:online"|"state:offline"|"state:reconnectionPending"|"state:reconnecting"} mpd_state */
 
 
 const MPD_ARGS = {
     autoConnect: false
 };
-var SERVER_IP = "";
 if(process.env.NODE_ENV !== "production") {
     MPD_ARGS.webSocketUrl = "ws://raspberrypi.fritz.box:8080/mopidy/ws/";
-    SERVER_IP = "http://raspberrypi.fritz.box:8080";
 }
 
 class MopidyHandler extends EventEmitter {
@@ -32,16 +32,19 @@ class MopidyHandler extends EventEmitter {
         // make playback api public
         this.playback = new PlaybackHandler(this._mopidy);
 
-        /** @type {import('./LibraryHandler').mpd_album[]} */
+        // Init model view objects
+        /** @type {import('Model/Album').Album[]} */
         this._fullAlbumList = [];
+        /** @type {Object.<string, import('Model/Album').Album[]>} */
+        this._tokenToAlbumList = {};
+        /** @type {import('Model/Album').Album} */
+        this.Albums = [];
 
-        /** @type {Object.<string, import('./LibraryHandler').mpd_album[]>} */
-        this._tokenToAlbumList = {}
-
+        // Init mpd model objects
         /** @type {import('./LibraryHandler').mpd_album[]} */
-        this.albums = [];
+        this._mpd_albums = [];
         /** @type {Object.<string,import('./LibraryHandler').mpd_track[]>} */
-        this.album_uri_to_tracks = {};
+        this._album_uri_to_tracks = {};
         /** @type {Object.<string,import('./LibraryHandler').mpd_image[]>} */
         this.album_uri_to_artwork = {};
 
@@ -77,53 +80,50 @@ class MopidyHandler extends EventEmitter {
     }
 
     _handleWebsocketEvent(event, args) {
-        console.log(event);
+        console.log("Websocket event:", event)
         console.log(args);
-    }
-
-    /**
-     * 
-     * @param {Object.<string,import('./LibraryHandler').mpd_image[]>} uri_to_artwork_list 
-     */
-    _getPrimaryAlbumArtwork(uri_to_artwork_list) {
-        let album_uri_to_artwork_uri = [];
-        Object.entries(uri_to_artwork_list).forEach(([uri, artworklist]) => {
-            if(artworklist.length === 0) return;
-            album_uri_to_artwork_uri[uri] = `${SERVER_IP}${artworklist[0].uri}`;
-        });
-        return album_uri_to_artwork_uri;
     }
     
     /**
      * Get all albums, tracks and artwork from library
      */
     async _getAlbums() {
+
+        // only run one fetch at a time
         if(this._gettingAlbums) return;
         
+        // lock
         this._gettingAlbums = true;
 
         try {
 
-            this._fullAlbumList = await this._library.browse("local:directory?type=album");
+            // Get data from server
+            this._mpd_albums = await this._library.browse("local:directory?type=album");             
+            this._album_uri_to_tracks = await this._library.lookup(this._mpd_albums.map(ref => ref.uri));
+            this._album_uri_to_artwork_list = await this._library.getImages(this._mpd_albums.map(ref => ref.uri));
 
-            this._tokenToAlbumList = {};
-
-            this.albums = this._fullAlbumList;
+            // Map data onto view model
+            this._fullAlbumList = this._mpd_albums.map(mpd_album =>
+                Album(
+                    mpd_album,
+                    this._album_uri_to_tracks[mpd_album.uri],
+                    this._album_uri_to_artwork_list[mpd_album.uri]
+                )
+            );
             
-            this.album_uri_to_tracks = await this._library.lookup(this._fullAlbumList.map(ref => ref.uri));
-    
-            this._uri_to_artwork_list = await this._library.getImages(this._fullAlbumList.map(ref => ref.uri));
-
-            this.album_uri_to_artwork_uri = this._getPrimaryAlbumArtwork(this._uri_to_artwork_list);
-
+            // Visible albums
+            this.Albums = this._fullAlbumList;
+            
+            // Done
             this.emit("state", "state:albums_fetched");
 
         } catch(err) {
 
-            console.error(`Caught exception: ${err}`);
+            console.error("Caught exception:", err);
 
         }
 
+        // unlock
         this._gettingAlbums = false;
     }
 
@@ -144,11 +144,11 @@ class MopidyHandler extends EventEmitter {
                 if(album.name.toLowerCase().search(lowerCaseToken) !== -1) return true;
 
                 // check album artists
-                for(let track of this.album_uri_to_tracks[album.uri]) {
-                    for(let artist of track.artists) {
-                        if(artist.name.toLowerCase().search(lowerCaseToken) === -1) continue
-                        return true;
-                    }
+                if(album.artist.toLowerCase().search(lowerCaseToken) !== -1) return true;
+
+                // check track artists
+                for(let track of album.tracks) {
+                    if(track.artist.toLowerCase().search(lowerCaseToken) !== -1) return true;
                 };
 
                 // No match found
@@ -169,14 +169,14 @@ class MopidyHandler extends EventEmitter {
     async filterAlbums(token) {
         
         if(!token || token === "") {
-            this.albums = this._fullAlbumList;
+            this.Albums = this._fullAlbumList;
             this.emit("state", "state:albums_not_filtered");
             return;
         }
         
         const time_start = Date.now();
         
-        this.albums = this._filterAlbumsByLowercaseToken(token.toLowerCase());
+        this.Albums = this._filterAlbumsByLowercaseToken(token.toLowerCase());
         this.emit("state", "state:albums_filtered");
         
         const time_end = Date.now();
@@ -185,29 +185,36 @@ class MopidyHandler extends EventEmitter {
 
     /**
      * @readonly
-     * @type {import('./LibraryHandler').mpd_track[]} The current tracklist
+     * @type {import('Model/Track').Track[]} The current tracklist
      */
     get currentTracklist() {
-        return this._tracklist.currentTracklist.map(tl_track => tl_track.track);
+        return this._tracklist.currentTracklist.map(tl_track => Track(tl_track.track));
     }
 
     /**
-     * Play track, reset playlist if necessary
-     * @param {import('./LibraryHandler').mpd_track} track 
+     * @readonly
+     * @type {import('Model/Track').Track} The current track
      */
-    async playAlbumTrack(track) {
+    get currentTrack() {
+        return Track(this.playback.track);
+    }
+
+    /**
+     * 
+     * @param {import('Model/Track').Track[]} tracks 
+     * @param {import('Model/Track').Track} track 
+     */
+    async playTracklist(tracks, track=null) {
         try {
 
-            await this._tracklist.set(this.album_uri_to_tracks[track.album.uri]);
+            await this._tracklist.set(tracks.map(t => t._uri));
             
-            let tlid = this._tracklist.getTrackId(track);
+            let tlid = track ? this._tracklist.getTrackId(track._uri) : null;
 
             await this.playback.sendCmd("play", {tlid: tlid});
 
         } catch(err) {
-
-            console.error(`Caught exception: ${err}`);
-
+            console.error("Caught exception:", err);
         }
     }
 
@@ -215,21 +222,47 @@ class MopidyHandler extends EventEmitter {
      * Toggles Playback: STOPPED -> PLAYING <-> PAUSED
      */
     async togglePlayback() {
-        switch(this.playback.state) {
-            case "stopped":
-                this.playback.sendCmd("play")
-            break;
+        try {
+            switch(this.playback.state) {
+                case "stopped":
+                    await this.playback.sendCmd("play")
+                break;
+    
+                case "paused":
+                    await this.playback.sendCmd("resume");
+                break;
+                
+                case "playing":
+                    await this.playback.sendCmd("pause");
+                break;
+                
+                default:
+                    throw new UnknownPlaybackStateError(this._state);
+            }
+        } catch(err) {
+            console.error("Caught exception:", err);
+        }
+    }
 
-            case "paused":
-                this.playback.sendCmd("resume");
-            break;
-            
-            case "playing":
-                this.playback.sendCmd("pause");
-            break;
-            
-            default:
-                console.error(UnknownPlaybackStateError(this._state));
+    /**
+     * Play next song
+     */
+    async next() {
+        try {
+            await this.playback.sendCmd("next");  
+        } catch(err) {
+            console.error("Caught exception:", err);
+        }
+    }
+
+    /**
+     * 
+     */
+    async previous() {
+        try {
+            await this.playback.sendCmd("previous");  
+        } catch(err) {
+            console.error("Caught exception:", err);
         }
     }
 };

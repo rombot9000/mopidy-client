@@ -37,7 +37,7 @@ const AnimatedEq = (props) => (
 /**
  * 
  * @param {Object} props
- * @param {import('MopidyHandler/LibraryHandler').mpd_track} props.track
+ * @param {import('Model/Track').Track} props.track
  * @param {import('MopidyHandler/PlaybackHandler').PlaybackState} props.state
  */
 function TracklistItem(props) {
@@ -46,7 +46,7 @@ function TracklistItem(props) {
     // filter props
     const {to, track, state, ...tableRowProps} = props;
     
-    // set styles when active
+    // set last cell content (duration or time position)
     const [seconds, setSeconds] = React.useState(Math.floor(track.length/1000));
 
     // set first cell content
@@ -86,29 +86,6 @@ function TracklistItem(props) {
     /**
      * @param {MouseEvent} event 
      */
-    function handleClick(event) {
-        event.stopPropagation();
-        switch(state) {
-            case "playing":
-                MopidyHandler.playback.sendCmd("pause");
-            break;
-
-            case "paused":
-                MopidyHandler.playback.sendCmd("resume");
-            break;
-            
-            case "stopped":
-                MopidyHandler.playAlbumTrack(track);
-            break;
-            
-            default:
-                console.warn(`Unknwon playback state: ${state}`);
-        }
-    }
-
-    /**
-     * @param {MouseEvent} event 
-     */
     function showTrackNo(event) {
         setFirstCell(state === "playing" ? <AnimatedEq fontSize="inherit"/> : track.track_no);
     }
@@ -125,7 +102,6 @@ function TracklistItem(props) {
         <TableRow
             {...tableRowProps}
             selected={state !== "stopped"}
-            onClick={handleClick}
             onMouseEnter={showCtrlIcons}
             onMouseLeave={showTrackNo}
         >
@@ -138,7 +114,7 @@ function TracklistItem(props) {
 
 /**
  * @param {Object} props
- * @param {import('MopidyHandler/LibraryHandler').mpd_track[]} props.tracks 
+ * @param {import('Model/Track').Track[]} props.tracks 
  */
 function Tracklist(props) {
     const classes = useStyles();
@@ -161,6 +137,19 @@ function Tracklist(props) {
         
     }, []); // prevents call on each render
 
+    /**
+     * @param {import('Model/Track').Track} track 
+     */
+    function handleClick(track) {
+
+        if(currentTrack && track._uri === currentTrack._uri) {
+            MopidyHandler.togglePlayback();
+        } else {
+            MopidyHandler.playTracklist(props.tracks, track);
+        }
+
+    }
+
     return (
         <TableContainer className={classes.container}>
             <Table size="small">
@@ -168,7 +157,8 @@ function Tracklist(props) {
                     <TracklistItem
                         key={i}
                         track={track}
-                        state={currentTrack && track.uri === currentTrack.uri ? playbackState : "stopped"}
+                        state={currentTrack && track._uri === currentTrack.uri ? playbackState : "stopped"}
+                        onClick={(e) => handleClick(track)}
                     />
                     ))}
                 </TableBody>

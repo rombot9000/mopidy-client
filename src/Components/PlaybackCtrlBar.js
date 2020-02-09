@@ -19,17 +19,16 @@ const useStyles = makeStyles(theme => ({
 /**
  * 
  * @param {Object} props
- * @param {import('MopidyHandler/PlaybackHandler').PlaybackCmd} props.cmd
  */
 function PlaybackButton(props) {
 
     // remove warning msg
-    const { to, fullWidth, ...filteredProps } = props;
+    const { to, fullWidth, children, ...filteredProps } = props;
     filteredProps.fullwidth = props.fullWidth.toString();
     
     return (
-        <IconButton {...filteredProps} color="secondary" onClick={() => MopidyHandler.playback.sendCmd(props.cmd)}>
-            {props.children}
+        <IconButton {...filteredProps} color="secondary">
+            {children}
         </IconButton>
     );
 };
@@ -37,44 +36,20 @@ function PlaybackButton(props) {
 const PlaybackCtrlBar = React.forwardRef((props, ref) => {
     const classes = useStyles();
 
-    const [track, setTrack] = React.useState({
-        /** @type {string} */
-        artist: null,
-        /** @type {string} */
-        album: null,
-        /** @type {string} */
-        track: null
-    });
+    const [track, setTrack] = React.useState(MopidyHandler.currentTrack);
     const [playbackState, setPlaybackState] = React.useState(MopidyHandler.playback.state);
    
     React.useEffect(() => {
-        /**
-         * @param {import('MopidyHandler/LibraryHandler').mpd_track} track 
-         */
-        function onTrackInfoUpdate(track) {
-            if(track) {
-                setTrack({
-                    artist: track.artists[0].name,
-                    album: track.album.name,
-                    track: track.name
-                });
-            } else {
-                setTrack({
-                    artist: null,
-                    album: null,
-                    track: null
-                });
-            }
-        }
-        MopidyHandler.playback.on("trackInfoUpdated", onTrackInfoUpdate);
+        const handleTrackInfoUpdate = setTrack.bind(this);
+        MopidyHandler.playback.on("trackInfoUpdated", handleTrackInfoUpdate);
 
-        const onPlaybackStateChanged = setPlaybackState.bind(this);
-        MopidyHandler.playback.on("playbackStateChanged", onPlaybackStateChanged);
+        const handlePlaybackStateChanged = setPlaybackState.bind(this);
+        MopidyHandler.playback.on("playbackStateChanged", handlePlaybackStateChanged);
 
         // return clean up function
         return () => {
-            MopidyHandler.playback.removeListener("trackInfoUpdated", onTrackInfoUpdate);
-            MopidyHandler.playback.removeListener("playbackStateChanged", onPlaybackStateChanged);
+            MopidyHandler.playback.removeListener("trackInfoUpdated", handleTrackInfoUpdate);
+            MopidyHandler.playback.removeListener("playbackStateChanged", handlePlaybackStateChanged);
         }
     }, []); // prevents call on each render
 
@@ -82,18 +57,18 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
         <AppBar {...props} ref={ref} position="fixed" color="primary" className={classes.appBar}>
             <Toolbar>
                 <ButtonGroup>
-                    <PlaybackButton cmd="previous">
+                    <PlaybackButton onClick={() => MopidyHandler.previous()}>
                         <SkipPrevious/>
                     </PlaybackButton>
-                    <PlaybackButton cmd={playbackState === "playing" ? "pause" : "resume"}>
+                    <PlaybackButton onClick={() => MopidyHandler.togglePlayback()}>
                         {playbackState === "playing" ? <Pause/> : <PlayArrow/>}
                     </PlaybackButton>
-                    <PlaybackButton cmd="next">
+                    <PlaybackButton onClick={() => MopidyHandler.next()}>
                         <SkipNext/>
                     </PlaybackButton>
                 </ButtonGroup>
                 <Box flexGrow={2}>
-                    <Typography variant="body1" color="inherit">{track.track}</Typography>
+                    <Typography variant="body1" color="inherit">{track.name}</Typography>
                     <Typography variant="body2" color="inherit">{track.artist}</Typography>
                 </Box>
             </Toolbar>

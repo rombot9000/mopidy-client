@@ -3,8 +3,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core";
 import { GridListTile, GridListTileBar } from "@material-ui/core";
 
-import MopidyHandler from "MopidyHandler/MopidyHandler"
-
 const useStyles = makeStyles(theme => ({
     paper: {
     },
@@ -15,14 +13,13 @@ const useStyles = makeStyles(theme => ({
 
 /**
  * @callback onTileClick
- * @param {import('MopidyHandler/LibraryHandler').mpd_album} album
+ * @param {import('Model/Album').Album} album
  */
-
 
 /**
  * 
  * @typedef AlbumGridTileProps
- * @property {import('../MopidyHandler/LibraryHandler').mpd_album} album
+ * @property {import('Model/Album').Album} album
  * @property {number} size
  * @property {onTileClick} onClick
  */
@@ -34,7 +31,7 @@ const useStyles = makeStyles(theme => ({
  * @returns {boolean} True if component should NOT rerender, false otherwise
  */
 function checkProps(prevProps, nextProps) {
-    return prevProps.size === nextProps.size && prevProps.album.uri === nextProps.album.uri;
+    return prevProps.size === nextProps.size && prevProps.album._uri === nextProps.album._uri;
 };
 
 /**
@@ -46,8 +43,6 @@ const AlbumGridTile = React.memo(props => {
 
     // filter props and set consts
     const {to, album, size, onClick, ...gridListTileProps} = props;
-    const src = MopidyHandler.album_uri_to_artwork_uri[album.uri];
-    const artist = MopidyHandler.album_uri_to_tracks[album.uri][0].artists[0].name;
     
     return (
         <GridListTile
@@ -57,13 +52,13 @@ const AlbumGridTile = React.memo(props => {
                 className={classes.cover}
                 width={size}
                 height={size}
-                src={src}
+                src={album.cover}
                 alt="No cover for you!"
                 onClick={() => onClick(album)}
             />
             <GridListTileBar
                 title={album.name}
-                subtitle={artist}
+                subtitle={album.artist}
             />
         </GridListTile>
     );

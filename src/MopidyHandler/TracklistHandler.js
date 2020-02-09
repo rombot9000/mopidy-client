@@ -66,11 +66,9 @@ class TracklistHandler {
     /**
      * Sets tracklist on server to album
      * Does nothing if album is already set
-     * @param {import('./LibraryHandler').mpd_track[]} tracks
+     * @param {string[]} uris
      */
-    async set(tracks) {
-
-        let uris = tracks.map(t => t.uri);
+    async set(uris) {
         
         await this._mopidy.tracklist.clear({})
         
@@ -83,13 +81,13 @@ class TracklistHandler {
 
     /**
      * 
-     * @param {import('./LibraryHandler').mpd_track} track
+     * @param {string} uri
      * @returns {number} id of tracklist item
      */
-    getTrackId(track) {
-        let tl_item = this._currentTracklist.find(ti => ti.track.uri === track.uri);
+    getTrackId(uri) {
+        let tl_item = this._currentTracklist.find(ti => ti.track.uri === uri);
 
-        if(tl_item == null) throw new Error(`Track '${track.name}' not in current tracklist!`);
+        if(tl_item == null) throw new Error(`Track with uri ${uri} not in current tracklist!`);
 
         return tl_item.tlid;
     }

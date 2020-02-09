@@ -4,7 +4,6 @@ import { Box, Modal } from '@material-ui/core';
 import { CssBaseline, makeStyles } from '@material-ui/core';
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 
-//import Modal from "Components/Modal";
 import AlbumGrid from "Components/AlbumGrid"
 import AlbumDetails from "Components/AlbumDetails"
 import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
@@ -61,7 +60,7 @@ function App() {
 
 
     /**
-     * @param {import('./MopidyHandler/LibraryHandler').mpd_album} album 
+     * @param {import('Model/Album').Album} album 
      */
     function openDetailsModal(album) {
         function closeDetailsModal() {
@@ -70,7 +69,7 @@ function App() {
         }
         components.components["detailsModal"] = (
             <Modal key="detailsModal" open={true} onClose={closeDetailsModal}>
-                <AlbumDetails uri={album.uri}/>
+                <AlbumDetails album={album}/>
             </Modal>
         );
         setComponents({
@@ -89,7 +88,7 @@ function App() {
             <MenuDrawer open={showMenuDrawer} onClose={toggleSideMenu}/>
             <Box mb={`${state.ctrlBarHeight}px`} className={classes.rootBox}>
                 <AlbumGrid
-                    albums={MopidyHandler.albums}
+                    albums={MopidyHandler.Albums}
                     onTileClick={openDetailsModal}
                     />
                 {Object.values(components.components)}

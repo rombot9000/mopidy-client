@@ -2,6 +2,8 @@ import { EventEmitter } from "events";
 
 import { UnknownPlaybackCmdError, UnknownPlaybackStateError } from "./Errors";
 
+import { Track } from "Model";
+
 /** @typedef {"play"|"pause"|"resume"|"stop"|"next"|"previous"} PlaybackCmd */
 /** @typedef {"playing"|"paused"|"stopped"} PlaybackState */
 
@@ -75,7 +77,7 @@ class PlaybackHandler extends EventEmitter {
         
         this.track = tl_track ? tl_track.track : null;
 
-        this.emit("trackInfoUpdated", this.track);
+        this.emit("trackInfoUpdated", Track(this.track));
     }
 
     /**
