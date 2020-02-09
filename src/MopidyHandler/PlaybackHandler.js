@@ -3,6 +3,7 @@ import { EventEmitter } from "events";
 /**
  * Enum for mopidy playback cmds
  * @readonly
+ * @type {"play"|"pause"|"resume"|"stop"|"next"|"previous"}
  */
 export const PlaybackCmds = {
     PLAY: "play",
@@ -96,6 +97,7 @@ export class PlaybackHandler extends EventEmitter {
         switch(eventType) {
             case "playbackStateChanged":
                 this.state = args.new_state;
+                this.emit("playbackStateChanged", [this.state]);
             break;
             
             case "trackPlaybackStarted":

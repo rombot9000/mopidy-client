@@ -39,55 +39,71 @@ const AnimatedEq = (props) => (
  * 
  * @param {Object} props
  * @param {import('MopidyHandler/LibraryHandler').mpd_track} props.track
- * @param {bool} props.isCurrentTrack
+ * @param {import('MopidyHandler/PlaybackHandler').PlaybackStates} props.state
  */
 function TracklistItem(props) {
     const classes = useStyles();
 
     // filter props
-    const {to, track, isCurrentTrack, ...tableRowProps} = props;
+    const {to, track, state, ...tableRowProps} = props;
     
     // set styles when active
     const [seconds, setSeconds] = React.useState(Math.floor(track.length/1000));
 
     // set first cell content
-    const [firstCell, setFirstCell] = React.useState(isCurrentTrack ? <AnimatedEq fontSize="inherit"/> : track.track_no);
+    const [firstCell, setFirstCell] = React.useState(track.track_no);
     
     // React to track changes
     React.useEffect(() => {
-        // eq icon
-        setFirstCell(isCurrentTrack ? <AnimatedEq fontSize="inherit"/> : track.track_no);
 
-        // track length or counter
         let interval = null;
-        if(isCurrentTrack) {
-            setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000));
-            interval = setInterval(() => setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000)), 1000);
-        } else {
-            setSeconds(Math.floor(track.length/1000));
+        switch(state) {
+            case PlaybackStates.PLAYING:
+                setFirstCell(<AnimatedEq fontSize="inherit"/>);
+                interval = setInterval(() => setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000)), 1000);
+            break;
+
+            case PlaybackStates.PAUSED:
+                setFirstCell(<AnimatedEq fontSize="inherit"/>);//TODO: Make icon for stopped playback
+                setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000));
+            break;
+
+            case PlaybackStates.STOPPED:
+                setFirstCell(track.track_no);
+                setSeconds(Math.floor(track.length/1000));
+            break;
+
+            default:
+                console.warn(`Unknwon playback state: ${state}`);
         }
 
         // return clean up function
         return () => {
-            if(interval) {
-                clearInterval(interval);
-            }
+            if(interval) clearInterval(interval);
         };
-    }, [isCurrentTrack, track.length]);
+
+    }, [state, track.length]);
 
     /**
      * @param {MouseEvent} event 
      */
     function handleClick(event) {
         event.stopPropagation();
-        if(isCurrentTrack) {
-            if(MopidyHandler.playback.state === PlaybackStates.PLAYING){
+        switch(state) {
+            case PlaybackStates.PLAYING:
                 MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE);
-            } else {
+            break;
+
+            case PlaybackStates.PAUSED:
                 MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME);
-            }
-        } else {
-            MopidyHandler.playAlbumTrack(track);
+            break;
+            
+            case PlaybackStates.STOPPED:
+                MopidyHandler.playAlbumTrack(track);
+            break;
+            
+            default:
+                console.warn(`Unknwon playback state: ${state}`);
         }
     }
 
@@ -95,23 +111,23 @@ function TracklistItem(props) {
      * @param {MouseEvent} event 
      */
     function showTrackNo(event) {
-        setFirstCell(isCurrentTrack ? <AnimatedEq fontSize="inherit"/> : track.track_no);
+        setFirstCell(state === PlaybackStates.PLAYING ? <AnimatedEq fontSize="inherit"/> : track.track_no);
     }
     
     /**
      * @param {MouseEvent} event 
      */
-    function showIcon(event) {
-        setFirstCell(isCurrentTrack ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
+    function showCtrlIcons(event) {
+        setFirstCell(state === PlaybackStates.PLAYING ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
     }
 
 
     return (
         <TableRow
             {...tableRowProps}
-            selected={isCurrentTrack}
+            selected={state !== PlaybackStates.STOPPED}
             onClick={handleClick}
-            onMouseEnter={showIcon}
+            onMouseEnter={showCtrlIcons}
             onMouseLeave={showTrackNo}
         >
             <TableCell className={classes.iconcell} align="right">{firstCell}</TableCell>
@@ -129,16 +145,19 @@ function Tracklist(props) {
     const classes = useStyles();
 
     const [currentTrack, setCurrentTrack] = React.useState(MopidyHandler.playback.track);
+    const [playbackState, setPlaybackState] = React.useState(MopidyHandler.playback.state);
     React.useEffect(() => {
 
-        function onTrackInfoUpdate() {
-            setCurrentTrack(MopidyHandler.playback.track);
-        }
+        const onTrackInfoUpdate = () => setCurrentTrack(MopidyHandler.playback.track);
         MopidyHandler.playback.on("trackInfoUpdated", onTrackInfoUpdate);
+
+        const onPlaybackStateChanged = () => setPlaybackState(MopidyHandler.playback.state);
+        MopidyHandler.playback.on("playbackStateChanged", onPlaybackStateChanged);
 
         // return clean up method
         return () => {
             MopidyHandler.playback.removeListener("trackInfoUpdated", onTrackInfoUpdate);
+            MopidyHandler.playback.removeListener("playbackStateChanged", onPlaybackStateChanged);
         }
         
     }, []); // prevents call on each render
@@ -150,7 +169,7 @@ function Tracklist(props) {
                     <TracklistItem
                         key={i}
                         track={track}
-                        isCurrentTrack={currentTrack ? track.uri === currentTrack.uri : false}
+                        state={currentTrack && track.uri === currentTrack.uri ? playbackState : PlaybackStates.STOPPED}
                     />
                     ))}
                 </TableBody>
