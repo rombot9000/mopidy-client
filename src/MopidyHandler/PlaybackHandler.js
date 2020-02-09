@@ -69,14 +69,33 @@ class PlaybackHandler extends EventEmitter {
      * Get current playback info
      */
     async _getPlaybackInfo() {
-        this._state = await this._mopidy.playback.getState({});
-        this.emit("playbackStateChanged", this._state);
+        this._updateState(await this._mopidy.playback.getState({}));
 
-        if(this._state !== "stopped") {
-            this.tl_track = await this._mopidy.playback.getCurrentTlTrack({});
+        if(this.state !== "stopped") {
+            this._updateTrackInfo(await this._mopidy.playback.getCurrentTlTrack({}));
             this._updateTimePosition(await this._mopidy.playback.getTimePosition({}));
-            this.track = this.tl_track ? this.tl_track.track : null;
         }
+    }
+
+    /**
+     * Update state and emit event
+     * @param {PlaybackState} state 
+     */
+    _updateState(state) {
+        this._state = state;
+        this.emit("playbackStateChanged", this._state);
+    }
+
+    /**
+     * Update current track and emit event
+     * @param {import('./TracklistHandler').mpd_tracklist_item} tl_track 
+     */
+    _updateTrackInfo(tl_track) {
+        
+        this.tl_track = tl_track;
+        
+        this.track = tl_track ? tl_track.track : null;
+
         this.emit("trackInfoUpdated", this.track);
     }
 
@@ -90,15 +109,12 @@ class PlaybackHandler extends EventEmitter {
         
         switch(eventType) {
             case "playbackStateChanged":
-                this._state = args.new_state;
-                this.emit("playbackStateChanged", this._state);
+                this._updateState(args.new_state);
             break;
             
             case "trackPlaybackStarted":
                 this._updateTimePosition(0);     
-                this.tl_track = args.tl_track;
-                this.track = args.tl_track.track;
-                this.emit("trackInfoUpdated", this.track);
+                this._updateTrackInfo(args.tl_track);
             break;
 
             case "trackPlaybackResumed":
@@ -108,11 +124,7 @@ class PlaybackHandler extends EventEmitter {
 
             case "trackPlaybackEnded":
             case "trackPlaybackStopped":
-                if(this._state === "stopped") {
-                    this.tl_track = null;
-                    this.track = null;
-                    this.emit("trackInfoUpdated", this.track);
-                }
+                if(this.state === "stopped") this._updateTrackInfo(null)
             break;
 
             default:
