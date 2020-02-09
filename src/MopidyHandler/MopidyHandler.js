@@ -3,7 +3,10 @@ import Mopidy from "mopidy";
 
 import LibraryHandler from "./LibraryHandler";
 import TracklistHandler from "./TracklistHandler";
-import { PlaybackHandler, PlaybackCmds } from "./PlaybackHandler";
+import PlaybackHandler from "./PlaybackHandler";
+
+import { UnknownPlaybackStateError } from "./Errors";
+
 
 var MPD_ARGS = {};
 var SERVER_IP = "";
@@ -41,6 +44,13 @@ class MopidyHandler extends EventEmitter {
         this.album_uri_to_artwork = {};
 
         mopidy.on("state:online", this._getAlbums.bind(this));
+
+        mopidy.on("websocket:close", console.log);
+        mopidy.on("websocket:error", console.log);
+        mopidy.on("websocket:open", console.log);
+        
+        mopidy.on("websocket:incomingMessage", console.log);
+
     }
 
     /**
@@ -87,26 +97,6 @@ class MopidyHandler extends EventEmitter {
         }
 
         this._gettingAlbums = false;
-    }
-
-    /**
-     * Play track, reset playlist if necessary
-     * @param {import('./LibraryHandler').mpd_track} track 
-     */
-    async playAlbumTrack(track) {
-        try {
-
-            await this._tracklist.set(this.album_uri_to_tracks[track.album.uri]);
-            
-            let tlid = this._tracklist.getTrackId(track);
-
-            await this.playback.sendCmd(PlaybackCmds.PLAY, {tlid: tlid});
-
-        } catch(err) {
-
-            console.error(`Caught exception: ${err}`);
-
-        }
     }
 
     /**
@@ -171,6 +161,48 @@ class MopidyHandler extends EventEmitter {
      */
     get currentTracklist() {
         return this._tracklist.currentTracklist.map(tl_track => tl_track.track);
+    }
+
+    /**
+     * Play track, reset playlist if necessary
+     * @param {import('./LibraryHandler').mpd_track} track 
+     */
+    async playAlbumTrack(track) {
+        try {
+
+            await this._tracklist.set(this.album_uri_to_tracks[track.album.uri]);
+            
+            let tlid = this._tracklist.getTrackId(track);
+
+            await this.playback.sendCmd("play", {tlid: tlid});
+
+        } catch(err) {
+
+            console.error(`Caught exception: ${err}`);
+
+        }
+    }
+
+    /**
+     * Toggles Playback: STOPPED -> PLAYING <-> PAUSED
+     */
+    async togglePlayback() {
+        switch(this.playback.state) {
+            case "stopped":
+                this.playback.sendCmd("play")
+            break;
+
+            case "paused":
+                this.playback.sendCmd("resume");
+            break;
+            
+            case "playing":
+                this.playback.sendCmd("pause");
+            break;
+            
+            default:
+                console.error(UnknownPlaybackStateError(this._state));
+        }
     }
 };
 

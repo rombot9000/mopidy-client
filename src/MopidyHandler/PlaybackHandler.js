@@ -1,33 +1,17 @@
 import { EventEmitter } from "events";
 
-/**
- * Enum for mopidy playback cmds
- * @readonly
- * @type {"play"|"pause"|"resume"|"stop"|"next"|"previous"}
- */
-export const PlaybackCmds = {
-    PLAY: "play",
-    PAUSE: "pause",
-    RESUME: "resume",
-    STOP: "stop",
-    NEXT: "next",
-    PREV: "previous"
-};
+import { UnknownPlaybackCmdError, UnknownPlaybackStateError } from "./Errors";
+
+/** @typedef {"play"|"pause"|"resume"|"stop"|"next"|"previous"} PlaybackCmd */
+/** @typedef {"playing"|"paused"|"stopped"} PlaybackState */
+
+/** @readonly A list of available playback commands */
+const PlaybackCmds = ["play", "pause", "resume", "stop", "next", "previous"];
 Object.freeze(PlaybackCmds);
 
-/**
- * Enum for mopidy playback states
- * @readonly
- */
-export const PlaybackStates = {
-    PLAYING: "playing",
-    PAUSED: "paused",
-    STOPPED: "stopped"
-}
-Object.freeze(PlaybackStates);
 
 
-export class PlaybackHandler extends EventEmitter {
+class PlaybackHandler extends EventEmitter {
     /**
      * @param {import('mopidy')} mopidy 
      */
@@ -40,8 +24,8 @@ export class PlaybackHandler extends EventEmitter {
         this.tl_track = null;
         /** @type {import('./LibraryHandler').mpd_track} */
         this.track = null;
-        /** @type {string} */
-        this.state = null;
+        /** @type {PlaybackState} */
+        this._state = null;
         /** @type {number} */
         this._timePosition = 0;
         /** @type {number} */
@@ -52,6 +36,15 @@ export class PlaybackHandler extends EventEmitter {
 
         // handle events
         this._mopidy.on("event", this._onEvent.bind(this));
+    }
+    
+    /**
+     * Current playback state
+     * @readonly
+     * @type {PlaybackState}
+     */
+    get state() {
+        return this._state;
     }
 
     /**
@@ -76,14 +69,14 @@ export class PlaybackHandler extends EventEmitter {
      * Get current playback info
      */
     async _getPlaybackInfo() {
-        this.state = await this._mopidy.playback.getState({});
+        this._state = await this._mopidy.playback.getState({});
 
-        if(this.state !== PlaybackStates.STOPPED) {
+        if(this._state !== "stopped") {
             this.tl_track = await this._mopidy.playback.getCurrentTlTrack({});
-            this.updateTimePosition(await this._mopidy.playback.getTimePosition({}));
+            this._updateTimePosition(await this._mopidy.playback.getTimePosition({}));
             this.track = this.tl_track ? this.tl_track.track : null;
         }
-        this.emit("trackInfoUpdated");
+        this.emit("trackInfoUpdated", this.track);
     }
 
     /**
@@ -96,28 +89,28 @@ export class PlaybackHandler extends EventEmitter {
         
         switch(eventType) {
             case "playbackStateChanged":
-                this.state = args.new_state;
-                this.emit("playbackStateChanged", [this.state]);
+                this._state = args.new_state;
+                this.emit("playbackStateChanged", this._state);
             break;
             
             case "trackPlaybackStarted":
-                this.updateTimePosition(0);     
+                this._updateTimePosition(0);     
                 this.tl_track = args.tl_track;
                 this.track = args.tl_track.track;
-                this.emit("trackInfoUpdated");
+                this.emit("trackInfoUpdated", this.track);
             break;
 
             case "trackPlaybackResumed":
             case "trackPlaybackPaused":
-                this.updateTimePosition(args.time_position);     
+                this._updateTimePosition(args.time_position);     
             break;
 
             case "trackPlaybackEnded":
             case "trackPlaybackStopped":
-                if(this.state === PlaybackStates.STOPPED) {
+                if(this._state === "stopped") {
                     this.tl_track = null;
                     this.track = null;
-                    this.emit("trackInfoUpdated");
+                    this.emit("trackInfoUpdated", this.track);
                 }
             break;
 
@@ -129,30 +122,31 @@ export class PlaybackHandler extends EventEmitter {
     /**
      * @param {number} timePosition 
      */
-    updateTimePosition(timePosition) {
+    _updateTimePosition(timePosition) {
         this._timePositionUpdated = Date.now();
         this._timePosition = timePosition;
     }
 
 
     /**
+     * The time postion of the current track
      * @readonly
-     * @type {number} The time postion of the current track
+     * @type {number}
      */
     get timePosition() {
 
-        switch(this.state) {
-            case PlaybackStates.PLAYING:
+        switch(this._state) {
+            case "playing":
                 return this._timePosition + Date.now() - this._timePositionUpdated;
 
-            case PlaybackStates.PAUSED:
+            case "paused":
                 return this._timePosition;
 
-            case PlaybackStates.STOPPED:
+            case "stopped":
                 return null;
 
             default:
-                console.warn(`Unknown playback state: ${this.state}`);
+                console.warn(UnknownPlaybackStateError(this._state));
                 return null;
         }
 
@@ -160,13 +154,13 @@ export class PlaybackHandler extends EventEmitter {
 
     /**
      * Since most playback api calls do not require arguments, we use a single api wrapper frunction
-     * @param {*} cmd 
+     * @param {PlaybackCmd} cmd 
      * @param {Object.<string,any>} args Optional arguments for cmd
      */
     async sendCmd(cmd, args={}) {
         try {
 
-            if(!Object.values(PlaybackCmds).includes(cmd)) throw new Error(`Unknown playback command ${cmd}`);
+            if(!PlaybackCmds.includes(cmd)) throw new UnknownPlaybackCmdError(cmd);
             
             await this._mopidy.playback[cmd](args);
 
@@ -175,3 +169,5 @@ export class PlaybackHandler extends EventEmitter {
         }
     }
 };
+
+export default PlaybackHandler;

@@ -8,7 +8,6 @@ import {ButtonGroup, IconButton} from "@material-ui/core";
 import {PlayArrow, Pause, SkipNext, SkipPrevious} from "@material-ui/icons";
 
 import MopidyHandler from "MopidyHandler/MopidyHandler";
-import {PlaybackCmds} from "MopidyHandler/PlaybackHandler";
 
 const useStyles = makeStyles(theme => ({
     appBar: {
@@ -20,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 /**
  * 
  * @param {Object} props
- * @param {string} cmd
+ * @param {import('MopidyHandler/PlaybackHandler').PlaybackCmd} props.cmd
  */
 function PlaybackButton(props) {
 
@@ -49,12 +48,16 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
    
 
     React.useEffect(() => {
-        function onTrackInfoUpdate() {
-            if(MopidyHandler.playback.tl_track != null) {
+        /**
+         * 
+         * @param {import('MopidyHandler/LibraryHandler').mpd_track} track 
+         */
+        function onTrackInfoUpdate(track) {
+            if(track) {
                 setState({
-                    artist: MopidyHandler.playback.tl_track.track.artists[0].name,
-                    album: MopidyHandler.playback.tl_track.track.album.name,
-                    track: MopidyHandler.playback.tl_track.track.name
+                    artist: track.artists[0].name,
+                    album: track.album.name,
+                    track: track.name
                 });
             } else {
                 setState({
@@ -75,16 +78,16 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
         <AppBar {...props} ref={ref} position="fixed" color="primary" className={classes.appBar}>
             <Toolbar>
                 <ButtonGroup>
-                    <PlaybackButton cmd={PlaybackCmds.PREV}>
+                    <PlaybackButton cmd="previous">
                         <SkipPrevious/>
                     </PlaybackButton>
-                    <PlaybackButton cmd={PlaybackCmds.PAUSE}>
+                    <PlaybackButton cmd="pause">
                         <Pause/>
                     </PlaybackButton>
-                    <PlaybackButton cmd={PlaybackCmds.RESUME}>
+                    <PlaybackButton cmd="resume">
                         <PlayArrow/>
                     </PlaybackButton>
-                    <PlaybackButton cmd={PlaybackCmds.NEXT}>
+                    <PlaybackButton cmd="next">
                         <SkipNext/>
                     </PlaybackButton>
                 </ButtonGroup>

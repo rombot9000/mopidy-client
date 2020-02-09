@@ -5,7 +5,6 @@ import { TableContainer, Table, TableBody, TableRow, TableCell, SvgIcon } from "
 import { PlayArrow, Pause } from "@material-ui/icons";
 
 import MopidyHandler from "MopidyHandler/MopidyHandler";
-import { PlaybackStates, PlaybackCmds } from "MopidyHandler/PlaybackHandler";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -39,7 +38,7 @@ const AnimatedEq = (props) => (
  * 
  * @param {Object} props
  * @param {import('MopidyHandler/LibraryHandler').mpd_track} props.track
- * @param {import('MopidyHandler/PlaybackHandler').PlaybackStates} props.state
+ * @param {import('MopidyHandler/PlaybackHandler').PlaybackState} props.state
  */
 function TracklistItem(props) {
     const classes = useStyles();
@@ -58,17 +57,17 @@ function TracklistItem(props) {
 
         let interval = null;
         switch(state) {
-            case PlaybackStates.PLAYING:
+            case "playing":
                 setFirstCell(<AnimatedEq fontSize="inherit"/>);
                 interval = setInterval(() => setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000)), 1000);
             break;
 
-            case PlaybackStates.PAUSED:
+            case "paused":
                 setFirstCell(<AnimatedEq fontSize="inherit"/>);//TODO: Make icon for stopped playback
                 setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000));
             break;
 
-            case PlaybackStates.STOPPED:
+            case "stopped":
                 setFirstCell(track.track_no);
                 setSeconds(Math.floor(track.length/1000));
             break;
@@ -82,7 +81,7 @@ function TracklistItem(props) {
             if(interval) clearInterval(interval);
         };
 
-    }, [state, track.length]);
+    }, [state, track.length, track.track_no]);
 
     /**
      * @param {MouseEvent} event 
@@ -90,15 +89,15 @@ function TracklistItem(props) {
     function handleClick(event) {
         event.stopPropagation();
         switch(state) {
-            case PlaybackStates.PLAYING:
-                MopidyHandler.playback.sendCmd(PlaybackCmds.PAUSE);
+            case "playing":
+                MopidyHandler.playback.sendCmd("pause");
             break;
 
-            case PlaybackStates.PAUSED:
-                MopidyHandler.playback.sendCmd(PlaybackCmds.RESUME);
+            case "paused":
+                MopidyHandler.playback.sendCmd("resume");
             break;
             
-            case PlaybackStates.STOPPED:
+            case "stopped":
                 MopidyHandler.playAlbumTrack(track);
             break;
             
@@ -111,21 +110,21 @@ function TracklistItem(props) {
      * @param {MouseEvent} event 
      */
     function showTrackNo(event) {
-        setFirstCell(state === PlaybackStates.PLAYING ? <AnimatedEq fontSize="inherit"/> : track.track_no);
+        setFirstCell(state === "playing" ? <AnimatedEq fontSize="inherit"/> : track.track_no);
     }
     
     /**
      * @param {MouseEvent} event 
      */
     function showCtrlIcons(event) {
-        setFirstCell(state === PlaybackStates.PLAYING ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
+        setFirstCell(state === "playing" ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
     }
 
 
     return (
         <TableRow
             {...tableRowProps}
-            selected={state !== PlaybackStates.STOPPED}
+            selected={state !== "stopped"}
             onClick={handleClick}
             onMouseEnter={showCtrlIcons}
             onMouseLeave={showTrackNo}
@@ -148,10 +147,10 @@ function Tracklist(props) {
     const [playbackState, setPlaybackState] = React.useState(MopidyHandler.playback.state);
     React.useEffect(() => {
 
-        const onTrackInfoUpdate = () => setCurrentTrack(MopidyHandler.playback.track);
+        const onTrackInfoUpdate = setCurrentTrack.bind(this);
         MopidyHandler.playback.on("trackInfoUpdated", onTrackInfoUpdate);
 
-        const onPlaybackStateChanged = () => setPlaybackState(MopidyHandler.playback.state);
+        const onPlaybackStateChanged = setPlaybackState.bind(this);
         MopidyHandler.playback.on("playbackStateChanged", onPlaybackStateChanged);
 
         // return clean up method
@@ -169,7 +168,7 @@ function Tracklist(props) {
                     <TracklistItem
                         key={i}
                         track={track}
-                        state={currentTrack && track.uri === currentTrack.uri ? playbackState : PlaybackStates.STOPPED}
+                        state={currentTrack && track.uri === currentTrack.uri ? playbackState : "stopped"}
                     />
                     ))}
                 </TableBody>
