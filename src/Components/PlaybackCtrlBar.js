@@ -46,11 +46,7 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
         track: null
     });
     const [playbackState, setPlaybackState] = React.useState(MopidyHandler.playback.state);
-
-    console.log(MopidyHandler.playback.state);
-    console.log(playbackState);
    
-
     React.useEffect(() => {
         /**
          * @param {import('MopidyHandler/LibraryHandler').mpd_track} track 
