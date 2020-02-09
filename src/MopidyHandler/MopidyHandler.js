@@ -47,7 +47,9 @@ class MopidyHandler extends EventEmitter {
 
         // Set event handlers
         this._mopidy.on("state", this._handleStateEvent.bind(this));
-        this._mopidy.on("websocket", this._handleWebsocketEvent.bind(this));
+        this._mopidy.on("websocket:open", this._handleWebsocketEvent.bind(this));
+        this._mopidy.on("websocket:close", this._handleWebsocketEvent.bind(this));
+        this._mopidy.on("websocket:error", this._handleWebsocketEvent.bind(this));
 
         // Connect
         this._mopidy.connect();
