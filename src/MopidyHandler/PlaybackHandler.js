@@ -31,11 +31,20 @@ class PlaybackHandler extends EventEmitter {
         /** @type {number} */
         this._timePositionUpdated = 0;
 
-        // handle state changes
-        this._mopidy.on("state", this._onStateChange.bind(this));
-
         // handle events
-        this._mopidy.on("event", this._onEvent.bind(this));
+        this._mopidy.on("event", this._handleEvent.bind(this));
+    }
+
+    /**
+     * Init handler when server is online
+     */
+    async init() {
+        this._updateState(await this._mopidy.playback.getState({}));
+
+        if(this.state !== "stopped") {
+            this._updateTrackInfo(await this._mopidy.playback.getCurrentTlTrack({}));
+            this._updateTimePosition(await this._mopidy.playback.getTimePosition({}));
+        }
     }
     
     /**
@@ -45,36 +54,6 @@ class PlaybackHandler extends EventEmitter {
      */
     get state() {
         return this._state;
-    }
-
-    /**
-     * 
-     * @param {string} state 
-     * @param {any} args 
-     */
-    _onStateChange(state, args) {
-        const [,stateType] = state.split(':');
-
-        switch(stateType) {
-            case "online":
-                this._getPlaybackInfo();
-            break;
-
-            default:
-                console.debug(`State not handled here: ${state}`);
-        }
-    }
-
-    /**
-     * Get current playback info
-     */
-    async _getPlaybackInfo() {
-        this._updateState(await this._mopidy.playback.getState({}));
-
-        if(this.state !== "stopped") {
-            this._updateTrackInfo(await this._mopidy.playback.getCurrentTlTrack({}));
-            this._updateTimePosition(await this._mopidy.playback.getTimePosition({}));
-        }
     }
 
     /**
@@ -103,7 +82,7 @@ class PlaybackHandler extends EventEmitter {
      * @param {string} event 
      * @param {any} args 
      */
-    _onEvent(event, args) {
+    _handleEvent(event, args) {
 
         const [,eventType] = event.split(':');
         

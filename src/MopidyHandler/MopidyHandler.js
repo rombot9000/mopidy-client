@@ -7,28 +7,30 @@ import PlaybackHandler from "./PlaybackHandler";
 
 import { UnknownPlaybackStateError } from "./Errors";
 
+/** @typedef {"state:online"} mpd_state */
 
-var MPD_ARGS = {};
+
+const MPD_ARGS = {
+    autoConnect: false
+};
 var SERVER_IP = "";
 if(process.env.NODE_ENV !== "production") {
-    MPD_ARGS = {
-        webSocketUrl: "ws://raspberrypi.fritz.box:8080/mopidy/ws/"
-    };
+    MPD_ARGS.webSocketUrl = "ws://raspberrypi.fritz.box:8080/mopidy/ws/";
     SERVER_IP = "http://raspberrypi.fritz.box:8080";
 }
-
- /** Instance of mopidy connector object */
-const mopidy = new Mopidy(MPD_ARGS);
 
 class MopidyHandler extends EventEmitter {
     constructor() {
         super();
 
+         /** Instance of mopidy connector object */
+        this._mopidy = new Mopidy(MPD_ARGS);
+
         // Init api handlers
-        this._library = new LibraryHandler(mopidy);
-        this._tracklist = new TracklistHandler(mopidy);
+        this._library = new LibraryHandler(this._mopidy);
+        this._tracklist = new TracklistHandler(this._mopidy);
         // make playback api public
-        this.playback = new PlaybackHandler(mopidy);
+        this.playback = new PlaybackHandler(this._mopidy);
 
         /** @type {import('./LibraryHandler').mpd_album[]} */
         this._fullAlbumList = [];
@@ -43,14 +45,38 @@ class MopidyHandler extends EventEmitter {
         /** @type {Object.<string,import('./LibraryHandler').mpd_image[]>} */
         this.album_uri_to_artwork = {};
 
-        mopidy.on("state:online", this._getAlbums.bind(this));
+        // Set event handlers
+        this._mopidy.on("state", this._handleStateEvent.bind(this));
+        this._mopidy.on("websocket", this._handleWebsocketEvent.bind(this));
 
-        mopidy.on("websocket:close", console.log);
-        mopidy.on("websocket:error", console.log);
-        mopidy.on("websocket:open", console.log);
-        
-        mopidy.on("websocket:incomingMessage", console.log);
+        // Connect
+        this._mopidy.connect();
+    }
 
+    /**
+     * 
+     * @param {mpd_state} state 
+     * @param {any} args 
+     */
+    _handleStateEvent(state, args) {
+        const [,stateType] = state.split(':');
+
+        switch(stateType) {
+            case "online":
+                this.playback.init();
+                this._tracklist.init();
+                this._getAlbums();
+            break;
+
+            default:
+                console.warn("State not handled:", state);
+                console.log(args);
+        }
+    }
+
+    _handleWebsocketEvent(event, args) {
+        console.log(event);
+        console.log(args);
     }
 
     /**

@@ -26,28 +26,15 @@ class TracklistHandler {
         /** @type {import('./LibraryHandler').mpd_album} */
         this._currentAlbum = null;
         
-        // handle state changes
-        this._mopidy.on("state", this._onStateChange.bind(this));
-
         // handle events
         this._mopidy.on("event", this._onEvent.bind(this));
     }
 
     /**
-     * @param {string} state 
-     * @param {any} args 
+     * Init handler when server is online
      */
-    _onStateChange(state, args) {
-        const [,stateType] = state.split(':');
-
-        switch(stateType) {
-            case "online":
-                this._getTracklist();
-            break;
-
-            default:
-                console.debug(`State not handled here: ${state}`);
-        }
+    init() {
+        this._getTracklist();
     }
 
     /**
@@ -65,6 +52,7 @@ class TracklistHandler {
             
             default:
                 console.debug("Event not handled here:", eventType);
+                console.debug(args);
         }
     }
 
