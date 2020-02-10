@@ -90,7 +90,7 @@ function App() {
                 <AlbumGrid
                     albums={MopidyHandler.Albums}
                     onTileClick={openDetailsModal}
-                    />
+                />
                 {Object.values(components.components)}
             </Box>
             <PlaybackCtrlBar ref={ctrlBarRef}/>
