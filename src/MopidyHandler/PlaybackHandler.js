@@ -109,7 +109,8 @@ class PlaybackHandler extends EventEmitter {
             break;
 
             default:
-                console.debug(`Event not handled here: ${event}`);
+                //console.debug(`Event not handled here: ${event}`);
+                break;
         }
     }
 

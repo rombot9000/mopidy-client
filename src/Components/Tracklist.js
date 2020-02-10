@@ -56,9 +56,11 @@ function TracklistItem(props) {
     React.useEffect(() => {
 
         let interval = null;
+        console.log(state);
         switch(state) {
             case "playing":
                 setFirstCell(<AnimatedEq fontSize="inherit"/>);
+                setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000));
                 interval = setInterval(() => setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000)), 1000);
             break;
 
@@ -87,7 +89,7 @@ function TracklistItem(props) {
      * @param {MouseEvent} event 
      */
     function showTrackNo(event) {
-        setFirstCell(state === "playing" ? <AnimatedEq fontSize="inherit"/> : track.track_no);
+        setFirstCell(state !== "stopped" ? <AnimatedEq fontSize="inherit"/> : track.track_no);
     }
     
     /**
@@ -119,20 +121,20 @@ function TracklistItem(props) {
 function Tracklist(props) {
     const classes = useStyles();
 
-    const [currentTrack, setCurrentTrack] = React.useState(MopidyHandler.playback.track);
-    const [playbackState, setPlaybackState] = React.useState(MopidyHandler.playback.state);
+    const [currentTrack, setCurrentTrack] = React.useState(MopidyHandler.currentTrack);
+    const [playbackState, setPlaybackState] = React.useState(MopidyHandler.playbackState);
     React.useEffect(() => {
 
-        const onTrackInfoUpdate = setCurrentTrack.bind(this);
-        MopidyHandler.playback.on("trackInfoUpdated", onTrackInfoUpdate);
+        const handleTrackInfoUpdate = setCurrentTrack.bind(this);
+        MopidyHandler.playback.on("trackInfoUpdated", handleTrackInfoUpdate);
 
-        const onPlaybackStateChanged = setPlaybackState.bind(this);
-        MopidyHandler.playback.on("playbackStateChanged", onPlaybackStateChanged);
+        const handlePlaybackStateChanged = setPlaybackState.bind(this);
+        MopidyHandler.playback.on("playbackStateChanged", handlePlaybackStateChanged);
 
         // return clean up method
         return () => {
-            MopidyHandler.playback.removeListener("trackInfoUpdated", onTrackInfoUpdate);
-            MopidyHandler.playback.removeListener("playbackStateChanged", onPlaybackStateChanged);
+            MopidyHandler.playback.removeListener("trackInfoUpdated", handleTrackInfoUpdate);
+            MopidyHandler.playback.removeListener("playbackStateChanged", handlePlaybackStateChanged);
         }
         
     }, []); // prevents call on each render
@@ -142,7 +144,7 @@ function Tracklist(props) {
      */
     function handleClick(track) {
 
-        if(currentTrack && track._uri === currentTrack._uri) {
+        if(track._uri === currentTrack._uri) {
             MopidyHandler.togglePlayback();
         } else {
             MopidyHandler.playTracklist(props.tracks, track);
@@ -157,7 +159,7 @@ function Tracklist(props) {
                     <TracklistItem
                         key={i}
                         track={track}
-                        state={currentTrack && track._uri === currentTrack.uri ? playbackState : "stopped"}
+                        state={track._uri === currentTrack._uri ? playbackState : "stopped"}
                         onClick={(e) => handleClick(track)}
                     />
                     ))}

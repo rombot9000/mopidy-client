@@ -200,6 +200,14 @@ class MopidyHandler extends EventEmitter {
     }
 
     /**
+     * @readonly
+     * @type {import('./PlaybackHandler').PlaybackState} The current playback state
+     */
+    get playbackState() {
+        return this.playback.state;
+    }
+
+    /**
      * 
      * @param {import('Model/Track').Track[]} tracks 
      * @param {import('Model/Track').Track} track 

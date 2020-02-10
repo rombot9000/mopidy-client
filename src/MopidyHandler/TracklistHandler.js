@@ -51,8 +51,9 @@ class TracklistHandler {
             break;
             
             default:
-                console.debug("Event not handled here:", eventType);
-                console.debug(args);
+                // console.debug("Event not handled here:", eventType);
+                // console.debug(args);
+                break;
         }
     }
 
