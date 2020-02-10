@@ -37,7 +37,7 @@ const AnimatedEq = (props) => (
 /**
  * 
  * @param {Object} props
- * @param {import('Model/Track').Track} props.track
+ * @param {import('ViewModel/Track').Track} props.track
  * @param {import('MopidyHandler/PlaybackHandler').PlaybackState} props.state
  */
 function TracklistItem(props) {
@@ -116,7 +116,7 @@ function TracklistItem(props) {
 
 /**
  * @param {Object} props
- * @param {import('Model/Track').Track[]} props.tracks 
+ * @param {import('ViewModel/Track').Track[]} props.tracks 
  */
 function Tracklist(props) {
     const classes = useStyles();
@@ -140,7 +140,7 @@ function Tracklist(props) {
     }, []); // prevents call on each render
 
     /**
-     * @param {import('Model/Track').Track} track 
+     * @param {import('ViewModel/Track').Track} track 
      */
     function handleClick(track) {
 

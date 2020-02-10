@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 
 import { UnknownPlaybackCmdError, UnknownPlaybackStateError } from "./Errors";
 
-import { Track } from "Model";
+import { Track } from "ViewModel";
 
 /** @typedef {"play"|"pause"|"resume"|"stop"|"next"|"previous"} PlaybackCmd */
 /** @typedef {"playing"|"paused"|"stopped"} PlaybackState */

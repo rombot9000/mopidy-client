@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 /**
  * 
  * @param {Object} props
- * @param {import('Model/Album').Album} props.album 
+ * @param {import('ViewModel/Album').Album} props.album 
  */
 const AlbumDetails = React.forwardRef( (props, ref) => {
     const {to, album, ...filteredProps} = props;

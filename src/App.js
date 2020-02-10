@@ -60,7 +60,7 @@ function App() {
 
 
     /**
-     * @param {import('Model/Album').Album} album 
+     * @param {import('ViewModel/Album').Album} album 
      */
     function openDetailsModal(album) {
         function closeDetailsModal() {

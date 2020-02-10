@@ -13,13 +13,13 @@ const useStyles = makeStyles(theme => ({
 
 /**
  * @callback onTileClick
- * @param {import('Model/Album').Album} album
+ * @param {import('ViewModel/Album').Album} album
  */
 
 /**
  * 
  * @typedef AlbumGridTileProps
- * @property {import('Model/Album').Album} album
+ * @property {import('ViewModel/Album').Album} album
  * @property {number} size
  * @property {onTileClick} onClick
  */

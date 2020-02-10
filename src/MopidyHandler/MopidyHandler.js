@@ -7,7 +7,7 @@ import PlaybackHandler from "./PlaybackHandler";
 
 import { UnknownPlaybackStateError } from "./Errors";
 
-import { Album, Track } from "Model";
+import { Album, Track } from "ViewModel";
 
 /** @typedef {"state:online"|"state:offline"|"state:reconnectionPending"|"state:reconnecting"} mpd_state */
 
@@ -33,11 +33,11 @@ class MopidyHandler extends EventEmitter {
         this.playback = new PlaybackHandler(this._mopidy);
 
         // Init model view objects
-        /** @type {import('Model/Album').Album[]} */
+        /** @type {import('ViewModel/Album').Album[]} */
         this._fullAlbumList = [];
-        /** @type {Object.<string, import('Model/Album').Album[]>} */
+        /** @type {Object.<string, import('ViewModel/Album').Album[]>} */
         this._tokenToAlbumList = {};
-        /** @type {import('Model/Album').Album} */
+        /** @type {import('ViewModel/Album').Album} */
         this.Albums = [];
 
         // Init mpd model objects
@@ -185,7 +185,7 @@ class MopidyHandler extends EventEmitter {
 
     /**
      * @readonly
-     * @type {import('Model/Track').Track[]} The current tracklist
+     * @type {import('ViewModel/Track').Track[]} The current tracklist
      */
     get currentTracklist() {
         return this._tracklist.currentTracklist.map(tl_track => Track(tl_track.track));
@@ -193,7 +193,7 @@ class MopidyHandler extends EventEmitter {
 
     /**
      * @readonly
-     * @type {import('Model/Track').Track} The current track
+     * @type {import('ViewModel/Track').Track} The current track
      */
     get currentTrack() {
         return Track(this.playback.track);
@@ -209,8 +209,8 @@ class MopidyHandler extends EventEmitter {
 
     /**
      * 
-     * @param {import('Model/Track').Track[]} tracks 
-     * @param {import('Model/Track').Track} track 
+     * @param {import('ViewModel/Track').Track[]} tracks 
+     * @param {import('ViewModel/Track').Track} track 
      */
     async playTracklist(tracks, track=null) {
         try {
