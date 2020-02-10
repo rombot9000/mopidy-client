@@ -2,6 +2,8 @@
  * @typedef Track
  * @property {string} _uri
  * @property {string} name
+ * @property {number} disc_no
+ * @property {number} track_no
  * @property {string} artist
  * @property {string} year
  * @property {number} length
@@ -32,6 +34,7 @@ function Track(mpd_track) {
     return {
         _uri: mpd_track.uri,
         name: mpd_track.name,
+        disc_no: mpd_track.disc_no,
         track_no: mpd_track.track_no,
         length: mpd_track.length,
         year: year,
