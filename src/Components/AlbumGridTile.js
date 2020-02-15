@@ -1,26 +1,17 @@
 import React from "react";
 
-import { makeStyles } from "@material-ui/core";
-import { GridListTile, GridListTileBar } from "@material-ui/core";
-
-const useStyles = makeStyles(theme => ({
-    paper: {
-    },
-    cover: {
-        objectFit: 'cover'
-    }
-}));
+import { makeStyles, Typography } from "@material-ui/core";
+import SquareImage from "./SquareImage";
 
 /**
  * @callback onTileClick
- * @param {import('ViewModel/Album').Album} album
+ * @param {import("ViewModel/Album").Album} album
  */
 
 /**
  * 
  * @typedef AlbumGridTileProps
- * @property {import('ViewModel/Album').Album} album
- * @property {number} size
+ * @property {import("ViewModel/Album").Album} album
  * @property {onTileClick} onClick
  */
 
@@ -35,33 +26,21 @@ function checkProps(prevProps, nextProps) {
 };
 
 /**
- * 
+ * Use Memo to prevent rerender when onClick is called
+ * NOTE: we use backgound-image hack since the Paper component adds white space below a child img...
  * @param {AlbumGridTileProps} props
  */
 const AlbumGridTile = React.memo(props => {
-    const classes = useStyles();
-
-    // filter props and set consts
-    const {to, album, size, onClick, ...gridListTileProps} = props;
     
     return (
-        <GridListTile
-            {...gridListTileProps}
-            >
-            <img
-                className={classes.cover}
-                width={size}
-                height={size}
-                src={album.cover}
-                alt="No cover for you!"
-                onClick={() => onClick(album)}
-            />
-            <GridListTileBar
-                title={album.name}
-                subtitle={album.artist}
-            />
-        </GridListTile>
+        <div onClick={() => props.onClick(props.album)}>
+            <SquareImage src={props.album.cover}/>
+            <Typography variant="button">{props.album.name}</Typography>
+            <br/>
+            <Typography variant="caption">{props.album.artist}</Typography>
+        </div>
     );
+
 }, checkProps);
 
 export default AlbumGridTile;
