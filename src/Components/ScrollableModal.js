@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Modal, Container, Fab } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 
-// Note: for now we use an absolute top padding of 50px
+// Note: for now we use an absolute top padding of theme.spacing(x)
 // since the percentual padding is relative to the width of the outer component!
 const useStyles = makeStyles(theme => ({
     container: {
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     },
     fab: {
         position: "absolute",
-        top: 50,
+        top: theme.spacing(4),
         right: "10%",
         transform: "translate(50%,-50%)",
     },
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
         left: "50%",
         top: 0,
         transform: "translate(-50%,0%)",
-        paddingTop: 50,
+        paddingTop: theme.spacing(4),
         "&::-webkit-scrollbar": {
             display: "none"
         },
