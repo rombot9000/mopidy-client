@@ -13,6 +13,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const MIN_COL_NUMBER = 2;
+
 /**
  * @function AlbumGrid
  * @param {Object} props
@@ -33,7 +35,7 @@ function AlbumGrid(props) {
             const minSize = 200;
             const width = gridListRef.current ? gridListRef.current.offsetWidth : 0;
             
-            const cols = Math.floor(width / minSize);
+            let cols = Math.max(Math.floor(width / minSize), MIN_COL_NUMBER);
             const size = Math.floor(width / cols);
             
             setDims({
