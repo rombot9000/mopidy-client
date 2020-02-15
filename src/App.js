@@ -1,11 +1,12 @@
 import React from "react";
 
-import { Box, Modal } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { CssBaseline, makeStyles } from '@material-ui/core';
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 
-import AlbumGrid from "Components/AlbumGrid"
-import AlbumDetails from "Components/AlbumDetails"
+import AlbumGrid from "Components/AlbumGrid";
+import AlbumDetails from "Components/AlbumDetails";
+import ScollableModal from "Components/ScrollableModal";
 import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
 import SearchBar from "Components/SearchBar";
 import MenuDrawer from "Components/MenuDrawer";
@@ -68,9 +69,9 @@ function App() {
             setComponents(components);
         }
         components.components["detailsModal"] = (
-            <Modal key="detailsModal" open={true} onClose={closeDetailsModal}>
+            <ScollableModal key="detailsModal" open={true} onClose={closeDetailsModal}>
                 <AlbumDetails album={album}/>
-            </Modal>
+            </ScollableModal>
         );
         setComponents({
             "components": components.components
@@ -91,9 +92,9 @@ function App() {
                     albums={MopidyHandler.Albums}
                     onTileClick={openDetailsModal}
                 />
-                {Object.values(components.components)}
             </Box>
             <PlaybackCtrlBar ref={ctrlBarRef}/>
+            {Object.values(components.components)}
         </React.Fragment>
     );
 };

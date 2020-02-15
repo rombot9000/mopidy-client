@@ -1,29 +1,23 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import { Card, CardContent, CardMedia } from "@material-ui/core";
+import { Typography, Container } from "@material-ui/core";
+import { Card, Grid} from "@material-ui/core";
 
 import Tracklist from "./Tracklist";
 
 const useStyles = makeStyles(theme => ({
-    card: {
+    root: {
         display: "flex",
-        position: 'absolute',
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%,-50%)",
-        outline: 0,
-        maxHeight: "80%",
-        maxWidth: "80%",
-        height: 500
+    },
+    gridContainer: {
+        spacing: 0
     },
     cover: {
-        width: 500,
+        width: "100%",
         objectFit: "cover"
     },
     content: {
-        height: "100%",
         display: "flex",
         flexDirection: "column"
     },
@@ -32,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 /**
  * 
  * @param {Object} props
- * @param {import('ViewModel/Album').Album} props.album 
+ * @param {import("ViewModel/Album").Album} props.album 
  */
 const AlbumDetails = React.forwardRef( (props, ref) => {
     const {to, album, ...filteredProps} = props;
@@ -40,14 +34,20 @@ const AlbumDetails = React.forwardRef( (props, ref) => {
     const classes = useStyles();
 
     return (
-        <Card ref={ref} {...filteredProps} className={classes.card}>
-            <CardMedia className={classes.cover} image={album.cover}/>
-            <CardContent className={classes.content}>
+        <Card ref={ref} {...filteredProps} className={classes.root}>
+            <Grid container className={classes.gridContainer}>
+                <Grid item sm={12} md={6}>
+                    <Container className={classes.cover}  disableGutters={true}>
+                        <img src={album.cover}/>
+                    </Container>
+                </Grid>
+                <Grid item sm={12} md={6} className={classes.content}>
                     <Typography variant="h5">{album.name}</Typography>
                     <Typography variant="h6">{album.artist}</Typography>
                     <Typography variant="overline">{album.year}</Typography>
                     <Tracklist tracks={album.tracks}/>
-            </CardContent>
+                </Grid>
+            </Grid>
         </Card>
     );
 });
