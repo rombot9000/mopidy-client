@@ -37,8 +37,8 @@ const AlbumDetails = React.forwardRef( (props, ref) => {
         <Card ref={ref} {...filteredProps} className={classes.root}>
             <Grid container className={classes.gridContainer}>
                 <Grid item sm={12} md={6}>
-                    <Container className={classes.cover}  disableGutters={true}>
-                        <img src={album.cover}/>
+                    <Container disableGutters={true}>
+                        <img src={album.cover} className={classes.cover}/>
                     </Container>
                 </Grid>
                 <Grid item sm={12} md={6} className={classes.content}>

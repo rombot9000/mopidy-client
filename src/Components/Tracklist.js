@@ -56,7 +56,6 @@ function TracklistItem(props) {
     React.useEffect(() => {
 
         let interval = null;
-        console.log(state);
         switch(state) {
             case "playing":
                 setFirstCell(<AnimatedEq fontSize="inherit"/>);
