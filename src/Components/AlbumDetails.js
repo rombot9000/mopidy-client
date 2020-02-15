@@ -1,25 +1,30 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Container } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { Card, Grid} from "@material-ui/core";
 
 import Tracklist from "./Tracklist";
+import SquareImage from "./SquareImage";
 
 const useStyles = makeStyles(theme => ({
     root: {
         display: "flex",
     },
-    gridContainer: {
+    container: {
         spacing: 0
+    },
+    item: {
+        width: "100%"
     },
     cover: {
         width: "100%",
-        objectFit: "cover"
+        objectFit: "cover",
     },
     content: {
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        padding: theme.spacing(2),
     },
 }));
 
@@ -28,20 +33,18 @@ const useStyles = makeStyles(theme => ({
  * @param {Object} props
  * @param {import("ViewModel/Album").Album} props.album 
  */
-const AlbumDetails = React.forwardRef( (props, ref) => {
-    const {to, album, ...filteredProps} = props;
+function AlbumDetails(props){
 
+    const {to, album, ...filteredProps} = props;
     const classes = useStyles();
 
     return (
-        <Card ref={ref} {...filteredProps} className={classes.root}>
+        <Card {...filteredProps} className={classes.root}>
             <Grid container className={classes.gridContainer}>
-                <Grid item sm={12} md={6}>
-                    <Container disableGutters={true}>
-                        <img src={album.cover} className={classes.cover}/>
-                    </Container>
+                <Grid item xs={12} sm={6} className={classes.item}>
+                    <SquareImage src={album.cover} elevation={0} square={true}/>
                 </Grid>
-                <Grid item sm={12} md={6} className={classes.content}>
+                <Grid item xs={12} sm={6} className={classes.item, classes.content}>
                     <Typography variant="h5">{album.name}</Typography>
                     <Typography variant="h6">{album.artist}</Typography>
                     <Typography variant="overline">{album.year}</Typography>
@@ -50,6 +53,6 @@ const AlbumDetails = React.forwardRef( (props, ref) => {
             </Grid>
         </Card>
     );
-});
+};
 
 export default AlbumDetails;
