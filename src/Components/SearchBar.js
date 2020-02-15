@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {makeStyles, Container, Paper, IconButton, Input} from "@material-ui/core";
-import {Search, Menu} from "@material-ui/icons";
+import {Search, Menu, Clear} from "@material-ui/icons";
 
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 
@@ -33,15 +33,24 @@ function SearchBar(props) {
      */
     function handleKeyDown(event) {
         if(event.key === "Escape") {
-            event.preventDefault();
-            setInputValue("");
-            MopidyHandler.filterAlbums("");
+           clear(event);
         } else if(event.key === "Backspace") {
             // Is faster than onInput-Callback!
+            // Problem: it does not handle selected text deletion...
             event.preventDefault();
             setInputValue(inputValue.slice(0,-1));
             MopidyHandler.filterAlbums(inputValue.slice(0,-1));
         }
+    }
+
+    /**
+     * 
+     * @param {MouseEvent|KeyboardEvent} event 
+     */
+    function clear(event) {
+        event.preventDefault();
+        setInputValue("");
+        MopidyHandler.filterAlbums("");
     }
 
     /**
@@ -50,8 +59,21 @@ function SearchBar(props) {
      */
     function handleInput(event) {
         event.preventDefault();
-        MopidyHandler.filterAlbums(event.target.value);
         setInputValue(event.target.value);
+        MopidyHandler.filterAlbums(event.target.value);
+    }
+
+    function rightHandButton() {
+        if(inputValue === "") return (
+            <IconButton onClick={() => inputRef.current.focus()}>
+                <Search fontSize="inherit"/>
+            </IconButton>
+        )
+        return (
+            <IconButton onClick={clear}>
+                <Clear fontSize="inherit"/>
+            </IconButton>   
+        )
     }
     
     return (
@@ -75,9 +97,7 @@ function SearchBar(props) {
                     onInput={handleInput}
                     onKeyDown={handleKeyDown}
                 />
-                <IconButton onClick={() => inputRef.current.focus()}>
-                    <Search fontSize="inherit"/>
-                </IconButton>
+                {rightHandButton()}
             </Paper>
         </Container>
     );
