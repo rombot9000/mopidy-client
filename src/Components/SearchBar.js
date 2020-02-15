@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {makeStyles, Container, Paper, IconButton, Input} from "@material-ui/core";
+import {makeStyles, Paper, IconButton, Input} from "@material-ui/core";
 import {Search, Menu, Clear} from "@material-ui/icons";
 
 import MopidyHandler from "MopidyHandler/MopidyHandler";
@@ -77,10 +77,7 @@ function SearchBar(props) {
     }
     
     return (
-        <Container
-            disableGutters={true}
-            className={props.className}
-        >
+        <div className={props.className}>
             <Paper
                 className={classes.paper}
                 elevation={4}
@@ -91,7 +88,7 @@ function SearchBar(props) {
                 <Input 
                     className={classes.input}
                     inputRef={inputRef}
-                    disableUnderline={true}
+                    disableUnderline
                     value={inputValue}
                     placeholder="Search for Albums or Artists..."
                     onInput={handleInput}
@@ -99,7 +96,7 @@ function SearchBar(props) {
                 />
                 {rightHandButton()}
             </Paper>
-        </Container>
+        </div>
     );
 }
 

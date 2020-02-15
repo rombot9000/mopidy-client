@@ -69,7 +69,7 @@ function App() {
             setComponents(components);
         }
         components.components["detailsModal"] = (
-            <ScollableModal key="detailsModal" open={true} onClose={closeDetailsModal}>
+            <ScollableModal key="detailsModal" open onClose={closeDetailsModal}>
                 <AlbumDetails album={album}/>
             </ScollableModal>
         );

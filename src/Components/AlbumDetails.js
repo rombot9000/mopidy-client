@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
         objectFit: "cover",
     },
     content: {
+        width:"100%",
         display: "flex",
         flexDirection: "column",
         padding: theme.spacing(2),
@@ -40,11 +41,11 @@ function AlbumDetails(props){
 
     return (
         <Card {...filteredProps} className={classes.root}>
-            <Grid container className={classes.gridContainer}>
+            <Grid container className={classes.container}>
                 <Grid item xs={12} sm={6} className={classes.item}>
                     <SquareImage src={album.cover} elevation={0} square={true}/>
                 </Grid>
-                <Grid item xs={12} sm={6} className={classes.item, classes.content}>
+                <Grid item xs={12} sm={6} className={classes.content}>
                     <Typography variant="h5">{album.name}</Typography>
                     <Typography variant="h6">{album.artist}</Typography>
                     <Typography variant="overline">{album.year}</Typography>

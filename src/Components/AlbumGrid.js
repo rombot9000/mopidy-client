@@ -15,8 +15,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const MIN_COL_NUMBER = 2;
-
 /**
  * @function AlbumGrid
  * @param {Object} props

@@ -41,8 +41,8 @@ function ScrollableModal(props) {
 
     return (
         <Modal open={props.open} onClose={props.onClose}>
-            <Container className={classes.container} disableGutters={true}>
-                <Container className={classes.content} disableGutters={true}>
+            <Container className={classes.container} disableGutters>
+                <Container className={classes.content} disableGutters>
                     {props.children}
                 </Container>
                 <Fab color="primary" size="small" className={classes.fab} onClick={props.onClose}>
