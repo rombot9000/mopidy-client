@@ -5,32 +5,34 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Modal, Container, Fab } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 
-// Note: for now we use an absolute top padding of theme.spacing(x)
-// since the percentual padding is relative to the width of the outer component!
+// NOTE: we calc the width and height instead of using padding
+// since the translate function does not work well with paddings or margins
+const PADDING = 2;
 const useStyles = makeStyles(theme => ({
     container: {
         outline: 0,
+        position: "absolute",
+        overflowX: "visible",
+        overflowY: "visible",
+        [theme.breakpoints.down('sm')]: {
+            top: `calc(50% + ${0.5*theme.spacing(PADDING)}px)`,
+            height: `calc(100% - ${theme.spacing(PADDING)}px)`,
+            width: `calc(100% - ${2*theme.spacing(PADDING)}px)`,
+            maxWidth: 0.5*theme.breakpoints.width("md") - theme.spacing(PADDING),
+        },
+        [theme.breakpoints.up('md')]: {
+            top: "50%",
+            height: 0.5*theme.breakpoints.width("md") - theme.spacing(PADDING),
+            width: theme.breakpoints.width("md") - 2*theme.spacing(PADDING),
+        },
+        left: "50%",
+        transform: "translate(-50%,-50%)",
     },
     fab: {
         position: "absolute",
-        top: theme.spacing(4),
-        right: "10%",
-        transform: "translate(50%,-50%)",
-    },
-    content: {
-        position: "absolute",
-        overflowX: "hidden",
-        overflowY: "scroll",
-        maxHeight: "100%",
-        maxWidth: "80%",
-        left: "50%",
+        right: 0,
         top: 0,
-        transform: "translate(-50%,0%)",
-        paddingTop: theme.spacing(4),
-        "&::-webkit-scrollbar": {
-            display: "none"
-        },
-        "-msOverflowStyle": "none"
+        transform: "translate(25%,-25%)",
     }
 }));
 
@@ -42,7 +44,7 @@ function ScrollableModal(props) {
     return (
         <Modal open={props.open} onClose={props.onClose}>
             <Container className={classes.container} disableGutters>
-                <Container className={classes.content} disableGutters>
+                <Container disableGutters>
                     {props.children}
                 </Container>
                 <Fab color="primary" size="small" className={classes.fab} onClick={props.onClose}>

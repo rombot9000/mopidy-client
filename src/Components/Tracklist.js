@@ -1,6 +1,6 @@
 import React from "react";
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 import { TableContainer, Table, TableBody, TableRow, TableCell, SvgIcon } from "@material-ui/core";
 import { PlayArrow, Pause } from "@material-ui/icons";
 
@@ -8,11 +8,11 @@ import MopidyHandler from "MopidyHandler/MopidyHandler";
 
 const useStyles = makeStyles(theme => ({
     container: {
-        maxHeight: '100%',
+        maxHeight: "100%",
         backgroundColor: theme.palette.background.paper,
     },
     iconcell: {
-        width: '3em'
+        width: 10,
     }
 }));
 
@@ -37,8 +37,8 @@ const AnimatedEq = (props) => (
 /**
  * 
  * @param {Object} props
- * @param {import('ViewModel/Track').Track} props.track
- * @param {import('MopidyHandler/PlaybackHandler').PlaybackState} props.state
+ * @param {import("ViewModel/Track").Track} props.track
+ * @param {import("MopidyHandler/PlaybackHandler").PlaybackState} props.state
  */
 function TracklistItem(props) {
     const classes = useStyles();
@@ -115,7 +115,7 @@ function TracklistItem(props) {
 
 /**
  * @param {Object} props
- * @param {import('ViewModel/Track').Track[]} props.tracks 
+ * @param {import("ViewModel/Track").Track[]} props.tracks 
  */
 function Tracklist(props) {
     const classes = useStyles();
@@ -139,7 +139,7 @@ function Tracklist(props) {
     }, []); // prevents call on each render
 
     /**
-     * @param {import('ViewModel/Track').Track} track 
+     * @param {import("ViewModel/Track").Track} track 
      */
     function handleClick(track) {
 

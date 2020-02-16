@@ -1,32 +1,52 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import { Card, Grid} from "@material-ui/core";
+import { Typography, Container } from "@material-ui/core";
+import { Paper, Grid } from "@material-ui/core";
 
 import Tracklist from "./Tracklist";
 import SquareImage from "./SquareImage";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        display: "flex",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        [theme.breakpoints.down('sm')]: {
+            overflowY: "scroll",
+            "&::-webkit-scrollbar": {
+                display: "none"
+            },
+            "-msOverflowStyle": "none",
+        }
     },
     container: {
-        spacing: 0
-    },
-    item: {
-        width: "100%"
+        spacing: 0,
+        maxWidth: "100%",
+        maxHeight: "100%",
     },
     cover: {
         width: "100%",
-        objectFit: "cover",
+        height: "100%",
     },
     content: {
-        width:"100%",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         padding: theme.spacing(2),
-    },
+        heigth: "100%",
+        [theme.breakpoints.up('md')]: {
+            width: "100%",
+            height: `calc(100%-${theme.spacing(4)}px)`,
+            overflowY: "scroll",
+            "&::-webkit-scrollbar": {
+                display: "none"
+            },
+            "-msOverflowStyle": "none",
+        }
+    }
 }));
 
 /**
@@ -40,19 +60,19 @@ function AlbumDetails(props){
     const classes = useStyles();
 
     return (
-        <Card {...filteredProps} className={classes.root}>
+        <Paper {...filteredProps} className={classes.root}>
             <Grid container className={classes.container}>
-                <Grid item xs={12} sm={6} className={classes.item}>
+                <Grid item sm={12} md={6} className={classes.cover}>
                     <SquareImage src={album.cover} elevation={0} square={true}/>
                 </Grid>
-                <Grid item xs={12} sm={6} className={classes.content}>
-                    <Typography variant="h5">{album.name}</Typography>
-                    <Typography variant="h6">{album.artist}</Typography>
-                    <Typography variant="overline">{album.year}</Typography>
-                    <Tracklist tracks={album.tracks}/>
+                <Grid item sm={12} md={6} className={classes.content}>
+                        <Typography variant="h5">{album.name}</Typography>
+                        <Typography variant="h6">{album.artist}</Typography>
+                        <Typography variant="overline">{album.year}</Typography>
+                        <Tracklist tracks={album.tracks}/>
                 </Grid>
             </Grid>
-        </Card>
+        </Paper>
     );
 };
 
