@@ -10,6 +10,10 @@ import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
 import SearchBar from "Components/SearchBar";
 import MenuDrawer from "Components/MenuDrawer";
 
+/** 
+ * @typedef {Object.<string, JSX.Element>} ViewComponents
+ */
+
 const useStyles = makeStyles(theme => ({
     rootBox: {
         width: '100%',
@@ -30,18 +34,37 @@ const useStyles = makeStyles(theme => ({
 function MainView(props) {
     const classes = useStyles();
 
+    /** 
+     * State var for holding additional view components
+     * @type {[ViewComponents, React.Dispatch<React.SetStateAction<ViewComponents>>]} 
+     */
+    const [components, setComponents] = React.useState({});
+    
+    /**
+     * Add components to view
+     * @param {ViewComponents} component 
+     */
+    function addComponent(component) {
+        setComponents({...components, ...component});
+    }
+
+    /**
+     * Remove componentes from view
+     * @param {string} key 
+     */
+    function delComponent(key) {
+        delete components[key];
+        setComponents(components);
+    }
+
+
+    /*
+     * Listen for view changes
+     */
     const [view, setView] = React.useState({
         height: 0,
         paddingTop: 0
     });
-
-    const[showMenuDrawer, setShowMenuDrawer] = React.useState(false);
-
-    const [components, setComponents] = React.useState({
-        /** @type {Object.<string, JSX.Element>} */
-        "components": {}
-    });
-
     // adjust offset of view depending on ctrl bar height
     const ctrlBarRef = React.useRef(null);
     const srchBarRef = React.useRef(null);
@@ -60,19 +83,20 @@ function MainView(props) {
      */
     function openDetailsModal(album) {
         function closeDetailsModal() {
-            delete components.components["detailsModal"];
-            setComponents(components);
+            delComponent("detailsModal");
         }
-        components.components["detailsModal"] = (
-            <ScollableModal key="detailsModal" open onClose={closeDetailsModal}>
-                <AlbumDetails album={album}/>
-            </ScollableModal>
-        );
-        setComponents({
-            "components": components.components
+        addComponent({
+            "detailsModal": (
+                <ScollableModal key="detailsModal" open onClose={closeDetailsModal}>
+                    <AlbumDetails album={album}/>
+                </ScollableModal>
+            )
         });
     }
 
+
+    const[showMenuDrawer, setShowMenuDrawer] = React.useState(false);
+    /** Toggle menu drawer */
     function toggleSideMenu() {
         setShowMenuDrawer(!showMenuDrawer);
     }
@@ -92,7 +116,7 @@ function MainView(props) {
                 />
             </Box>
             <PlaybackCtrlBar ref={ctrlBarRef}/>
-            {Object.values(components.components)}
+            {Object.values(components)}
         </React.Fragment>
     );
 };
