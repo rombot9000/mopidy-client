@@ -1,4 +1,10 @@
 #!/bin/bash
+set -e
+
+if [[ $(which convert) == "" ]]; then
+    echo "ERROR: ImageMagick not installed"
+    exit 1
+fi
 
 # make script callable from anywhere, see: https://stackoverflow.com/a/9107028
 ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
