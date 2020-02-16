@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
  * @param {function} props.onMenuIconClick
  * @param {string} props.className 
  */
-function SearchBar(props) {
+const SearchBar = React.forwardRef((props, ref) => {
 
     const classes = useStyles();
     const inputRef = React.useRef(null);
@@ -77,7 +77,7 @@ function SearchBar(props) {
     }
     
     return (
-        <div className={props.className}>
+        <div className={props.className} ref={ref}>
             <Paper
                 className={classes.paper}
                 elevation={4}
@@ -98,6 +98,6 @@ function SearchBar(props) {
             </Paper>
         </div>
     );
-}
+});
 
 export default SearchBar;

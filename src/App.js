@@ -19,10 +19,11 @@ const useStyles = makeStyles(theme => ({
     searchBar: {
         zIndex: 1100,
         position: "fixed",
-        width: 500,
-        top: "1vw",
-        left: "1vw",
-        maxWidth: "98vw"
+        width: "100%",
+        maxWidth: theme.spacing(64),
+        padding: theme.spacing(1,1,0,1),//top-right-bottom-left
+        left: "50%",
+        transform: "translate(-50%,0)",
     }
 }));
 
@@ -32,7 +33,11 @@ function App() {
 
     const [state, setState] = React.useState({
         mpdState: null,
-        ctrlBarHeight: 0
+    });
+
+    const [view, setView] = React.useState({
+        height: 0,
+        paddingTop: 0
     });
 
     const[showMenuDrawer, setShowMenuDrawer] = React.useState(false);
@@ -54,10 +59,15 @@ function App() {
 
     // adjust offset of view depending on ctrl bar height
     const ctrlBarRef = React.useRef(null);
+    const srchBarRef = React.useRef(null);
     React.useEffect(() => {
         const height = ctrlBarRef.current ? ctrlBarRef.current.offsetHeight : 0;
-        setState(prev => ({...prev, ctrlBarHeight: height}));
-    }, [ctrlBarRef]); // listen for ctrl bar changes
+        const paddingTop = srchBarRef.current ? srchBarRef.current.offsetHeight : 0;
+        setView({
+            height: height,
+            paddingTop: paddingTop
+        });
+    }, [ctrlBarRef, srchBarRef]); // listen for ctrl bar changes
 
 
     /**
@@ -85,9 +95,13 @@ function App() {
     return (
         <React.Fragment>
             <CssBaseline/>
-            <SearchBar className={classes.searchBar} onMenuIconClick={toggleSideMenu}/>
+            <SearchBar className={classes.searchBar} onMenuIconClick={toggleSideMenu} ref={srchBarRef}/>
             <MenuDrawer open={showMenuDrawer} onClose={toggleSideMenu}/>
-            <Box mb={`${state.ctrlBarHeight}px`} className={classes.rootBox}>
+            <Box 
+                className={classes.rootBox}
+                marginBottom={`${view.height}px`}
+                paddingTop={`${view.paddingTop}px`}
+            >
                 <AlbumGrid
                     albums={MopidyHandler.Albums}
                     onTileClick={openDetailsModal}
