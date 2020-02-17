@@ -7,7 +7,8 @@ import {AppBar, Toolbar, Box} from "@material-ui/core";
 import {ButtonGroup, IconButton} from "@material-ui/core";
 import {PlayArrow, Pause, SkipNext, SkipPrevious} from "@material-ui/icons";
 
-import MopidyHandler from "MopidyHandler/MopidyHandler";
+import * as PlaybackActions from "Actions/PlaybackActions";
+import PlaybackStore from "Stores/PlaybackStore";
 
 const useStyles = makeStyles(theme => ({
     appBar: {
@@ -36,20 +37,20 @@ function PlaybackButton(props) {
 const PlaybackCtrlBar = React.forwardRef((props, ref) => {
     const classes = useStyles();
 
-    const [track, setTrack] = React.useState(MopidyHandler.currentTrack);
-    const [playbackState, setPlaybackState] = React.useState(MopidyHandler.playback.state);
+    const [track, setTrack] = React.useState(PlaybackStore.currentTrack);
+    const [playbackState, setPlaybackState] = React.useState(PlaybackStore.state);
    
     React.useEffect(() => {
         const handleTrackInfoUpdate = setTrack.bind(this);
-        MopidyHandler.playback.on("trackInfoUpdated", handleTrackInfoUpdate);
+        PlaybackStore.on("trackInfoUpdated", handleTrackInfoUpdate);
 
         const handlePlaybackStateChanged = setPlaybackState.bind(this);
-        MopidyHandler.playback.on("playbackStateChanged", handlePlaybackStateChanged);
+        PlaybackStore.on("playbackStateChanged", handlePlaybackStateChanged);
 
         // return clean up function
         return () => {
-            MopidyHandler.playback.removeListener("trackInfoUpdated", handleTrackInfoUpdate);
-            MopidyHandler.playback.removeListener("playbackStateChanged", handlePlaybackStateChanged);
+            PlaybackStore.removeListener("trackInfoUpdated", handleTrackInfoUpdate);
+            PlaybackStore.removeListener("playbackStateChanged", handlePlaybackStateChanged);
         }
     }, []); // prevents call on each render
 
@@ -57,13 +58,13 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
         <AppBar {...props} ref={ref} position="fixed" color="primary" className={classes.appBar}>
             <Toolbar>
                 <ButtonGroup>
-                    <PlaybackButton onClick={() => MopidyHandler.previous()}>
+                    <PlaybackButton onClick={() => PlaybackActions.previous()}>
                         <SkipPrevious/>
                     </PlaybackButton>
-                    <PlaybackButton onClick={() => MopidyHandler.togglePlayback()}>
+                    <PlaybackButton onClick={() => PlaybackActions.toggle()}>
                         {playbackState === "playing" ? <Pause/> : <PlayArrow/>}
                     </PlaybackButton>
-                    <PlaybackButton onClick={() => MopidyHandler.next()}>
+                    <PlaybackButton onClick={() => PlaybackActions.next()}>
                         <SkipNext/>
                     </PlaybackButton>
                 </ButtonGroup>

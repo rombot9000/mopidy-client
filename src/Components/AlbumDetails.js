@@ -1,8 +1,7 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Container } from "@material-ui/core";
-import { Paper, Grid } from "@material-ui/core";
+import { Typography, Paper, Grid } from "@material-ui/core";
 
 import Tracklist from "./Tracklist";
 import SquareImage from "./SquareImage";

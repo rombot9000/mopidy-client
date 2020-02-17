@@ -5,6 +5,17 @@ import { CssBaseline } from '@material-ui/core';
 import MopidyHandler from "MopidyHandler/MopidyHandler";
 import MainView from "Components/MainView";
 
+import Mopdy from "Mopidy";
+import PlaybackStore from "Stores/PlaybackStore";
+import TracklistStore from "Stores/TracklistStore";
+import LibraryStore from "Stores/LibraryStore";
+
+Mopdy.on("state:online", () => {
+    PlaybackStore.init();
+    TracklistStore.init();
+    LibraryStore.init();
+});
+
 
 
 function App() {

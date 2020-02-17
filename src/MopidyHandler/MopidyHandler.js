@@ -1,5 +1,6 @@
 import EventEmitter from "events";
-import Mopidy from "mopidy";
+
+import Mopidy from "Mopidy";
 
 import LibraryHandler from "./LibraryHandler";
 import TracklistHandler from "./TracklistHandler";
@@ -9,22 +10,16 @@ import { UnknownPlaybackStateError } from "./Errors";
 
 import { Album, Track } from "ViewModel";
 
+
 /** @typedef {"state:online"|"state:offline"|"state:reconnectionPending"|"state:reconnecting"} mpd_state */
 
-
-const MPD_ARGS = {
-    autoConnect: false
-};
-if(process.env.NODE_ENV !== "production") {
-    MPD_ARGS.webSocketUrl = "ws://raspberrypi.fritz.box:8080/mopidy/ws/";
-}
 
 class MopidyHandler extends EventEmitter {
     constructor() {
         super();
 
          /** Instance of mopidy connector object */
-        this._mopidy = new Mopidy(MPD_ARGS);
+        this._mopidy = Mopidy;
 
         // Init api handlers
         this._library = new LibraryHandler(this._mopidy);

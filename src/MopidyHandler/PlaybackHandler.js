@@ -157,7 +157,7 @@ class PlaybackHandler extends EventEmitter {
 
             if(!PlaybackCmds.includes(cmd)) throw new UnknownPlaybackCmdError(cmd);
             
-            await this._mopidy.playback[cmd](args);
+            console.log(await this._mopidy.playback[cmd](args));
 
         } catch(err) {
             console.error(err);
