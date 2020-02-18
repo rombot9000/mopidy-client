@@ -163,6 +163,28 @@ class PlaybackHandler extends EventEmitter {
             console.error(err);
         }
     }
+
+    /**
+     * Toggles Playback: STOPPED -> PLAYING <-> PAUSED
+     */
+    async togglePlayback() {
+        switch(this._state) {
+            case "stopped":
+                await this._mopidy.playback.play({});
+            break;
+
+            case "paused":
+                await this._mopidy.playback.resume({});
+            break;
+            
+            case "playing":
+                await this._mopidy.playback.pause({});
+            break;
+            
+            default:
+                throw new UnknownPlaybackStateError(this._state);
+        }
+    }
 };
 
 export default PlaybackHandler;

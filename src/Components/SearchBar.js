@@ -3,7 +3,7 @@ import React from 'react';
 import {makeStyles, Paper, IconButton, Input} from "@material-ui/core";
 import {Search, Menu, Clear} from "@material-ui/icons";
 
-import MopidyHandler from "MopidyHandler/MopidyHandler";
+import * as LibraryActions  from 'Actions/LibraryActions';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -39,7 +39,7 @@ const SearchBar = React.forwardRef((props, ref) => {
             // Problem: it does not handle selected text deletion...
             event.preventDefault();
             setInputValue(inputValue.slice(0,-1));
-            MopidyHandler.filterAlbums(inputValue.slice(0,-1));
+            LibraryActions.filter(inputValue.slice(0,-1));
         }
     }
 
@@ -50,7 +50,7 @@ const SearchBar = React.forwardRef((props, ref) => {
     function clear(event) {
         event.preventDefault();
         setInputValue("");
-        MopidyHandler.filterAlbums("");
+        LibraryActions.filter("");
     }
 
     /**
@@ -60,7 +60,7 @@ const SearchBar = React.forwardRef((props, ref) => {
     function handleInput(event) {
         event.preventDefault();
         setInputValue(event.target.value);
-        MopidyHandler.filterAlbums(event.target.value);
+        LibraryActions.filter(event.target.value);
     }
 
     function rightHandButton() {

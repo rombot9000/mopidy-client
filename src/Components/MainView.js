@@ -10,6 +10,8 @@ import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
 import SearchBar from "Components/SearchBar";
 import MenuDrawer from "Components/MenuDrawer";
 
+import LibraryStore from "Stores/LibraryStore";
+
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents
  */
@@ -39,6 +41,20 @@ function MainView(props) {
      * @type {[ViewComponents, React.Dispatch<React.SetStateAction<ViewComponents>>]} 
      */
     const [components, setComponents] = React.useState({});
+
+
+    // Setup states and listeners
+    const [albums, setAlbums] = React.useState(LibraryStore.albums);
+    React.useEffect(() => {
+
+        const handleLibraryUpdate = () => {setAlbums(LibraryStore.albums)};
+        LibraryStore.on("update", handleLibraryUpdate);
+        
+        return () => {
+            LibraryStore.removeListener("update", handleLibraryUpdate);
+        }
+    }, []);
+
     
     /**
      * Add components to view
@@ -111,7 +127,7 @@ function MainView(props) {
                 paddingTop={`${view.paddingTop}px`}
             >
                 <AlbumGrid
-                    albums={props.albums}
+                    albums={albums}
                     onTileClick={openDetailsModal}
                 />
             </Box>

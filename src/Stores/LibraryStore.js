@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import Dispatcher from "Dispatcher";
 import { LIBRARY_ACTIONS } from "Actions/LibraryActions"
 
-import Mopidy from "Mopidy";
+import { Album } from "ViewModel";
 
 class LibraryStore extends EventEmitter {
     constructor() {
@@ -22,8 +22,8 @@ class LibraryStore extends EventEmitter {
         this._fullAlbumList = [];
         /** @type {Object.<string, import("ViewModel/Album").Album[]>} */
         this._tokenToAlbumList = {};
-        /** @type {import("ViewModel/Album").Album} */
-        this.Albums = [];
+        /** @type {import("ViewModel/Album").Album[]} */
+        this._filteredAlbums = [];
     }
 
     async init() {
@@ -34,13 +34,15 @@ class LibraryStore extends EventEmitter {
     async handleActions(action) {
         try {
 
-            switch(action) {
+            switch(action.type) {
                 case LIBRARY_ACTIONS.FETCH_ALL:
                     await this._fetchAllAlbums();
+                    this.emit("update");
                 break;
     
                 case LIBRARY_ACTIONS.FILTER:
-                    await this._filterAlbums(action.token);
+                    this._filteredAlbums = this._filterAlbumsByLowercaseToken(action.token.toLowerCase());
+                    this.emit("update");
                 break;
     
                 default:
@@ -53,26 +55,46 @@ class LibraryStore extends EventEmitter {
         }
     }
 
+    /**
+     * @readonly
+     */
+    get albums() {
+        return this._filteredAlbums;
+    }
+
+    /**
+     * Get all album and track data from music server
+     */
     async _fetchAllAlbums() {
 
-        // only run one fetch at a time
-        if(this._gettingAlbums) return;
+        // // only run one fetch at a time
+        // if(this._gettingAlbums) return;
 
-        // lock
-        this._gettingAlbums = true;
+        // // lock
+        // this._gettingAlbums = true;
         
-        try {
+        // try {
 
-            this._mpd_albums = await this._browse("local:directory?type=album");             
-            this._album_uri_to_tracks = await this._lookup(this._mpd_albums.map(ref => ref.uri));
-            this._album_uri_to_artwork_list = await this._getImages(this._mpd_albums.map(ref => ref.uri));
+        //     // Fetch albums, tracks, and artwork from server
+        //     this._mpd_albums = await this._browse("local:directory?type=album");             
+        //     this._album_uri_to_tracks = await this._lookup(this._mpd_albums.map(ref => ref.uri));
+        //     this._album_uri_to_artwork_list = await this._getImages(this._mpd_albums.map(ref => ref.uri));
 
-        } catch(exception) {
+        //     // Map data onto view model
+        //     this._fullAlbumList = this._mpd_albums.map(mpd_album =>
+        //         Album(
+        //             mpd_album,
+        //             this._album_uri_to_tracks[mpd_album.uri],
+        //             this._album_uri_to_artwork_list[mpd_album.uri]
+        //         )
+        //     );
 
-            console.error("Error getting albums:", exception);
-        }
+        // } catch(exception) {
 
-        this._gettingAlbums = false;
+        //     console.error("Error getting albums:", exception);
+        // }
+
+        // this._gettingAlbums = false;
 
     }
 
@@ -107,56 +129,6 @@ class LibraryStore extends EventEmitter {
         }
 
         return this._tokenToAlbumList[lowerCaseToken];
-    }
-
-    /**
-     * Filter albums using the token string
-     * Matching album name and artists
-     * NOTE: search takes a couple of ms with 100+ albums, thus no optimization necessary atm
-     * @param {string} token 
-     */
-    async _filterAlbums(token) {
-        
-        if(!token || token === "") {
-            this.Albums = this._fullAlbumList;
-            this.emit("state", "state:albums_not_filtered");
-            return;
-        }
-        
-        const time_start = Date.now();
-        
-        this.Albums = this._filterAlbumsByLowercaseToken(token.toLowerCase());
-        this.emit("state", "state:albums_filtered");
-        
-        const time_end = Date.now();
-        console.log("Filtering time: ", time_end - time_start);
-    }
-
-    /**
-     * Wrapper for mopidy.library.browse
-     * @param {string} uri
-     * @returns {Promise.<mpd_ref[]>}
-     */
-    async _browse(uri) {
-        return Mopidy.library.browse({"uri": uri});
-    }
-
-    /**
-     * Wrapper for mopidy.library.lookup
-     * @param {string[]} uris
-     * @returns {Promise.<Object.<string,mpd_track[]>>}
-     */
-    async _lookup(uris) {
-        return Mopidy.library.lookup({"uris": uris});
-    }
-
-    /**
-     * Wrapper for mopidy.library.getImages
-     * @param {string[]} uris
-     * @returns {Promise.<Object.<string,mpd_image[]>>}
-     */
-    async _getImages(uris) {
-        return Mopidy.library.getImages({"uris": uris});
     }
 }
 

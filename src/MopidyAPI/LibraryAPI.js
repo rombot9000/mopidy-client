@@ -55,11 +55,8 @@
 
 /** Handler for mopidy library API */
 class LibraryHandler {
-    /**
-     * @param {import('mopidy')} mopidy 
-     */
     constructor(mopidy) {
-        this._mopidy = mopidy;
+        this._library = mopidy.library;
     }
     
     /**
@@ -68,7 +65,7 @@ class LibraryHandler {
      * @returns {Promise.<mpd_ref[]>}
      */
     async browse(uri) {
-        return this._mopidy.library.browse({"uri": uri});
+        return this._library.browse({"uri": uri});
     }
 
     /**
@@ -77,7 +74,7 @@ class LibraryHandler {
      * @returns {Promise.<Object.<string,mpd_track[]>>}
      */
     async lookup(uris) {
-        return this._mopidy.library.lookup({"uris": uris});
+        return this._library.lookup({"uris": uris});
     }
 
     /**
@@ -86,7 +83,7 @@ class LibraryHandler {
      * @returns {Promise.<Object.<string,mpd_image[]>>}
      */
     async getImages(uris) {
-        return this._mopidy.library.getImages({"uris": uris});
+        return this._library.getImages({"uris": uris});
     }
 }
 

@@ -4,7 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { TableContainer, Table, TableBody, TableRow, TableCell, SvgIcon } from "@material-ui/core";
 import { PlayArrow, Pause } from "@material-ui/icons";
 
-import MopidyHandler from "MopidyHandler/MopidyHandler";
+import PlaybackStore from "Stores/PlaybackStore";
+import * as PlaybackActions from "Actions/PlaybackActions";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -38,7 +39,7 @@ const AnimatedEq = (props) => (
  * 
  * @param {Object} props
  * @param {import("ViewModel/Track").Track} props.track
- * @param {import("MopidyHandler/PlaybackHandler").PlaybackState} props.state
+ * @param {import("Stores/PlaybackStore").PlaybackState} props.state
  */
 function TracklistItem(props) {
     const classes = useStyles();
@@ -59,13 +60,13 @@ function TracklistItem(props) {
         switch(state) {
             case "playing":
                 setFirstCell(<AnimatedEq fontSize="inherit"/>);
-                setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000));
-                interval = setInterval(() => setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000)), 1000);
+                setSeconds(Math.floor(PlaybackStore.timePosition/1000));
+                interval = setInterval(() => setSeconds(Math.floor(PlaybackStore.timePosition/1000)), 1000);
             break;
 
             case "paused":
                 setFirstCell(<AnimatedEq fontSize="inherit"/>);//TODO: Make icon for stopped playback
-                setSeconds(Math.floor(MopidyHandler.playback.timePosition/1000));
+                setSeconds(Math.floor(PlaybackStore.timePosition/1000));
             break;
 
             case "stopped":
@@ -120,20 +121,20 @@ function TracklistItem(props) {
 function Tracklist(props) {
     const classes = useStyles();
 
-    const [currentTrack, setCurrentTrack] = React.useState(MopidyHandler.currentTrack);
-    const [playbackState, setPlaybackState] = React.useState(MopidyHandler.playbackState);
+    const [currentTrack, setCurrentTrack] = React.useState(PlaybackStore.currentTrack);
+    const [playbackState, setPlaybackState] = React.useState(PlaybackStore.state);
     React.useEffect(() => {
 
-        const handleTrackInfoUpdate = setCurrentTrack.bind(this);
-        MopidyHandler.playback.on("trackInfoUpdated", handleTrackInfoUpdate);
+        const handleTrackUpdate = setCurrentTrack.bind(this);
+        PlaybackStore.on("update:track", handleTrackUpdate);
 
-        const handlePlaybackStateChanged = setPlaybackState.bind(this);
-        MopidyHandler.playback.on("playbackStateChanged", handlePlaybackStateChanged);
+        const handleStateUpdate = setPlaybackState.bind(this);
+        PlaybackStore.on("update:state", handleStateUpdate);
 
         // return clean up method
         return () => {
-            MopidyHandler.playback.removeListener("trackInfoUpdated", handleTrackInfoUpdate);
-            MopidyHandler.playback.removeListener("playbackStateChanged", handlePlaybackStateChanged);
+            PlaybackStore.removeListener("update:track", handleTrackUpdate);
+            PlaybackStore.removeListener("update:state", handleStateUpdate);
         }
         
     }, []); // prevents call on each render
@@ -144,9 +145,9 @@ function Tracklist(props) {
     function handleClick(track) {
 
         if(track._uri === currentTrack._uri) {
-            MopidyHandler.togglePlayback();
+            PlaybackActions.toggle();
         } else {
-            MopidyHandler.playTracklist(props.tracks, track);
+            PlaybackActions.play(track, props.tracks);
         }
 
     }

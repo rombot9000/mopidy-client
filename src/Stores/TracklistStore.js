@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import Dispatcher from "Dispatcher";
 import { TRACKLIST_ACTIONS } from "Actions/TracklistActions"
 
-import Mopidy from "Mopidy";
+import {Track} from "ViewModel";
 
 class TracklistStore extends EventEmitter {
     constructor() {
@@ -13,16 +13,13 @@ class TracklistStore extends EventEmitter {
         this._currentTracklist = [];
         /** @type {import('./LibraryHandler').mpd_album} */
         this._currentAlbum = null;
-        
-        // handle events
-        Mopidy.on("event", this._onEvent.bind(this));
     }
 
     /**
      * Init handler when server is online
      */
     init() {
-        this._getTracklist();
+        //this._getTracklist();
     }
 
     /**
@@ -35,12 +32,6 @@ class TracklistStore extends EventEmitter {
             switch(action) {
 
                 case TRACKLIST_ACTIONS.SET:
-                    await Mopidy.tracklist.clear({});
-                    this._currentTracklist = await Mopidy.tracklist.add({
-                        "tracks": null,
-                        "at_position": null,
-                        "uris": action.uris
-                    });
                 break;
 
                 default:
@@ -72,32 +63,7 @@ class TracklistStore extends EventEmitter {
      * @type {mpd_tracklist}
      */
     get currentTracklist() {
-        return this._currentTracklist;
-    }
-
-    /**
-     * @param {string} event 
-     * @param {any} args 
-     */
-    _onEvent(event, args) {
-
-        switch(event) {
-            case "event:tracklistChanged":
-                this._getTracklist();
-            break;
-            
-            default:
-                // console.debug("Event not handled here:", eventType);
-                // console.debug(args);
-                break;
-        }
-    }
-
-    /**
-     * Get current tracklist from server and store in member var
-     */
-    async _getTracklist() {
-        this._currentTracklist = await Mopidy.tracklist.getTlTracks({});
+        return this._currentTracklist.map(tl_track => Track(tl_track.track));;
     }
 }
 

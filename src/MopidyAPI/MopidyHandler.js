@@ -123,62 +123,6 @@ class MopidyHandler extends EventEmitter {
     }
 
     /**
-     * Internal search function, uses cached results
-     * @param {string} lowerCaseToken 
-     */
-    _filterAlbumsByLowercaseToken(lowerCaseToken) {
-
-        if(!lowerCaseToken || lowerCaseToken === "") return this._fullAlbumList;
-
-        if(!this._tokenToAlbumList[lowerCaseToken]) {
-
-            // Use prev search result as basis
-            this._tokenToAlbumList[lowerCaseToken] = this._filterAlbumsByLowercaseToken(lowerCaseToken.slice(0,-1)).filter(album => {
-
-                // check album name
-                if(album.name.toLowerCase().search(lowerCaseToken) !== -1) return true;
-
-                // check album artists
-                if(album.artist.toLowerCase().search(lowerCaseToken) !== -1) return true;
-
-                // check track artists
-                for(let track of album.tracks) {
-                    if(track.artist.toLowerCase().search(lowerCaseToken) !== -1) return true;
-                };
-
-                // No match found
-                return false;
-
-            });
-        }
-
-        return this._tokenToAlbumList[lowerCaseToken];
-    }
-
-    /**
-     * Filter albums using the token string
-     * Matching album name and artists
-     * NOTE: search takes a couple of ms with 100+ albums, thus no optimization necessary atm
-     * @param {string} token 
-     */
-    async filterAlbums(token) {
-        
-        if(!token || token === "") {
-            this.Albums = this._fullAlbumList;
-            this.emit("state", "state:albums_not_filtered");
-            return;
-        }
-        
-        const time_start = Date.now();
-        
-        this.Albums = this._filterAlbumsByLowercaseToken(token.toLowerCase());
-        this.emit("state", "state:albums_filtered");
-        
-        const time_end = Date.now();
-        console.log("Filtering time: ", time_end - time_start);
-    }
-
-    /**
      * @readonly
      * @type {import('ViewModel/Track').Track[]} The current tracklist
      */

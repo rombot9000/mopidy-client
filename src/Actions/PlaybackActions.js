@@ -1,5 +1,7 @@
 import Dispatcher from "Dispatcher";
 
+import { Tracklist, Playback } from "MopidyAPI";
+
 export const PLAYBACK_ACTIONS = {
     PLAY: "playbackActions.Play",
     PAUSE: "playbackActions.Pause",
@@ -10,27 +12,32 @@ export const PLAYBACK_ACTIONS = {
     PREVIOUS: "playbackActions.Previous"
 };
 
-export function play(track, tracklist) {
+export async function play(track, tracks) {
+    await Tracklist.set(tracks);
+    await Playback.play(track);
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.PLAY,
         track: track,
-        tracklist: tracklist
+        tracks: tracks
     });
 };
 
 export function pause() {
+    Playback.pause();
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.PAUSE
     });
 };
 
 export function resume() {
+    Playback.resume();
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.RESUME
     });
 };
 
 export function stop() {
+    Playback.stop();
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.STOP
     });
@@ -43,12 +50,14 @@ export function toggle() {
 };
 
 export function next() {
+    Playback.next();
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.NEXT
     });
 };
 
 export function previous() {
+    Playback.previous();
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.PREVIOUS
     });

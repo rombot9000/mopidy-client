@@ -3,9 +3,7 @@ import { EventEmitter } from "events";
 import Dispatcher from "Dispatcher";
 import { PLAYBACK_ACTIONS } from "Actions/PlaybackActions";
 
-import Mopidy from "Mopidy";
-
-import { UnknownPlaybackStateError } from "MopidyHandler/Errors";
+import { UnknownPlaybackStateError } from "MopidyAPI/Errors";
 
 import { Track } from "ViewModel";
 
@@ -28,20 +26,18 @@ class PlaybackStore extends EventEmitter {
         /** @type {number} */
         this._timePositionUpdated = 0;
 
-        // handle events
-        Mopidy.on("event", this._handleEvent.bind(this)); 
     }
 
     /**
      * Init handler when server is online
      */
     async init() {
-        this._updateState(await Mopidy.playback.getState({}));
+        // this._updateState(await Mopidy.playback.getState({}));
 
-        if(this._state !== "stopped") {
-            this._updateTrackInfo(await Mopidy.playback.getCurrentTlTrack({}));
-            this._updateTimePosition(await Mopidy.playback.getTimePosition({}));
-        }
+        // if(this._state !== "stopped") {
+        //     this._updateTrackInfo(await Mopidy.playback.getCurrentTlTrack({}));
+        //     this._updateTimePosition(await Mopidy.playback.getTimePosition({}));
+        // }
     }
 
     /**
@@ -53,34 +49,14 @@ class PlaybackStore extends EventEmitter {
 
             switch(action.type) {
                 case PLAYBACK_ACTIONS.PLAY:
-                    console.warn("Action not yet implemented:", action.type);
-                break;
-                
                 case PLAYBACK_ACTIONS.PAUSE:
-                    await Mopidy.playback.pause({});
-                break;
-                
                 case PLAYBACK_ACTIONS.RESUME:
-                    await Mopidy.playback.resume({});
-                break;
-                
                 case PLAYBACK_ACTIONS.STOP:
-                    await Mopidy.playback.stop({});
-                break;
-                
                 case PLAYBACK_ACTIONS.TOGGLE:
-                    await this._togglePlayback();
-                break;
-                
                 case PLAYBACK_ACTIONS.NEXT:
-                    await Mopidy.playback.next({});
-                break;
-                
                 case PLAYBACK_ACTIONS.PREVIOUS:
-                    await Mopidy.playback.previous({});
-                break;
-    
                 default:
+                    //Nothing to be done...
             }
 
         } catch(exception) {
@@ -191,28 +167,6 @@ class PlaybackStore extends EventEmitter {
     _updateTimePosition(timePosition) {
         this._timePositionUpdated = Date.now();
         this._timePosition = timePosition;
-    }
-
-    /**
-     * Toggles Playback: STOPPED -> PLAYING <-> PAUSED
-     */
-    async _togglePlayback() {
-        switch(this._state) {
-            case "stopped":
-                await Mopidy.playback.play({});
-            break;
-
-            case "paused":
-                await Mopidy.playback.resume({});
-            break;
-            
-            case "playing":
-                await Mopidy.playback.pause({});
-            break;
-            
-            default:
-                throw new UnknownPlaybackStateError(this._state);
-        }
     }
 }
 
