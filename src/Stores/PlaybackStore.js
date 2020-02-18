@@ -197,17 +197,17 @@ class PlaybackStore extends EventEmitter {
      * Toggles Playback: STOPPED -> PLAYING <-> PAUSED
      */
     async _togglePlayback() {
-        switch(this.playback.state) {
+        switch(this._state) {
             case "stopped":
-                await this.playback.sendCmd("play")
+                await Mopidy.playback.play({});
             break;
 
             case "paused":
-                await this.playback.sendCmd("resume");
+                await Mopidy.playback.resume({});
             break;
             
             case "playing":
-                await this.playback.sendCmd("pause");
+                await Mopidy.playback.pause({});
             break;
             
             default:

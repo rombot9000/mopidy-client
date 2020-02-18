@@ -1,40 +1,26 @@
 import Dispatcher from "Dispatcher";
 
 export const LIBRARY_ACTIONS = {
-    BROWSE: "libraryActions.Browse",
-    LOOKUP: "libraryActions.Lookup",
-    GET_IMAGES: "libraryActions.GetImages"
+    FETCH_ALL: "libraryActions.FetchAll",
+    FILTER: "libraryActions.Filter",
 };
 
 /**
- * 
- * @param {string} uri
+ * Fetch all albums from server
  */
-export function browse(uri) {
+export function fetch_all() {
     Dispatcher.dispatch({
-        type: LIBRARY_ACTIONS.BROWSE,
-        uri: uri
+        type: LIBRARY_ACTIONS.FETCH_ALL,
     })
 };
 
 /**
- * 
- * @param {string[]} uris
+ * Filter albums by search token
+ * @param {string} token
  */
-export function lookup(uri) {
+export function filter(token) {
     Dispatcher.dispatch({
-        type: LIBRARY_ACTIONS.BROWSE,
-        uri: uri
-    })
-};
-
-/**
- * 
- * @param {string[]} uris
- */
-export function getImages(uri) {
-    Dispatcher.dispatch({
-        type: LIBRARY_ACTIONS.BROWSE,
-        uri: uri
+        type: LIBRARY_ACTIONS.FILTER,
+        token: token
     })
 };

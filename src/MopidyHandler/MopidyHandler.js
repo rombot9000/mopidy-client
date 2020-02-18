@@ -41,7 +41,7 @@ class MopidyHandler extends EventEmitter {
         /** @type {Object.<string,import('./LibraryHandler').mpd_track[]>} */
         this._album_uri_to_tracks = {};
         /** @type {Object.<string,import('./LibraryHandler').mpd_image[]>} */
-        this.album_uri_to_artwork = {};
+        this._album_uri_to_artwork_list = {};
 
         // Set event handlers
         this._mopidy.on("state", this._handleStateEvent.bind(this));
