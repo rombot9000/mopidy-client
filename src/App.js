@@ -36,6 +36,10 @@ mopidy.on("event", (event, args) => {
             if(this._state === "stopped") PlaybackActions.updateTrack(Track(null));
         break;
 
+        case "event:tracklistChanged":
+            TracklistActions.update();
+        break;
+
         default:
             console.debug(`Event not handled here: ${event}`);
             break;

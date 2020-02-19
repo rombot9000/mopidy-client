@@ -3,23 +3,12 @@ import { EventEmitter } from "events";
 import Dispatcher from "Dispatcher";
 import { TRACKLIST_ACTIONS } from "Actions/TracklistActions"
 
-import {Track} from "ViewModel";
-
 class TracklistStore extends EventEmitter {
     constructor() {
         super();
-    
-        /** @type {mpd_tracklist} */
-        this._currentTracklist = [];
-        /** @type {import('./LibraryHandler').mpd_album} */
-        this._currentAlbum = null;
-    }
 
-    /**
-     * Init handler when server is online
-     */
-    init() {
-        //this._getTracklist();
+        /** @type {import("ViewModel/Track").Track[]} */
+        this._tracks = [];
     }
 
     /**
@@ -29,11 +18,15 @@ class TracklistStore extends EventEmitter {
     async handleActions(action) {
         try {
 
-            switch(action) {
+            switch(action.type) {
 
-                case TRACKLIST_ACTIONS.SET:
+                case TRACKLIST_ACTIONS.INIT:
+                case TRACKLIST_ACTIONS.UPDATE:
+                    this._tracks = action.tracks
+                    this.emit("update");
                 break;
-
+                
+                case TRACKLIST_ACTIONS.SET:
                 default:
             }
 
@@ -44,26 +37,13 @@ class TracklistStore extends EventEmitter {
         }
     }
 
-        /**
-     * 
-     * @param {string} uri
-     * @returns {number} id of tracklist item
-     */
-    getTrackId(uri) {
-        let tl_item = this._currentTracklist.find(ti => ti.track.uri === uri);
-
-        if(tl_item == null) throw new Error(`Track with uri ${uri} not in current tracklist!`);
-
-        return tl_item.tlid;
-    }
-
     /**
      * Get current tracklist
      * @readonly
-     * @type {mpd_tracklist}
+     * @type {import("ViewModel/Track").Track[]}
      */
-    get currentTracklist() {
-        return this._currentTracklist.map(tl_track => Track(tl_track.track));;
+    get tracks() {
+        return this._tracks;
     }
 }
 

@@ -1,3 +1,5 @@
+import { Track } from 'ViewModel';
+
 /**
  * Mopidy tracklist item
  * @typedef mpd_tracklist_item
@@ -12,9 +14,9 @@
  */
 
 /**
- * Handler for mopidy tracklist and playback API
+ * Handler for mopidy tracklist API
  */
-class TracklistHandler {
+export default class TracklistAPI {
     /**
      * @param {import('mopidy')} mopidy 
      */
@@ -22,47 +24,18 @@ class TracklistHandler {
         this._mopidy = mopidy;
 
         /** @type {mpd_tracklist} */
-        this._currentTracklist = [];
-        /** @type {import('./LibraryHandler').mpd_album} */
-        this._currentAlbum = null;
-        
-        // handle events
-        this._mopidy.on("event", this._onEvent.bind(this));
+        this._tracklist = [];
     }
 
     /**
-     * Init handler when server is online
+     * Ifetch tracklist info from server
      */
-    init() {
-        this._getTracklist();
+    async fetch() {
+        this._tracklist = await this._mopidy.tracklist.getTlTracks({});
+
+        return this._tracklist.map(tl_item => Track(tl_item.track));
     }
 
-    /**
-     * @param {string} event 
-     * @param {any} args 
-     */
-    _onEvent(event, args) {
-
-        const [,eventType] = event.split(':');
-
-        switch(eventType) {
-            case "tracklistChanged":
-                this._getTracklist();
-            break;
-            
-            default:
-                // console.debug("Event not handled here:", eventType);
-                // console.debug(args);
-                break;
-        }
-    }
-
-    /**
-     * Get current tracklist from server and store in member var
-     */
-    async _getTracklist() {
-        this._currentTracklist = await this._mopidy.tracklist.getTlTracks({});
-    }
     
     /**
      * Sets tracklist on server to album
@@ -73,7 +46,7 @@ class TracklistHandler {
         
         await this._mopidy.tracklist.clear({})
         
-        this._currentTracklist = await this._mopidy.tracklist.add({
+        this._tracklist = await this._mopidy.tracklist.add({
             "tracks": null,
             "at_position": null,
             "uris": uris
@@ -82,15 +55,15 @@ class TracklistHandler {
 
     /**
      * 
-     * @param {string} uri
+     * @param {import("ViewModel/Track").Track} track
      * @returns {number} id of tracklist item
      */
-    getTrackId(uri) {
-        let tl_item = this._currentTracklist.find(ti => ti.track.uri === uri);
+    getTrackId(track) {
+        const track_tl_item = this._tracklist.find(tl_item => tl_item.track.uri === track._uri);
 
-        if(tl_item == null) throw new Error(`Track with uri ${uri} not in current tracklist!`);
+        if(track_tl_item == null) throw new Error(`Track ${track.name} not in tracklist!`);
 
-        return tl_item.tlid;
+        return track_tl_item.tlid;
     }
 
     /**
@@ -98,9 +71,7 @@ class TracklistHandler {
      * @readonly
      * @type {mpd_tracklist}
      */
-    get currentTracklist() {
-        return this._currentTracklist;
+    get tracklist() {
+        return this._tracklist.map(tl_item => Track(tl_item.track));
     }
 };
-
-export default TracklistHandler;

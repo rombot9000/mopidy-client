@@ -1,16 +1,35 @@
 import Dispatcher from "Dispatcher";
 
+import { Tracklist } from "MopidyAPI";
+
 export const TRACKLIST_ACTIONS = {
-    SET: "tracklistActions.Set"
+    INIT: "tracklistActions.Init",
+    UPDATE: "tracklistActions.Update",
+    SET: "tracklistActions.Set",
 }
 
 /**
  * 
- * @param {string[]} uris 
+ * @param {import("ViewModel/Track").Track[]} tracks 
  */
-export function set(uris) {
+export async function set(tracks) {
+    await Tracklist.set(tracks);
     Dispatcher.dispatch({
         type: TRACKLIST_ACTIONS.SET,
-        uris: uris
+    });
+};
+
+
+export async function init() {
+    Dispatcher.dispatch({
+        type: TRACKLIST_ACTIONS.INIT,
+        tracks: await Tracklist.fetch()
+    });
+};
+
+export async function update() {
+    Dispatcher.dispatch({
+        type: TRACKLIST_ACTIONS.UPDATE,
+        tracks: await Tracklist.fetch()
     });
 };
