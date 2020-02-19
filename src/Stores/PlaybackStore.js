@@ -7,37 +7,20 @@ import { UnknownPlaybackStateError } from "MopidyAPI/Errors";
 
 import { Track } from "ViewModel";
 
-/** @typedef {"play"|"pause"|"resume"|"stop"|"next"|"previous"} PlaybackCmd */
 /** @typedef {"playing"|"paused"|"stopped"} PlaybackState */
 
 class PlaybackStore extends EventEmitter {
     constructor() {
         super();
-        this._state = null;
-
-        /** @type {import("MopidyHandler/TracklistHandler").mpd_tracklist_item} */
-        this._tl_track = null;
-        /** @type {import("MopidyHandler/LibraryHandler").mpd_track} */
-        this._track = null;
         /** @type {PlaybackState} */
         this._state = null;
+        /** @type {import("ViewModel/Track").Track} */
+        this._track = Track(null);
         /** @type {number} */
         this._timePosition = 0;
         /** @type {number} */
         this._timePositionUpdated = 0;
 
-    }
-
-    /**
-     * Init handler when server is online
-     */
-    async init() {
-        // this._updateState(await Mopidy.playback.getState({}));
-
-        // if(this._state !== "stopped") {
-        //     this._updateTrackInfo(await Mopidy.playback.getCurrentTlTrack({}));
-        //     this._updateTimePosition(await Mopidy.playback.getTimePosition({}));
-        // }
     }
 
     /**
@@ -48,6 +31,29 @@ class PlaybackStore extends EventEmitter {
         try {
 
             switch(action.type) {
+                case PLAYBACK_ACTIONS.INIT:
+                    this._state = action.state;
+                    this._timePosition = action.timePosition;
+                    this._timePositionUpdated = action.timePositionUpdated;
+                    this._track = action.track;
+                    this.emit("update");
+                break;
+
+                case PLAYBACK_ACTIONS.UPDATE_STATE:
+                    this._state = action.state;
+                break;
+
+                case PLAYBACK_ACTIONS.UPDATE_TIME_POSITION:
+                    this._timePosition = action.timePosition;
+                    this._timePositionUpdated = action.timePositionUpdated;
+                    this.emit("update");
+                break;
+
+                case PLAYBACK_ACTIONS.UPDATE_TRACK:
+                    this._track = action.track;
+                    this.emit("update");
+                break;
+
                 case PLAYBACK_ACTIONS.PLAY:
                 case PLAYBACK_ACTIONS.PAUSE:
                 case PLAYBACK_ACTIONS.RESUME:
@@ -56,7 +62,7 @@ class PlaybackStore extends EventEmitter {
                 case PLAYBACK_ACTIONS.NEXT:
                 case PLAYBACK_ACTIONS.PREVIOUS:
                 default:
-                    //Nothing to be done...
+                    //Nothing to be done here...
             }
 
         } catch(exception) {
@@ -101,72 +107,10 @@ class PlaybackStore extends EventEmitter {
     /**
      * Get the current track
      * @readonly
-     * @type {Track}
+     * @type {import("ViewModel/Track").Track}
      */
     get currentTrack() {
-        return Track(this._track);
-    }
-
-    /**
-     * Update state and emit event
-     * @param {PlaybackState} state 
-     */
-    _updateState(state) {
-        this._state = state;
-        this.emit("playbackStateChanged", this._state);
-    }
-
-    /**
-     * Update current track and emit event
-     * @param {import("MopidyHandler/TracklistHandler").mpd_tracklist_item} tl_track 
-     */
-    _updateTrackInfo(tl_track) {
-        
-        this._tl_track = tl_track;
-        
-        this._track = tl_track ? tl_track.track : null;
-
-        this.emit("trackInfoUpdated", Track(this._track));
-    }
-
-    /**
-     * @param {string} event 
-     * @param {any} args 
-     */
-    _handleEvent(event, args) {
-        
-        switch(event) {
-            case "event:playbackStateChanged":
-                this._updateState(args.new_state);
-            break;
-            
-            case "event:trackPlaybackStarted":
-                this._updateTimePosition(0);     
-                this._updateTrackInfo(args.tl_track);
-            break;
-
-            case "event:trackPlaybackResumed":
-            case "event:trackPlaybackPaused":
-                this._updateTimePosition(args.time_position);     
-            break;
-
-            case "event:trackPlaybackEnded":
-            case "event:trackPlaybackStopped":
-                if(this._state === "stopped") this._updateTrackInfo(null)
-            break;
-
-            default:
-                console.debug(`Event not handled here: ${event}`);
-                break;
-        }
-    }
-
-    /**
-     * @param {number} timePosition 
-     */
-    _updateTimePosition(timePosition) {
-        this._timePositionUpdated = Date.now();
-        this._timePosition = timePosition;
+        return this._track;
     }
 }
 
