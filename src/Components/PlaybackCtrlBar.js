@@ -37,22 +37,25 @@ function PlaybackButton(props) {
 const PlaybackCtrlBar = React.forwardRef((props, ref) => {
     const classes = useStyles();
 
-    const [track, setTrack] = React.useState(PlaybackStore.currentTrack);
+    const [currentTrack, setCurrentTrack] = React.useState(PlaybackStore.track);
     const [playbackState, setPlaybackState] = React.useState(PlaybackStore.state);
-   
     React.useEffect(() => {
-        const handleTrackInfoUpdate = setTrack.bind(this);
-        PlaybackStore.on("trackInfoUpdated", handleTrackInfoUpdate);
 
-        const handlePlaybackStateChanged = setPlaybackState.bind(this);
-        PlaybackStore.on("playbackStateChanged", handlePlaybackStateChanged);
+        const handleTrackUpdate = () => { setCurrentTrack(PlaybackStore.track) };
+        PlaybackStore.on("update:track", handleTrackUpdate);
 
-        // return clean up function
+        const handleStateUpdate = () => { setPlaybackState(PlaybackStore.state) };
+        PlaybackStore.on("update:state", handleStateUpdate);
+
+        // return clean up method
         return () => {
-            PlaybackStore.removeListener("trackInfoUpdated", handleTrackInfoUpdate);
-            PlaybackStore.removeListener("playbackStateChanged", handlePlaybackStateChanged);
+            PlaybackStore.removeListener("update:track", handleTrackUpdate);
+            PlaybackStore.removeListener("update:state", handleStateUpdate);
         }
+        
     }, []); // prevents call on each render
+
+    console.log(currentTrack);
 
     return (
         <AppBar {...props} ref={ref} position="fixed" color="primary" className={classes.appBar}>
@@ -69,8 +72,8 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
                     </PlaybackButton>
                 </ButtonGroup>
                 <Box flexGrow={2}>
-                    <Typography variant="body1" color="inherit">{track.name}</Typography>
-                    <Typography variant="body2" color="inherit">{track.artist}</Typography>
+                    <Typography variant="body1" color="inherit">{currentTrack.name}</Typography>
+                    <Typography variant="body2" color="inherit">{currentTrack.artist}</Typography>
                 </Box>
             </Toolbar>
         </AppBar>

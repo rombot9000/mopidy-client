@@ -121,14 +121,14 @@ function TracklistItem(props) {
 function Tracklist(props) {
     const classes = useStyles();
 
-    const [currentTrack, setCurrentTrack] = React.useState(PlaybackStore.currentTrack);
+    const [currentTrack, setCurrentTrack] = React.useState(PlaybackStore.track);
     const [playbackState, setPlaybackState] = React.useState(PlaybackStore.state);
     React.useEffect(() => {
 
-        const handleTrackUpdate = setCurrentTrack.bind(this);
+        const handleTrackUpdate = () => { setCurrentTrack(PlaybackStore.track) };
         PlaybackStore.on("update:track", handleTrackUpdate);
 
-        const handleStateUpdate = setPlaybackState.bind(this);
+        const handleStateUpdate = () => { setPlaybackState(PlaybackStore.state) };
         PlaybackStore.on("update:state", handleStateUpdate);
 
         // return clean up method

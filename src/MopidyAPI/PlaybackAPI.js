@@ -76,4 +76,28 @@ export default class PlaybackAPI {
                 throw new UnknownPlaybackStateError(this._state);
         }
     }
+
+    async play(tlid) {
+        await this._mopidy.playback.play({tlid: tlid});
+    }
+
+    async pause(tlid) {
+        await this._mopidy.playback.pause({});
+    }
+
+    async resume(tlid) {
+        await this._mopidy.playback.resume({});
+    }
+
+    async stop(tlid) {
+        await this._mopidy.playback.stop({});
+    }
+
+    async next(tlid) {
+        await this._mopidy.playback.next({});
+    }
+
+    async previous(tlid) {
+        await this._mopidy.playback.previous({});
+    }
 };

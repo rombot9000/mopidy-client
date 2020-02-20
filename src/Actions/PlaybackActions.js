@@ -69,9 +69,7 @@ export async function play(track, tracks) {
     const tlid = Tracklist.getTrackId(track);
     await Playback.play(tlid);
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.PLAY,
-        track: track,
-        tracks: tracks
+        type: PLAYBACK_ACTIONS.PLAY
     });
 };
 
@@ -97,6 +95,7 @@ export function stop() {
 };
 
 export function toggle() {
+    Playback.togglePlayback();
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.TOGGLE
     });

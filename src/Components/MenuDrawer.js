@@ -11,7 +11,7 @@ function MenuDrawer(props) {
         <Drawer open={props.open} onClose={props.onClose}>
             <Typography variant="h6">Current Tracklist</Typography>
             <Divider orientation="horizontal"/>
-            <TrackList tracks={TracklistStore.currentTracklist}/>
+            <TrackList tracks={TracklistStore.tracks}/>
         </Drawer>
     );
 }

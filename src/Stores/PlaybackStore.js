@@ -110,7 +110,7 @@ class PlaybackStore extends EventEmitter {
      * @readonly
      * @type {import("ViewModel/Track").Track}
      */
-    get currentTrack() {
+    get track() {
         return this._track;
     }
 }

@@ -34,7 +34,10 @@ mopidy.on("event", (event, args) => {
 
         case "event:trackPlaybackEnded":
         case "event:trackPlaybackStopped":
-            if(this._state === "stopped") PlaybackActions.updateTrack(Track(null));
+            console.log(event);
+            console.log(args);
+            // Old code, needs to be moved somewhere else...
+            //if(this._state === "stopped") PlaybackActions.updateTrack(Track(null));
         break;
 
         case "event:tracklistChanged":

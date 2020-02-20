@@ -40,16 +40,16 @@ export default class TracklistAPI {
     /**
      * Sets tracklist on server to album
      * Does nothing if album is already set
-     * @param {string[]} uris
+     * @param {import("ViewModel/Track").Track[]} tracks
      */
-    async set(uris) {
+    async set(tracks) {
         
         await this._mopidy.tracklist.clear({})
         
         this._tracklist = await this._mopidy.tracklist.add({
             "tracks": null,
             "at_position": null,
-            "uris": uris
+            "uris": tracks.map(t => t._uri)
         });
     }
 
