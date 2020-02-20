@@ -53,10 +53,51 @@
  * @property {number} width
  */
 
+import { Album } from "ViewModel";
+
 /** Handler for mopidy library API */
 class LibraryHandler {
     constructor(mopidy) {
-        this._library = mopidy.library;
+        this._mopidy = mopidy;
+
+        /** promise */
+        this._fetchPromise = null;
+    }
+
+    async fetchAll() {
+        if( !this._fetchPromise ) {
+            this._fetchPromise = this._fetchAll();
+            this._fetchPromise.finally(() => {
+                this._fetchPromise = null;
+            })
+        }
+        return await this._fetchPromise;
+    }
+
+    async _fetchAll() {
+        try {
+
+            // Get data from server
+            const mpd_albums = await this._browse("local:directory?type=album");             
+            const album_uri_to_tracks = await this._lookup(mpd_albums.map(ref => ref.uri));
+            const album_uri_to_artwork_list = await this._getImages(mpd_albums.map(ref => ref.uri));
+
+            // Map data onto view model
+            const albums = mpd_albums.map(mpd_album =>
+                Album(
+                    mpd_album,
+                    album_uri_to_tracks[mpd_album.uri],
+                    album_uri_to_artwork_list[mpd_album.uri]
+                )
+            );
+
+            return albums;
+
+        } catch(err) {
+
+            console.error("Caught exception:", err);
+            return [];
+        }
     }
     
     /**
@@ -64,8 +105,8 @@ class LibraryHandler {
      * @param {string} uri
      * @returns {Promise.<mpd_ref[]>}
      */
-    async browse(uri) {
-        return this._library.browse({"uri": uri});
+    async _browse(uri) {
+        return this._mopidy.library.browse({"uri": uri});
     }
 
     /**
@@ -73,8 +114,8 @@ class LibraryHandler {
      * @param {string[]} uris
      * @returns {Promise.<Object.<string,mpd_track[]>>}
      */
-    async lookup(uris) {
-        return this._library.lookup({"uris": uris});
+    async _lookup(uris) {
+        return this._mopidy.library.lookup({"uris": uris});
     }
 
     /**
@@ -82,8 +123,8 @@ class LibraryHandler {
      * @param {string[]} uris
      * @returns {Promise.<Object.<string,mpd_image[]>>}
      */
-    async getImages(uris) {
-        return this._library.getImages({"uris": uris});
+    async _getImages(uris) {
+        return this._mopidy.library.getImages({"uris": uris});
     }
 }
 

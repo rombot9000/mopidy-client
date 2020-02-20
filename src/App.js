@@ -9,6 +9,7 @@ import { Track } from "ViewModel"
 // Setup API callbacks here for now
 import { mopidy } from "MopidyAPI";
 mopidy.on("state:online", () => {
+    console.log("Mopidy server online. Initializing stores...");
     LibraryActions.init();
     TracklistActions.init();
     PlaybackActions.init();
