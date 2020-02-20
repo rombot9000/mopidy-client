@@ -17,29 +17,48 @@ mopidy.on("state:online", () => {
 
 mopidy.on("event", (event, args) => {
 
-    console.log();
     console.log(event);
     console.log(args);
     
     switch(event) {
         case "event:playbackStateChanged":
-            PlaybackActions.updateState(args.new_state);
+            if(args.new_state === "stopped"){
+                PlaybackActions.update({
+                    state: "stopped",
+                    track: Track(null),
+                    timePosition: 0,
+                    timePositionUpdated: 0
+                });
+            }
         break;
         
         case "event:trackPlaybackStarted":
-            PlaybackActions.updateTimePosition(0);
-            PlaybackActions.updateTrack(Track(args.tl_track.track));
+            PlaybackActions.update({
+                state: "playing",
+                track: Track(args.tl_track.track),
+                timePosition: 0,
+                timePositionUpdated: Date.now()
+            });
         break;
 
         case "event:trackPlaybackResumed":
+            PlaybackActions.update({
+                state: "playing",
+                timePosition: args.time_position,
+                timePositionUpdated: Date.now()
+            });
+        break;
+        
         case "event:trackPlaybackPaused":
-            PlaybackActions.updateTimePosition(args.time_position);     
+            PlaybackActions.update({
+                state: "paused",
+                timePosition: args.time_position,
+                timePositionUpdated: Date.now()
+            });
         break;
 
         case "event:trackPlaybackEnded":
         case "event:trackPlaybackStopped":
-            // Old code, needs to be moved somewhere else...
-            //if(this._state === "stopped") PlaybackActions.updateTrack(Track(null));
         break;
 
         case "event:tracklistChanged":

@@ -4,6 +4,7 @@ import { Tracklist, Playback } from "MopidyAPI";
 
 export const PLAYBACK_ACTIONS = {
     INIT: "playbackActions.Init",
+    UPDATE: "playbackActions.Update",
     UPDATE_STATE: "playbackActions.UpdateState",
     UPDATE_TIME_POSITION: "playbackActions.UpdateTimePosition",
     UPDATE_TRACK: "playbackActions.UpdateTrack",
@@ -26,6 +27,24 @@ export async function init() {
         timePositionUpdated: timePositionUpdated
     });
 };
+
+/**
+ * 
+ * @param {Object} param0
+ * @param {import("MopidyAPI/PlaybackAPI").PlaybackState} param0.state
+ * @param {import("ViewModel/Track").Track} param0.track
+ * @param {number} param0.timePosition
+ * @param {number} param0.timePositionUpdated
+ */
+export function update({state, track, timePosition, timePositionUpdated}) {
+    Dispatcher.dispatch({
+        type: PLAYBACK_ACTIONS.UPDATE,
+        state: state,
+        track: track,
+        timePosition: timePosition,
+        timePositionUpdated: timePositionUpdated
+    })
+}
 
 /**
  * @param {import("Stores/PlaybackStore").PlaybackState} state 
