@@ -16,6 +16,10 @@ mopidy.on("state:online", () => {
 });
 
 mopidy.on("event", (event, args) => {
+
+    console.log();
+    console.log(event);
+    console.log(args);
     
     switch(event) {
         case "event:playbackStateChanged":
@@ -34,8 +38,6 @@ mopidy.on("event", (event, args) => {
 
         case "event:trackPlaybackEnded":
         case "event:trackPlaybackStopped":
-            console.log(event);
-            console.log(args);
             // Old code, needs to be moved somewhere else...
             //if(this._state === "stopped") PlaybackActions.updateTrack(Track(null));
         break;

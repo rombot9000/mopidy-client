@@ -37,25 +37,26 @@ function PlaybackButton(props) {
 const PlaybackCtrlBar = React.forwardRef((props, ref) => {
     const classes = useStyles();
 
-    const [currentTrack, setCurrentTrack] = React.useState(PlaybackStore.track);
-    const [playbackState, setPlaybackState] = React.useState(PlaybackStore.state);
+    const [playbackInfo, setPlaybackInfo] = React.useState({
+        state: PlaybackStore.state,
+        track: PlaybackStore.track
+    });
     React.useEffect(() => {
 
-        const handleTrackUpdate = () => { setCurrentTrack(PlaybackStore.track) };
-        PlaybackStore.on("update:track", handleTrackUpdate);
-
-        const handleStateUpdate = () => { setPlaybackState(PlaybackStore.state) };
-        PlaybackStore.on("update:state", handleStateUpdate);
+        const handlePlaybackUpdate = () => {
+            setPlaybackInfo({
+                state: PlaybackStore.state,
+                track: PlaybackStore.track
+            });
+        };
+        PlaybackStore.on("update", handlePlaybackUpdate);
 
         // return clean up method
         return () => {
-            PlaybackStore.removeListener("update:track", handleTrackUpdate);
-            PlaybackStore.removeListener("update:state", handleStateUpdate);
+            PlaybackStore.removeListener("update", handlePlaybackUpdate);
         }
         
     }, []); // prevents call on each render
-
-    console.log(currentTrack);
 
     return (
         <AppBar {...props} ref={ref} position="fixed" color="primary" className={classes.appBar}>
@@ -65,15 +66,15 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
                         <SkipPrevious/>
                     </PlaybackButton>
                     <PlaybackButton onClick={() => PlaybackActions.toggle()}>
-                        {playbackState === "playing" ? <Pause/> : <PlayArrow/>}
+                        {playbackInfo.state === "playing" ? <Pause/> : <PlayArrow/>}
                     </PlaybackButton>
                     <PlaybackButton onClick={() => PlaybackActions.next()}>
                         <SkipNext/>
                     </PlaybackButton>
                 </ButtonGroup>
                 <Box flexGrow={2}>
-                    <Typography variant="body1" color="inherit">{currentTrack.name}</Typography>
-                    <Typography variant="body2" color="inherit">{currentTrack.artist}</Typography>
+                    <Typography variant="body1" color="inherit">{playbackInfo.track.name}</Typography>
+                    <Typography variant="body2" color="inherit">{playbackInfo.track.artist}</Typography>
                 </Box>
             </Toolbar>
         </AppBar>

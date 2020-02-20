@@ -121,20 +121,23 @@ function TracklistItem(props) {
 function Tracklist(props) {
     const classes = useStyles();
 
-    const [currentTrack, setCurrentTrack] = React.useState(PlaybackStore.track);
-    const [playbackState, setPlaybackState] = React.useState(PlaybackStore.state);
+    const [playbackInfo, setPlaybackInfo] = React.useState({
+        state: PlaybackStore.state,
+        track: PlaybackStore.track
+    });
     React.useEffect(() => {
 
-        const handleTrackUpdate = () => { setCurrentTrack(PlaybackStore.track) };
-        PlaybackStore.on("update:track", handleTrackUpdate);
-
-        const handleStateUpdate = () => { setPlaybackState(PlaybackStore.state) };
-        PlaybackStore.on("update:state", handleStateUpdate);
+        const handlePlaybackUpdate = () => {
+            setPlaybackInfo({
+                state: PlaybackStore.state,
+                track: PlaybackStore.track
+            });
+        };
+        PlaybackStore.on("update", handlePlaybackUpdate);
 
         // return clean up method
         return () => {
-            PlaybackStore.removeListener("update:track", handleTrackUpdate);
-            PlaybackStore.removeListener("update:state", handleStateUpdate);
+            PlaybackStore.removeListener("update", handlePlaybackUpdate);
         }
         
     }, []); // prevents call on each render
@@ -144,7 +147,7 @@ function Tracklist(props) {
      */
     function handleClick(track) {
 
-        if(track._uri === currentTrack._uri) {
+        if(track._uri === playbackInfo.track._uri) {
             PlaybackActions.toggle();
         } else {
             PlaybackActions.play(track, props.tracks);
@@ -159,7 +162,7 @@ function Tracklist(props) {
                     <TracklistItem
                         key={i}
                         track={track}
-                        state={track._uri === currentTrack._uri ? playbackState : "stopped"}
+                        state={track._uri === playbackInfo.track._uri ? playbackInfo.state : "stopped"}
                         onClick={(e) => handleClick(track)}
                     />
                     ))}

@@ -41,18 +41,18 @@ class PlaybackStore extends EventEmitter {
 
                 case PLAYBACK_ACTIONS.UPDATE_STATE:
                     this._state = action.state;
-                    this.emit("update:state");
+                    this.emit("update");
                 break;
 
                 case PLAYBACK_ACTIONS.UPDATE_TIME_POSITION:
                     this._timePosition = action.timePosition;
                     this._timePositionUpdated = action.timePositionUpdated;
-                    this.emit("update:timePosition");
+                    this.emit("update");
                 break;
 
                 case PLAYBACK_ACTIONS.UPDATE_TRACK:
                     this._track = action.track;
-                    this.emit("update:track");
+                    this.emit("update");
                 break;
 
                 case PLAYBACK_ACTIONS.PLAY:

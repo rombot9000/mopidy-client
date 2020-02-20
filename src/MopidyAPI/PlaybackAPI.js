@@ -81,23 +81,23 @@ export default class PlaybackAPI {
         await this._mopidy.playback.play({tlid: tlid});
     }
 
-    async pause(tlid) {
+    async pause() {
         await this._mopidy.playback.pause({});
     }
 
-    async resume(tlid) {
+    async resume() {
         await this._mopidy.playback.resume({});
     }
 
-    async stop(tlid) {
+    async stop() {
         await this._mopidy.playback.stop({});
     }
 
-    async next(tlid) {
+    async next() {
         await this._mopidy.playback.next({});
     }
 
-    async previous(tlid) {
+    async previous() {
         await this._mopidy.playback.previous({});
     }
 };
