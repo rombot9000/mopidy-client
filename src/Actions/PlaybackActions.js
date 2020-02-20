@@ -17,11 +17,11 @@ export const PLAYBACK_ACTIONS = {
 };
 
 export async function init() {
-    const { state, currentTrack, timePosition, timePositionUpdated } = await Playback.fetchInfo();
+    const { state, track, timePosition, timePositionUpdated } = await Playback.fetchInfo();
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.INIT,
         state: state,
-        currentTrack: currentTrack,
+        track: track,
         timePosition: timePosition,
         timePositionUpdated: timePositionUpdated
     });

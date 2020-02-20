@@ -35,7 +35,8 @@ export default class PlaybackAPI {
             return {
                 state: this._state,
                 track: Track(null),
-                timePosition: 0
+                timePosition: 0,
+                timePositionUpdated: 0
             }
         }
 
@@ -48,7 +49,8 @@ export default class PlaybackAPI {
         return {
             state: this._state,
             track: Track(tltrack.track),
-            timePosition: timePosition
+            timePosition: timePosition,
+            timePositionUpdated: Date.now()
         };
     }
 
