@@ -14,7 +14,7 @@ class LibraryStore extends EventEmitter {
         this._filterToken = "";
     }
 
-    async handleActions(action) {
+    handleAction(action) {
         try {
 
             switch(action.type) {
@@ -81,5 +81,5 @@ class LibraryStore extends EventEmitter {
 }
 
 const libraryStore = new LibraryStore();
-Dispatcher.register(libraryStore.handleActions.bind(libraryStore));
+Dispatcher.register(libraryStore.handleAction.bind(libraryStore));
 export default libraryStore;

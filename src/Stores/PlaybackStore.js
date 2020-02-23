@@ -27,7 +27,7 @@ class PlaybackStore extends EventEmitter {
      * 
      * @param {} action 
      */
-    async handleActions(action) {
+    handleAction(action) {
         try {
 
             switch(action.type) {
@@ -124,5 +124,5 @@ class PlaybackStore extends EventEmitter {
 }
 
 const playbackStore = new PlaybackStore();
-Dispatcher.register(playbackStore.handleActions.bind(playbackStore));
+Dispatcher.register(playbackStore.handleAction.bind(playbackStore));
 export default playbackStore;

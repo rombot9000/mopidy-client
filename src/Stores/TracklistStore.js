@@ -15,7 +15,7 @@ class TracklistStore extends EventEmitter {
      * 
      * @param {*} action 
      */
-    async handleActions(action) {
+    handleAction(action) {
         try {
 
             switch(action.type) {
@@ -48,5 +48,5 @@ class TracklistStore extends EventEmitter {
 }
 
 const tracklistStore = new TracklistStore();
-Dispatcher.register(tracklistStore.handleActions.bind(tracklistStore));
+Dispatcher.register(tracklistStore.handleAction.bind(tracklistStore));
 export default tracklistStore
