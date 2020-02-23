@@ -18,12 +18,23 @@ if(process.env.NODE_ENV !== "production") {
 
 /**
  * 
- * @param {import('MopidyHandler/LibraryHandler').mpd_album} mpd_album
- * @param {import('MopidyHandler/LibraryHandler').mpd_track[]} mpd_tracks
- * @param {import('MopidyHandler/LibraryHandler').mpd_image[]} mpd_images
+ * @param {import("MopidyAPI/LibraryAPI").mpd_album} mpd_album
+ * @param {import("MopidyAPI/LibraryAPI").mpd_track[]} mpd_tracks
+ * @param {import("MopidyAPI/LibraryAPI").mpd_image[]} mpd_images
  * @returns {Album}
  */
-function Album(mpd_album, mpd_tracks, mpd_images) {
+function Album(mpd_album, mpd_tracks = [], mpd_images = []) {
+
+    if(!mpd_album) {
+        return {
+            _uri: "",
+            name: "",
+            year: "",
+            artist: "",
+            tracks: [],
+            cover: ""
+        }
+    }
 
     let tracks = mpd_tracks.map(
         mpd_track => Track(mpd_track)

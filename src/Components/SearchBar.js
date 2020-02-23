@@ -3,7 +3,7 @@ import React from 'react';
 import {makeStyles, Paper, IconButton, Input} from "@material-ui/core";
 import {Search, Menu, Clear} from "@material-ui/icons";
 
-import * as LibraryActions  from 'Actions/LibraryActions';
+import { LibraryActions, ViewActions }  from 'Actions';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -82,7 +82,7 @@ const SearchBar = React.forwardRef((props, ref) => {
                 className={classes.paper}
                 elevation={4}
             >
-                <IconButton onClick={props.onMenuIconClick}>
+                <IconButton onClick={ViewActions.toggleMenuDrawer}>
                     <Menu fontSize="inherit"/>
                 </IconButton>
                 <Input 

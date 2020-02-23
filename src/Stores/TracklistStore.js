@@ -1,9 +1,7 @@
 import { EventEmitter } from "events";
+import { TRACKLIST_ACTIONS } from "Actions/TracklistActions";
 
-import Dispatcher from "Dispatcher";
-import { TRACKLIST_ACTIONS } from "Actions/TracklistActions"
-
-class TracklistStore extends EventEmitter {
+export default class TracklistStore extends EventEmitter {
     constructor() {
         super();
 
@@ -46,7 +44,3 @@ class TracklistStore extends EventEmitter {
         return this._tracks;
     }
 }
-
-const tracklistStore = new TracklistStore();
-Dispatcher.register(tracklistStore.handleAction.bind(tracklistStore));
-export default tracklistStore

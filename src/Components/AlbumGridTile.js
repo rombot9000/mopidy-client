@@ -3,17 +3,7 @@ import React from "react";
 import { Typography } from "@material-ui/core";
 import SquareImage from "./SquareImage";
 
-/**
- * @callback onTileClick
- * @param {import("ViewModel/Album").Album} album
- */
-
-/**
- * 
- * @typedef AlbumGridTileProps
- * @property {import("ViewModel/Album").Album} album
- * @property {onTileClick} onClick
- */
+import { ViewActions } from "Actions";
 
 /**
  * 
@@ -33,7 +23,7 @@ function checkProps(prevProps, nextProps) {
 const AlbumGridTile = React.memo(props => {
     
     return (
-        <div onClick={() => props.onClick(props.album)}>
+        <div onClick={() => ViewActions.openAlbumDetailsModal(props.album)}>
             <SquareImage src={props.album.cover}/>
             <Typography variant="button">{props.album.name}</Typography>
             <br/>

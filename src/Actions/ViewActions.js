@@ -1,9 +1,14 @@
 import Dispatcher from "Dispatcher";
 
 export const VIEW_ACTIONS = {
-    OPEN_ALBUM_DETAILS_MODAL: "viewActions.OpenAlbumDetailsModal"
+    OPEN_ALBUM_DETAILS_MODAL: "viewActions.OpenAlbumDetailsModal",
+    TOGGLE_MENU_DRAWER: "viewActions.ToggleMenuDrawer"
 };
 
+/**
+ * 
+ * @param {import("ViewModel/Album").Album} album 
+ */
 export function openAlbumDetailsModal(album) {
     Dispatcher.dispatch({
         type: VIEW_ACTIONS.OPEN_ALBUM_DETAILS_MODAL,
@@ -11,3 +16,8 @@ export function openAlbumDetailsModal(album) {
     });
 };
 
+export function toggleMenuDrawer() {
+    Dispatcher.dispatch({
+        type: VIEW_ACTIONS.TOGGLE_MENU_DRAWER
+    });
+};

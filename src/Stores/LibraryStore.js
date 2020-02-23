@@ -1,10 +1,7 @@
 import { EventEmitter } from "events";
-
-import Dispatcher from "Dispatcher";
-
 import { LIBRARY_ACTIONS } from "Actions/LibraryActions"
 
-class LibraryStore extends EventEmitter {
+export default class LibraryStore extends EventEmitter {
     constructor() {
         super();
 
@@ -79,7 +76,3 @@ class LibraryStore extends EventEmitter {
         return this._tokenToAlbumList[lowerCaseToken];
     }
 }
-
-const libraryStore = new LibraryStore();
-Dispatcher.register(libraryStore.handleAction.bind(libraryStore));
-export default libraryStore;

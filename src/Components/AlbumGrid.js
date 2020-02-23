@@ -19,7 +19,6 @@ const useStyles = makeStyles(theme => ({
  * @function AlbumGrid
  * @param {Object} props
  * @param {import('ViewModel/Album').Album[]} props.albums
- * @param {import('./AlbumGridTile').onTileClick} props.onTileClick
  */
 function AlbumGrid(props) {
     // calc classes

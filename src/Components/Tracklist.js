@@ -4,8 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { TableContainer, Table, TableBody, TableRow, TableCell, SvgIcon } from "@material-ui/core";
 import { PlayArrow, Pause } from "@material-ui/icons";
 
-import PlaybackStore from "Stores/PlaybackStore";
-import * as PlaybackActions from "Actions/PlaybackActions";
+import { PlaybackActions } from "Actions";
+import { PlaybackStore } from "Stores";
 
 const useStyles = makeStyles(theme => ({
     container: {

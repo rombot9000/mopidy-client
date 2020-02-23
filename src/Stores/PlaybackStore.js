@@ -1,15 +1,12 @@
 import { EventEmitter } from "events";
 
-import Dispatcher from "Dispatcher";
 import { PLAYBACK_ACTIONS } from "Actions/PlaybackActions";
-
 import { UnknownPlaybackStateError } from "MopidyAPI/Errors";
-
 import { Track } from "ViewModel";
 
 /** @typedef {"playing"|"paused"|"stopped"} PlaybackState */
 
-class PlaybackStore extends EventEmitter {
+export default class PlaybackStore extends EventEmitter {
     constructor() {
         super();
         /** @type {PlaybackState} */
@@ -122,7 +119,3 @@ class PlaybackStore extends EventEmitter {
         return this._track;
     }
 }
-
-const playbackStore = new PlaybackStore();
-Dispatcher.register(playbackStore.handleAction.bind(playbackStore));
-export default playbackStore;

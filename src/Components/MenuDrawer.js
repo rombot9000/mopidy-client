@@ -4,11 +4,12 @@ import { Drawer, Typography, Divider } from "@material-ui/core";
 
 import TrackList from "Components/Tracklist";
 
-import TracklistStore from "Stores/TracklistStore";
+import { TracklistStore, ViewStore } from "Stores";
+import { ViewActions } from "Actions";
 
-function MenuDrawer(props) {
+function MenuDrawer() {
     return (
-        <Drawer open={props.open} onClose={props.onClose}>
+        <Drawer open={ViewStore.menuDrawerState} onClose={ViewActions.toggleMenuDrawer}>
             <Typography variant="h6">Current Tracklist</Typography>
             <Divider orientation="horizontal"/>
             <TrackList tracks={TracklistStore.tracks}/>

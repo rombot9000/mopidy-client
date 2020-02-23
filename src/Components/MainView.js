@@ -10,7 +10,7 @@ import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
 import SearchBar from "Components/SearchBar";
 import MenuDrawer from "Components/MenuDrawer";
 
-import LibraryStore from "Stores/LibraryStore";
+import { LibraryStore, ViewStore} from "Stores";
 
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents
@@ -42,20 +42,6 @@ function MainView(props) {
      */
     const [components, setComponents] = React.useState({});
 
-
-    // Setup states and listeners
-    const [albums, setAlbums] = React.useState(LibraryStore.albums);
-    React.useEffect(() => {
-
-        const handleLibraryUpdate = () => {setAlbums(LibraryStore.albums)};
-        LibraryStore.on("update", handleLibraryUpdate);
-        
-        return () => {
-            LibraryStore.removeListener("update", handleLibraryUpdate);
-        }
-    }, []);
-
-    
     /**
      * Add components to view
      * @param {ViewComponents} component 
@@ -73,6 +59,35 @@ function MainView(props) {
         setComponents(components);
     }
 
+
+    // Setup states and listeners
+    const [albums, setAlbums] = React.useState(LibraryStore.albums);
+    const[showMenuDrawer, setShowMenuDrawer] = React.useState(false);
+    React.useEffect(() => {
+
+        const handleLibraryUpdate = () => {setAlbums(LibraryStore.albums)};
+        LibraryStore.on("update", handleLibraryUpdate);
+
+        function openAlbumDetailsModal() {
+            addComponent({
+                "detailsModal": (
+                    <ScollableModal key="detailsModal" open onClose={() => delComponent("detailsModal")}>
+                        <AlbumDetails album={ViewStore.detailsModalAlbum}/>
+                    </ScollableModal>
+                )
+            });
+        }
+        ViewStore.on("openAlbumDetailsModal", openAlbumDetailsModal);
+
+        const toggleMenuDrawer = () => {setShowMenuDrawer(s => !s)};
+        ViewStore.on("toggleMenuDrawer", toggleMenuDrawer);
+        
+        return () => {
+            LibraryStore.removeListener("update", handleLibraryUpdate);
+            LibraryStore.removeListener("openAlbumDetailsModal", openAlbumDetailsModal);
+            LibraryStore.removeListener("toggleMenuDrawer", toggleMenuDrawer);
+        }
+    }, []);
 
     /*
      * Listen for view changes
@@ -93,45 +108,14 @@ function MainView(props) {
         });
     }, [ctrlBarRef, srchBarRef]); // listen for ctrl bar changes
 
-
-    /**
-     * @param {import('ViewModel/Album').Album} album 
-     */
-    function openDetailsModal(album) {
-        function closeDetailsModal() {
-            delComponent("detailsModal");
-        }
-        addComponent({
-            "detailsModal": (
-                <ScollableModal key="detailsModal" open onClose={closeDetailsModal}>
-                    <AlbumDetails album={album}/>
-                </ScollableModal>
-            )
-        });
-    }
-
-
-    const[showMenuDrawer, setShowMenuDrawer] = React.useState(false);
-    /** Toggle menu drawer */
-    function toggleSideMenu() {
-        setShowMenuDrawer(!showMenuDrawer);
-    }
-
     return (
         <React.Fragment>
-            <SearchBar className={classes.searchBar} onMenuIconClick={toggleSideMenu} ref={srchBarRef}/>
-            <MenuDrawer open={showMenuDrawer} onClose={toggleSideMenu}/>
-            <Box 
-                className={classes.rootBox}
-                marginBottom={`${view.height}px`}
-                paddingTop={`${view.paddingTop}px`}
-            >
-                <AlbumGrid
-                    albums={albums}
-                    onTileClick={openDetailsModal}
-                />
+            <SearchBar className={classes.searchBar} ref={srchBarRef} />
+            <MenuDrawer open={showMenuDrawer} />
+            <Box className={classes.rootBox} marginBottom={`${view.height}px`} paddingTop={`${view.paddingTop}px`} >
+                <AlbumGrid albums={albums} />
             </Box>
-            <PlaybackCtrlBar ref={ctrlBarRef}/>
+            <PlaybackCtrlBar ref={ctrlBarRef} />
             {Object.values(components)}
         </React.Fragment>
     );
