@@ -10,8 +10,6 @@ export default class ViewStore extends EventEmitter {
 
         /** @type {import("ViewModel/Album").Album} */
         this._detailsModalAlbum = Album(null);
-
-        this._menuDrawerState = false;
     }
 
     handleAction(action) {
@@ -22,7 +20,6 @@ export default class ViewStore extends EventEmitter {
             break;
 
             case VIEW_ACTIONS.TOGGLE_MENU_DRAWER:
-                this._menuDrawerState = !this._menuDrawerState;
                 this.emit("toggleMenuDrawer")
             break;
 
@@ -37,13 +34,4 @@ export default class ViewStore extends EventEmitter {
     get detailsModalAlbum() {
         return this._detailsModalAlbum;
     }
-
-    /**
-     * @readonly
-     * @type {boolean}
-     */
-    get menuDrawerState() {
-        return this._menuDrawerState;
-    }
-
 }

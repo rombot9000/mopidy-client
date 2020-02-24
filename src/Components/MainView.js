@@ -62,7 +62,6 @@ function MainView(props) {
 
     // Setup states and listeners
     const [albums, setAlbums] = React.useState(LibraryStore.albums);
-    const[showMenuDrawer, setShowMenuDrawer] = React.useState(false);
     React.useEffect(() => {
 
         const handleLibraryUpdate = () => {setAlbums(LibraryStore.albums)};
@@ -78,14 +77,10 @@ function MainView(props) {
             });
         }
         ViewStore.on("openAlbumDetailsModal", openAlbumDetailsModal);
-
-        const toggleMenuDrawer = () => {setShowMenuDrawer(s => !s)};
-        ViewStore.on("toggleMenuDrawer", toggleMenuDrawer);
         
         return () => {
             LibraryStore.removeListener("update", handleLibraryUpdate);
             LibraryStore.removeListener("openAlbumDetailsModal", openAlbumDetailsModal);
-            LibraryStore.removeListener("toggleMenuDrawer", toggleMenuDrawer);
         }
     }, []);
 
@@ -111,7 +106,7 @@ function MainView(props) {
     return (
         <React.Fragment>
             <SearchBar className={classes.searchBar} ref={srchBarRef} />
-            <MenuDrawer open={showMenuDrawer} />
+            <MenuDrawer/>
             <Box className={classes.rootBox} marginBottom={`${view.height}px`} paddingTop={`${view.paddingTop}px`} >
                 <AlbumGrid albums={albums} />
             </Box>
