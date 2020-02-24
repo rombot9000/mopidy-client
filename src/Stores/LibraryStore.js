@@ -4,6 +4,8 @@ import { LIBRARY_ACTIONS } from "Actions/LibraryActions"
 
 import { Album } from "ViewModel";
 
+import IndexedDB from "IDBDatabaseAPI/IndexedDB";
+
 export default class LibraryStore extends EventEmitter {
     constructor() {
         super();
@@ -13,77 +15,30 @@ export default class LibraryStore extends EventEmitter {
         /** @type {string} */
         this._filterToken = "";
 
-        /** @type {IDBDatabase} */
-        this._indexedDB = null;
-        
-        this._openDbConnection();
+        /** @type {IndexedDB} */
+        this._indexedDB = new IndexedDB("Library", 3);
+        this._indexedDB.addSchema({
+            name: "Albums",
+            params: {keyPath: "_uri"},
+            indexSchemes: Object.keys(Album(null)).map(key => {
+                return {"name": key, "params": null};
+            })
+        });
+        this._loadAlbumsFromDb();
     }
 
-    async _openDbConnection() {
-
-        if (!window.indexedDB) {
-            console.log("Your browser doesn't support a stable version of IndexedDB.");
-            return;
-        }
-        
-        const DATABASE_VERSION = 2;
-        const dbRequest = window.indexedDB.open("LibraryStore", DATABASE_VERSION);
-        console.log(dbRequest);
-
-        dbRequest.onupgradeneeded = (event) =>  { 
-            
-            /** @type {IDBDatabase} */
-            const indexedDB = event.target.result;
-            if(indexedDB.objectStoreNames.contains("Albums")) {
-                console.log("Deleting older version of album object store...");
-                indexedDB.deleteObjectStore("Albums");
-            }
-            console.log("Creating new album object store...");
-            const albumObjectStore = indexedDB.createObjectStore("Albums", {keyPath: "_uri" });
-            for(const item in Album(null)) {
-                albumObjectStore.createIndex(item, item, { unique: false });
-            }
-
-            albumObjectStore.transaction.oncomplete = (event) => {
-                console.log("Creating album index complete")
-            };
-        };
-
-        dbRequest.onsuccess = (event) => {
-            this._indexedDB = event.target.result;
-            this._indexedDB.onerror = (event) => { console.error(event.target.errorCode); };
-            this._loadAlbumsFromDb();
-        };
-
-        dbRequest.onerror =  (event) => {
-            console.error("Database error: " + event.target.errorCode);
-        };
+    async _saveAlbumsToDb() {
+        const albumObjectStoreWriter = this._indexedDB.getObjectStoreWriter("Albums"); 
+        await albumObjectStoreWriter.clear();
+        await albumObjectStoreWriter.add(this._tokenToAlbumList[""]);
     }
 
-    _saveAlbumsToDb() {
-        const albumObjectStore = this._indexedDB.transaction("Albums", "readwrite").objectStore("Albums"); 
-        const deleteAllRequest = albumObjectStore.clear();
-        deleteAllRequest.onsuccess = (event) => {
-            this._tokenToAlbumList[""].forEach( album => {
-                const request = albumObjectStore.add(album);
-                request.onerror = (event) => {console.log(event.target.errorCode)}
-            });
-        }
-        deleteAllRequest.onerror = (event) => {
-            console.error("Could not clear object store, error code:", event.target.errorCode);
-        };
-    }
-
-    _loadAlbumsFromDb() {
-        const albumObjectStore = this._indexedDB.transaction("Albums", "readonly").objectStore("Albums"); 
-        const request = albumObjectStore.getAll();
-        request.onerror = (event) => {console.log(event.target.errorCode)}
-        request.onsuccess = (event) => {
-            console.log("Got albums from object store");
-            console.log(event.target.result);
-            this._tokenToAlbumList = { "" : event.target.result};
-            this.emit("update");
-        }
+    async _loadAlbumsFromDb() {
+        await this._indexedDB.connect();
+        const albumObjectStoreWriter = this._indexedDB.getObjectStoreWriter("Albums"); 
+        const albums = await albumObjectStoreWriter.getAll();
+        this._tokenToAlbumList = { "" : albums };
+        this.emit("update");
     }
 
     handleAction(action) {
