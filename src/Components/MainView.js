@@ -41,33 +41,27 @@ function MainView(props) {
      * @type {[ViewComponents, React.Dispatch<React.SetStateAction<ViewComponents>>]} 
      */
     const [components, setComponents] = React.useState({});
-
-    /**
-     * Add components to view
-     * @param {ViewComponents} component 
-     */
-    function addComponent(component) {
-        setComponents({...components, ...component});
-    }
-
-    /**
-     * Remove componentes from view
-     * @param {string} key 
-     */
-    function delComponent(key) {
-        delete components[key];
-        setComponents(components);
-    }
-
-
-    // Setup states and listeners
-    const [albums, setAlbums] = React.useState(LibraryStore.albums);
     React.useEffect(() => {
+       /**
+        * Add components to view
+        * @param {ViewComponents} newComp 
+        */
+        function addComponent(newComp) {
+            setComponents(comps => {return {...comps, ...newComp}});
+        }
 
-        const handleLibraryUpdate = () => {setAlbums(LibraryStore.albums)};
-        LibraryStore.on("update", handleLibraryUpdate);
+        /**
+         * Remove componentes from view
+         * @param {string} key 
+         */
+        function delComponent(key) {
+            setComponents(comps => {
+                delete comps[key];
+                return {...comps};
+            });
+        }
 
-        function openAlbumDetailsModal() {
+        const openAlbumDetailsModal = () => {
             addComponent({
                 "detailsModal": (
                     <ScollableModal key="detailsModal" open onClose={() => delComponent("detailsModal")}>
@@ -77,11 +71,22 @@ function MainView(props) {
             });
         }
         ViewStore.on("openAlbumDetailsModal", openAlbumDetailsModal);
+
+        return () => {
+            LibraryStore.removeListener("openAlbumDetailsModal", openAlbumDetailsModal);
+        };
+    }, [])
+
+    // Setup states and listeners
+    const [albums, setAlbums] = React.useState(LibraryStore.albums);
+    React.useEffect(() => {
+
+        const handleLibraryUpdate = () => {setAlbums(LibraryStore.albums)};
+        LibraryStore.on("update", handleLibraryUpdate);
         
         return () => {
             LibraryStore.removeListener("update", handleLibraryUpdate);
-            LibraryStore.removeListener("openAlbumDetailsModal", openAlbumDetailsModal);
-        }
+        };
     }, []);
 
     /*
