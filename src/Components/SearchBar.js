@@ -34,12 +34,6 @@ const SearchBar = React.forwardRef((props, ref) => {
     function handleKeyDown(event) {
         if(event.key === "Escape") {
            clear(event);
-        } else if(event.key === "Backspace") {
-            // Is faster than onInput-Callback!
-            // Problem: it does not handle selected text deletion...
-            event.preventDefault();
-            setInputValue(inputValue.slice(0,-1));
-            LibraryActions.filter(inputValue.slice(0,-1));
         }
     }
 
