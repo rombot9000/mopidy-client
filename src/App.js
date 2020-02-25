@@ -2,17 +2,21 @@ import React from "react";
 
 import { CssBaseline } from '@material-ui/core';
 
+import { mopidy } from "MopidyAPI";
+
 import MainView from "Components/MainView";
-import { LibraryActions, TracklistActions, PlaybackActions } from "Actions"
-import { Track } from "ViewModel"
+import { LibraryActions, TracklistActions, PlaybackActions } from "Actions";
+import { Track } from "ViewModel";
+
+// Init stores
+LibraryActions.init();
 
 // Setup API callbacks here for now
-import { mopidy } from "MopidyAPI";
 mopidy.on("state:online", () => {
     console.log("Mopidy server online. Initializing stores...");
-    LibraryActions.init();
-    TracklistActions.init();
-    PlaybackActions.init();
+    LibraryActions.fetch();
+    TracklistActions.fetch();
+    PlaybackActions.fetch();
 });
 
 mopidy.on("event", (event, args) => {
@@ -62,7 +66,7 @@ mopidy.on("event", (event, args) => {
         break;
 
         case "event:tracklistChanged":
-            TracklistActions.update();
+            TracklistActions.fetch();
         break;
 
         default:

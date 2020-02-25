@@ -1,10 +1,6 @@
 import { EventEmitter } from "events";
-
 import { LIBRARY_ACTIONS } from "Actions/LibraryActions"
 
-import { Album } from "ViewModel";
-
-import IndexedDB from "StorageAPI/IndexedDB";
 
 export default class LibraryStore extends EventEmitter {
     constructor() {
@@ -15,36 +11,6 @@ export default class LibraryStore extends EventEmitter {
         /** @type {string} */
         this._filterToken = "";
 
-        /** @type {IndexedDB} */
-        this._indexedDB = new IndexedDB("Library", 3);
-        this._indexedDB.addSchema({
-            name: "Albums",
-            params: {keyPath: "_uri"},
-            indexSchemes: Object.keys(Album(null)).map(key => {
-                return {"name": key, "params": null};
-            })
-        });
-        this._loadAlbumsFromDb();
-    }
-
-    /**
-     * Save albums to indexedDb
-     */
-    async _saveAlbumsToDb() {
-        const albumObjectStoreWriter = this._indexedDB.getObjectStoreWriter("Albums"); 
-        await albumObjectStoreWriter.clear();
-        await albumObjectStoreWriter.add(this._tokenToAlbumList[""]);
-    }
-
-    /**
-     * Load albums from indexedDb
-     */
-    async _loadAlbumsFromDb() {
-        await this._indexedDB.connect();
-        const albumObjectStoreWriter = this._indexedDB.getObjectStoreWriter("Albums"); 
-        const albums = await albumObjectStoreWriter.getAll();
-        this._tokenToAlbumList = { "" : albums };
-        this.emit("update");
     }
 
     /**
@@ -60,10 +26,9 @@ export default class LibraryStore extends EventEmitter {
 
             switch(action.type) {
                 case LIBRARY_ACTIONS.INIT:
-                case LIBRARY_ACTIONS.FETCH_ALL:
+                case LIBRARY_ACTIONS.FETCH:
                     this._tokenToAlbumList = { "" : action.albums};
                     this.emit("update");
-                    this._saveAlbumsToDb();
                 break;
     
                 case LIBRARY_ACTIONS.FILTER:

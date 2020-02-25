@@ -28,7 +28,7 @@ export default class PlaybackStore extends EventEmitter {
         try {
 
             switch(action.type) {
-                case PLAYBACK_ACTIONS.INIT:
+                case PLAYBACK_ACTIONS.FETCH:
                     this._state = action.state;
                     this._timePosition = action.timePosition;
                     this._timePositionUpdated = action.timePositionUpdated;

@@ -19,6 +19,8 @@ export default class IndexedDB {
         this._indexedDB = null;
         /** @type {ObjectStoreSchema[]}} */
         this._schema = [];
+        /** @type {Promise} */
+        this._connected = null;
     }
 
     /**
@@ -28,8 +30,9 @@ export default class IndexedDB {
         this._schema.push(schema);
     }
 
-    connect() {
-        return new Promise( (resolve, reject) => {
+    _connect() {
+        // create connection promise if null
+        if(!this._connected) this._connected = new Promise( (resolve, reject) => {
             // Check if supported
             if (!window.indexedDB) {
                 reject("This browser does not support a stable version of IndexedDB.");
@@ -70,6 +73,9 @@ export default class IndexedDB {
                 resolve();
             };
         });
+
+        // return connection promise
+        return this._connected;
     }
 
     /**
@@ -90,8 +96,9 @@ export default class IndexedDB {
      * @param {string} name 
      * @param {IDBTransactionMode} mode 
      */
-    _getObjectStore(name, mode) {
-        const store =  this._indexedDB.transaction(name, mode).objectStore(name); 
+    async _getObjectStore(name, mode) {
+        await this._connect();
+        const store = this._indexedDB.transaction(name, mode).objectStore(name); 
         return new ObjectStore(store);
     }
 }

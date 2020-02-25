@@ -4,6 +4,7 @@ import { Tracklist, Playback } from "MopidyAPI";
 
 export const PLAYBACK_ACTIONS = {
     INIT: "playbackActions.Init",
+    FETCH: "playbackActions.Fetch",
     UPDATE: "playbackActions.Update",
     UPDATE_STATE: "playbackActions.UpdateState",
     UPDATE_TIME_POSITION: "playbackActions.UpdateTimePosition",
@@ -17,10 +18,10 @@ export const PLAYBACK_ACTIONS = {
     PREVIOUS: "playbackActions.Previous"
 };
 
-export async function init() {
+export async function fetch() {
     const { state, track, timePosition, timePositionUpdated } = await Playback.fetchInfo();
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.INIT,
+        type: PLAYBACK_ACTIONS.FETCH,
         state: state,
         track: track,
         timePosition: timePosition,

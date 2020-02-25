@@ -19,7 +19,7 @@ export default class TracklistStore extends EventEmitter {
             switch(action.type) {
 
                 case TRACKLIST_ACTIONS.INIT:
-                case TRACKLIST_ACTIONS.UPDATE:
+                case TRACKLIST_ACTIONS.FETCH:
                     this._tracks = action.tracks
                     this.emit("update");
                 break;

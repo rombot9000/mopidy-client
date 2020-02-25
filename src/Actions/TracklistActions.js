@@ -4,7 +4,7 @@ import { Tracklist } from "MopidyAPI";
 
 export const TRACKLIST_ACTIONS = {
     INIT: "tracklistActions.Init",
-    UPDATE: "tracklistActions.Update",
+    FETCH: "tracklistActions.Fetch",
     SET: "tracklistActions.Set",
 }
 
@@ -21,15 +21,11 @@ export async function set(tracks) {
 
 
 export async function init() {
-    Dispatcher.dispatch({
-        type: TRACKLIST_ACTIONS.INIT,
-        tracks: await Tracklist.fetch()
-    });
 };
 
-export async function update() {
+export async function fetch() {
     Dispatcher.dispatch({
-        type: TRACKLIST_ACTIONS.UPDATE,
+        type: TRACKLIST_ACTIONS.FETCH,
         tracks: await Tracklist.fetch()
     });
 };
