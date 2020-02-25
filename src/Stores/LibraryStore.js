@@ -4,7 +4,7 @@ import { LIBRARY_ACTIONS } from "Actions/LibraryActions"
 
 import { Album } from "ViewModel";
 
-import IndexedDB from "IDBDatabaseAPI/IndexedDB";
+import IndexedDB from "StorageAPI/IndexedDB";
 
 export default class LibraryStore extends EventEmitter {
     constructor() {
@@ -27,12 +27,18 @@ export default class LibraryStore extends EventEmitter {
         this._loadAlbumsFromDb();
     }
 
+    /**
+     * Save albums to indexedDb
+     */
     async _saveAlbumsToDb() {
         const albumObjectStoreWriter = this._indexedDB.getObjectStoreWriter("Albums"); 
         await albumObjectStoreWriter.clear();
         await albumObjectStoreWriter.add(this._tokenToAlbumList[""]);
     }
 
+    /**
+     * Load albums from indexedDb
+     */
     async _loadAlbumsFromDb() {
         await this._indexedDB.connect();
         const albumObjectStoreWriter = this._indexedDB.getObjectStoreWriter("Albums"); 
@@ -41,6 +47,14 @@ export default class LibraryStore extends EventEmitter {
         this.emit("update");
     }
 
+    /**
+     * 
+     * @param {Object} action
+     * @param {string} action.type 
+     * @param {import("ViewModel/Album").Album[]} [action.albums] list of album view model objects
+     * @param {string} [action.token] Search token
+     * 
+     */
     handleAction(action) {
         try {
 
@@ -72,7 +86,7 @@ export default class LibraryStore extends EventEmitter {
      * @readonly
      */
     get albums() {
-        return this._tokenToAlbumList[this._filterToken];
+        return this._filterAlbumsByLowercaseToken(this._filterToken);
     }
 
 
