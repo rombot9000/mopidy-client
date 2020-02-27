@@ -1,15 +1,30 @@
 import React from "react";
 
-import { Drawer, Typography, Divider } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Typography} from "@material-ui/core";
+import { QueueMusic, MusicNote, LibraryMusic, AlbumRounded, Tune } from "@material-ui/icons";
 
 import TrackList from "Components/Tracklist";
 
 import { TracklistStore, ViewStore } from "Stores";
 import { ViewActions } from "Actions";
 
+const useStyles = makeStyles(theme => ({
+    drawer: {
+        maxWidth: "80%"
+    },
+    list: {
+        minWidth: 320,
+        width: "100%"
+    }
+}));
+
 function MenuDrawer() {
 
-    const [drawerState, setDrawerState] = React.useState(false);
+    const classes = useStyles();
+
+    const [drawerState, setDrawerState] = React.useState(true);
     React.useEffect(() => {
         
         const toggleDrawerState = () => setDrawerState(s => !s);
@@ -21,10 +36,44 @@ function MenuDrawer() {
     }, [])
 
     return (
-        <Drawer open={drawerState} onClose={ViewActions.toggleMenuDrawer}>
-            <Typography variant="h6">Current Tracklist</Typography>
-            <Divider orientation="horizontal"/>
-            <TrackList tracks={TracklistStore.tracks}/>
+        <Drawer
+            className={classes.drawer}
+            open={drawerState}
+            onClose={() => setDrawerState(false)}
+        >
+            <List className={classes.list}>
+                <ListItem>
+                    <ListItemText disableTypography>
+                        <Typography variant="h5">Mopidy</Typography>
+                    </ListItemText>
+                </ListItem>
+                <Divider/>
+                <ListItem>
+                    <ListItemIcon><AlbumRounded/></ListItemIcon>
+                    <ListItemText>Albums</ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemIcon><LibraryMusic/></ListItemIcon>
+                    <ListItemText>Artists</ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemIcon><MusicNote/></ListItemIcon>
+                    <ListItemText>Tracks</ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemIcon><QueueMusic/></ListItemIcon>
+                    <ListItemText>Playlists</ListItemText>
+                </ListItem>
+                <ListItem button onClick={ViewActions.openSettingsModal}>
+                    <ListItemIcon><Tune/></ListItemIcon>
+                    <ListItemText>Settings</ListItemText>
+                </ListItem>
+                <Divider/>
+                <ListItem>
+                    <ListItemText>Now Playing</ListItemText>
+                </ListItem>
+                <TrackList tracks={TracklistStore.tracks}/>
+            </List>
         </Drawer>
     );
 }

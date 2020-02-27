@@ -2,7 +2,8 @@ import Dispatcher from "Dispatcher";
 
 export const VIEW_ACTIONS = {
     OPEN_ALBUM_DETAILS_MODAL: "viewActions.OpenAlbumDetailsModal",
-    TOGGLE_MENU_DRAWER: "viewActions.ToggleMenuDrawer"
+    TOGGLE_MENU_DRAWER: "viewActions.ToggleMenuDrawer",
+    OPEN_SETTINGS_MODAL: "viewActions.OpenSettingsModal"
 };
 
 /**
@@ -21,3 +22,9 @@ export function toggleMenuDrawer() {
         type: VIEW_ACTIONS.TOGGLE_MENU_DRAWER
     });
 };
+
+export function openSettingsModal() {
+    Dispatcher.dispatch({
+        type: VIEW_ACTIONS.OPEN_SETTINGS_MODAL
+    });
+}
