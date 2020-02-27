@@ -25,6 +25,7 @@ export const LIBRARY_ACTIONS = {
     INIT: "libraryActions.Init",
     FETCH: "libraryActions.Fetch",
     FILTER: "libraryActions.Filter",
+    SORT_ALBUMS: "libraryActions.SortAlbums"
 };
 
 /**
@@ -63,3 +64,14 @@ export function filter(token) {
         token: token
     })
 };
+
+/**
+ * Sort albums by key
+ * @param {string} key 
+ */
+export function sortAlbums(key) {
+    Dispatcher.dispatch({
+        type: LIBRARY_ACTIONS.SORT_ALBUMS,
+        key: key
+    });
+}

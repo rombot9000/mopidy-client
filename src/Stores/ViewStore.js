@@ -20,7 +20,11 @@ export default class ViewStore extends EventEmitter {
             break;
 
             case VIEW_ACTIONS.TOGGLE_MENU_DRAWER:
-                this.emit("toggleMenuDrawer")
+                this.emit("toggleMenuDrawer");
+            break;
+
+            case VIEW_ACTIONS.OPEN_SETTINGS_MODAL:
+                this.emit("openSettingsModal");
             break;
 
             default:

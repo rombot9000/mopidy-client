@@ -3,14 +3,8 @@ import React from "react";
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
-import AlbumGrid from "Components/AlbumGrid";
-import AlbumDetails from "Components/AlbumDetails";
-import ScollableModal from "Components/ScrollableModal";
-import PlaybackCtrlBar from "Components/PlaybackCtrlBar";
-import SearchBar from "Components/SearchBar";
-import MenuDrawer from "Components/MenuDrawer";
-
-import { LibraryStore, ViewStore} from "Stores";
+import { AlbumGrid, AlbumDetails, ScrollableModal, PlaybackCtrlBar, SearchBar, MenuDrawer, SettingsMenu } from "Components"; 
+import { LibraryStore, ViewStore } from "Stores";
 
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents
@@ -64,16 +58,28 @@ function MainView(props) {
         const openAlbumDetailsModal = () => {
             addComponent({
                 "detailsModal": (
-                    <ScollableModal key="detailsModal" open onClose={() => delComponent("detailsModal")}>
+                    <ScrollableModal key="detailsModal" open onClose={() => delComponent("detailsModal")}>
                         <AlbumDetails album={ViewStore.detailsModalAlbum}/>
-                    </ScollableModal>
+                    </ScrollableModal>
                 )
             });
         }
         ViewStore.on("openAlbumDetailsModal", openAlbumDetailsModal);
 
+        const openSettingsModal = () => {
+            addComponent({
+                "settingsModal": (
+                    <ScrollableModal key="settingsModal" open onClose={() => delComponent("settingsModal")}>
+                        <SettingsMenu/>
+                    </ScrollableModal>
+                )
+            });
+        }
+        ViewStore.on("openSettingsModal", openSettingsModal);
+
         return () => {
             LibraryStore.removeListener("openAlbumDetailsModal", openAlbumDetailsModal);
+            LibraryStore.removeListener("openSettingsModal", openSettingsModal);
         };
     }, [])
 

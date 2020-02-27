@@ -18,7 +18,8 @@ export default class LibraryStore extends EventEmitter {
      * @param {Object} action
      * @param {string} action.type 
      * @param {import("ViewModel/Album").Album[]} [action.albums] list of album view model objects
-     * @param {string} [action.token] Search token
+     * @param {string} [action.token] Filter token
+     * @param {string} [action.key] Sort key
      * 
      */
     handleAction(action) {
@@ -34,6 +35,12 @@ export default class LibraryStore extends EventEmitter {
                 case LIBRARY_ACTIONS.FILTER:
                     this._filterToken = action.token.toLowerCase()
                     this._filterAlbumsByLowercaseToken(this._filterToken);
+                    this.emit("update");
+                break;
+
+                case LIBRARY_ACTIONS.SORT_ALBUMS:
+                    this._sortByKey = action.key;
+                    this._sortAlbums();
                     this.emit("update");
                 break;
     
@@ -84,5 +91,15 @@ export default class LibraryStore extends EventEmitter {
         }
 
         return this._tokenToAlbumList[lowerCaseToken];
+    }
+
+    _sortAlbums() {
+        if(!this._sortByKey) return;
+
+        const sortedAlbumList = this._tokenToAlbumList[""].sort((a,b) => {
+            return ('' +  a[this._sortByKey]).localeCompare(b[this._sortByKey]);
+        });
+
+        this._tokenToAlbumList = { "" : sortedAlbumList};
     }
 }

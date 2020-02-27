@@ -3,4 +3,9 @@ import * as PlaybackActions from "./PlaybackActions";
 import * as TracklistActions from "./TracklistActions";
 import * as ViewActions from "./ViewActions";
 
-export {LibraryActions, PlaybackActions, TracklistActions, ViewActions};
+export {
+    LibraryActions,
+    PlaybackActions,
+    TracklistActions,
+    ViewActions
+};
