@@ -11,12 +11,13 @@ import { TracklistStore, ViewStore } from "Stores";
 import { ViewActions } from "Actions";
 
 const useStyles = makeStyles(theme => ({
-    drawer: {
+    paper: {
         maxWidth: "80%"
+
     },
     list: {
-        minWidth: 320,
-        width: "100%"
+        maxWidth: "100%",
+        minWidth: 600,
     }
 }));
 
@@ -37,9 +38,11 @@ function MenuDrawer() {
 
     return (
         <Drawer
-            className={classes.drawer}
             open={drawerState}
             onClose={() => setDrawerState(false)}
+            PaperProps={{
+                className: classes.paper
+            }}
         >
             <List className={classes.list}>
                 <ListItem>
