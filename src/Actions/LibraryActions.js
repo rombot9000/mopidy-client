@@ -3,20 +3,9 @@ import Dispatcher from "Dispatcher";
 // Server API
 import { Library } from "MopidyAPI";
 
-// View Model
-import { Album } from "ViewModel";
+// Storage
+import { LibraryDB, SettingsDB } from "StorageAPI";
 
-// Storage API
-import IndexedDB from "StorageAPI/IndexedDB";
-/** @type {IndexedDB} */
-const LibraryDB = new IndexedDB("Library", 3);
-LibraryDB.addSchema({
-    name: "Albums",
-    params: {keyPath: "_uri"},
-    indexSchemes: Object.keys(Album(null)).map(key => {
-        return {"name": key, "params": null};
-    })
-});
 
 /**
  * @readonly
@@ -32,12 +21,31 @@ export const LIBRARY_ACTIONS = {
  * Load albums from Library database
  */
 export async function init() {
-    const albumObjectStoreWriter = await LibraryDB.getObjectStoreWriter("Albums"); 
-    const albums = await albumObjectStoreWriter.getAll();
-    Dispatcher.dispatch({
-        type: LIBRARY_ACTIONS.INIT,
-        albums: albums
-    })
+    
+    let albums = [];
+    let albumSortKey;
+    try {
+
+        const albumObjectStoreReader = await LibraryDB.getObjectStoreReader("Albums"); 
+        albums = await albumObjectStoreReader.getAll();
+        
+        const settingsObjectStoreReader = await SettingsDB.getObjectStoreReader("Settings");
+        const albumSortKeyObject = await settingsObjectStoreReader.get("albumSortKey");
+        albumSortKey = albumSortKeyObject.value;
+    
+    } catch(err) {
+    
+        console.warn("Could not read from indexedDB:", err);
+        
+    } finally {
+    
+        Dispatcher.dispatch({
+            type: LIBRARY_ACTIONS.INIT,
+            albums: albums,
+            albumSortKey: albumSortKey
+        });
+    
+    }
 };
 
 /**
@@ -62,16 +70,18 @@ export function filter(token) {
     Dispatcher.dispatch({
         type: LIBRARY_ACTIONS.FILTER,
         token: token
-    })
+    });
 };
 
 /**
  * Sort albums by key
- * @param {string} key 
+ * @param {string} albumSortKey 
  */
-export function sortAlbums(key) {
+export async function sortAlbums(albumSortKey) {
     Dispatcher.dispatch({
         type: LIBRARY_ACTIONS.SORT_ALBUMS,
-        key: key
+        albumSortKey: albumSortKey
     });
-}
+    const settingsObjectStoreWriter = await SettingsDB.getObjectStoreWriter("Settings");
+    settingsObjectStoreWriter.add([{name: "albumSortKey", value: albumSortKey}]);
+};

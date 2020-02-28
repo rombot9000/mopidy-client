@@ -29,6 +29,8 @@ export default class LibraryStore extends EventEmitter {
                 case LIBRARY_ACTIONS.INIT:
                 case LIBRARY_ACTIONS.FETCH:
                     this._tokenToAlbumList = { "" : action.albums};
+                    if(action.albumSortKey != null) this._albumSortKey = action.albumSortKey;
+                    this._sortAlbums();
                     this.emit("update");
                 break;
     
@@ -39,7 +41,7 @@ export default class LibraryStore extends EventEmitter {
                 break;
 
                 case LIBRARY_ACTIONS.SORT_ALBUMS:
-                    this._sortByKey = action.key;
+                    this._albumSortKey = action.albumSortKey;
                     this._sortAlbums();
                     this.emit("update");
                 break;
@@ -94,10 +96,10 @@ export default class LibraryStore extends EventEmitter {
     }
 
     _sortAlbums() {
-        if(!this._sortByKey) return;
+        if(!this._albumSortKey) return;
 
         const sortedAlbumList = this._tokenToAlbumList[""].sort((a,b) => {
-            return ('' +  a[this._sortByKey]).localeCompare(b[this._sortByKey]);
+            return ('' +  a[this._albumSortKey]).localeCompare(b[this._albumSortKey]);
         });
 
         this._tokenToAlbumList = { "" : sortedAlbumList};
