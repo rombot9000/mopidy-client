@@ -38,7 +38,6 @@ const useStyles = makeStyles(theme => ({
         heigth: "100%",
         [theme.breakpoints.up('md')]: {
             width: "100%",
-            height: `calc(100%-${theme.spacing(4)}px)`,
             overflowY: "scroll",
             "&::-webkit-scrollbar": {
                 display: "none"

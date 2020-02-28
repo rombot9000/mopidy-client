@@ -12,12 +12,15 @@ import { ViewActions } from "Actions";
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        maxWidth: "80%"
-
+        [theme.breakpoints.up('sm')]: {
+            width: 400,
+        },
+        [theme.breakpoints.down('xs')]: {
+            width: `calc(100% - 56px)`,
+        }
     },
     list: {
-        maxWidth: "100%",
-        minWidth: 600,
+        width: "100%"
     }
 }));
 

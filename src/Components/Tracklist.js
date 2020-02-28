@@ -9,6 +9,7 @@ import { PlaybackStore } from "Stores";
 
 const useStyles = makeStyles(theme => ({
     container: {
+        maxWidth: "100%",
         maxHeight: "100%",
         backgroundColor: theme.palette.background.paper,
     },
