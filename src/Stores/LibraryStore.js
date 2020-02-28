@@ -10,6 +10,7 @@ export default class LibraryStore extends EventEmitter {
         this._tokenToAlbumList = { "" : [] };
         /** @type {string} */
         this._filterToken = "";
+        this._albumSortKey = null;
 
     }
 
@@ -61,6 +62,13 @@ export default class LibraryStore extends EventEmitter {
      */
     get albums() {
         return this._filterAlbumsByLowercaseToken(this._filterToken);
+    }
+
+    /**
+     * @readonly
+     */
+    get albumSortKey() {
+        return this._albumSortKey;
     }
 
 

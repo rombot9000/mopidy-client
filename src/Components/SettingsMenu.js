@@ -5,17 +5,26 @@ import { Paper, MenuList, MenuItem, FormControl, InputLabel, NativeSelect } from
 import { Album } from "ViewModel";
 
 import { LibraryActions } from "Actions";
+import { LibraryStore } from "Stores";
 
 export default function SettingsMenu() {
 
-    
+    const [albumSortKey, setAlbumSortKey] = React.useState(LibraryStore.albumSortKey);
+
     return (
         <Paper>
             <MenuList>
                 <MenuItem button={false}>
                     <FormControl>
                         <InputLabel>Sort albums by</InputLabel>
-                        <NativeSelect onInput={(event) => { LibraryActions.sortAlbums(event.target.value) }}>
+                        <NativeSelect
+                            value={albumSortKey}
+                            onInput={(event) => {
+                                event.preventDefault();
+                                LibraryActions.sortAlbums(event.target.value);
+                                setAlbumSortKey(event.target.value);
+                            }}
+                        >
                             {Object.keys(Album(null)).map(key => (
                                 <option value={key}>{key}</option>
                             ))}
