@@ -1,3 +1,5 @@
+/** @typedef {{index: string, params: IDBIndexParameters}} IndexSchema */
+
 export default class ObjectStore {
     /**
      * 
@@ -8,13 +10,13 @@ export default class ObjectStore {
     }
 
     /**
-     * @param {{name: string, params: IDBIndexParameters}[]} scheme 
+     * @param {IndexSchema[]} scheme 
      */
     createIndices(scheme) {
         return new Promise( (resolve, reject) => {
             // create indices from schema
             scheme.forEach(index => {
-                this._store.createIndex(index.name, index.name, index.params);
+                this._store.createIndex(index.index, index.index, index.params);
             })
             // resolve on sucess
             this._store.transaction.oncomplete = (event) => { resolve() };
@@ -48,6 +50,18 @@ export default class ObjectStore {
     getAll() {
         return new Promise((resolve, reject) => {
             const request = this._store.getAll();
+            request.onsuccess = (event) => { resolve(event.target.result) };
+            request.onerror = reject;
+        });
+    }
+
+    /**
+     * Get object from store by key
+     * @param {string} key 
+     */
+    get(key) {
+        return new Promise((resolve, reject) => {
+            const request = this._store.get(key);
             request.onsuccess = (event) => { resolve(event.target.result) };
             request.onerror = reject;
         });

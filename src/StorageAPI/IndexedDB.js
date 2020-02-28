@@ -1,8 +1,7 @@
 import ObjectStore from "./ObjectStore";
 
-/** @typedef {{name: string, params: IDBIndexParameters}} IndexSchema */
 
-/** @typedef {{name: string, params: IDBObjectStoreParameters, indexSchemes: IndexSchema[]}} ObjectStoreSchema */
+/** @typedef {{store: string, params: IDBObjectStoreParameters, indexSchemes: import("./ObjectStore").IndexSchema[]}} ObjectStoreSchema */
 
 /**
  * This class is basically just a promise wrapper for the IndexedDB API
@@ -50,10 +49,10 @@ export default class IndexedDB {
                 this._schema.forEach( (objectStoreSchema) => {
 
                     // clear old entries
-                    if(indexedDB.objectStoreNames.contains(objectStoreSchema.name)) indexedDB.deleteObjectStore(objectStoreSchema.name);
+                    if(indexedDB.objectStoreNames.contains(objectStoreSchema.store)) indexedDB.deleteObjectStore(objectStoreSchema.store);
                     
                     // create new store in database
-                    const store = indexedDB.createObjectStore(objectStoreSchema.name, objectStoreSchema.params);
+                    const store = indexedDB.createObjectStore(objectStoreSchema.store, objectStoreSchema.params);
 
                     // create instance of store handler class
                     const objectStore = new ObjectStore(store);
