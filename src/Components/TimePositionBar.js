@@ -14,17 +14,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function TimePositionSlider(props) {
+export default function TimePositionBar() {
     const classes = useStyles();
 
     /** @type {React.Ref<SVGAnimateElement>} */
     const animationRef = React.useRef(null);
 
+    // State object for animation
     const [animation, setAnimation] = React.useState({
         start: 0,
         end: 0,
         duration: 0
     });
+
+    // Listen for events: playback and window focus/blur
     React.useEffect(() => {
         const updateAnimationState = () => {
             animationRef.current.endElement();
@@ -41,7 +44,7 @@ export default function TimePositionSlider(props) {
         // Keep svg active when window in background
         let backgroundUpdateInterval;
         const handleBlur = () => {
-            backgroundUpdateInterval = setInterval(updateAnimationState, 5000);
+            backgroundUpdateInterval = setInterval(updateAnimationState, 2000);
         };
         window.addEventListener('blur', handleBlur);
 

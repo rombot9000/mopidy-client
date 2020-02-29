@@ -7,7 +7,7 @@ import {AppBar, Toolbar, Box } from "@material-ui/core";
 import {ButtonGroup, IconButton} from "@material-ui/core";
 import {PlayArrow, Pause, SkipNext, SkipPrevious} from "@material-ui/icons";
 
-import TimePositionSlider from "./TimePositionSlider";
+import TimePositionBar from "./TimePositionBar";
 
 import { PlaybackActions } from "Actions";
 import { PlaybackStore } from "Stores";
@@ -72,7 +72,7 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
     return (
         <AppBar {...props} ref={ref} position="fixed" color="primary" className={classes.appbar}>
             <div className={classes.slider}>
-                <TimePositionSlider/>
+                <TimePositionBar/>
             </div>
             <Toolbar>
                 <ButtonGroup>
