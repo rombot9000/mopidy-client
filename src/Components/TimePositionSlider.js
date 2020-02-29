@@ -15,12 +15,12 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function TimePositionSlider(props) {
-
     const classes = useStyles();
 
+    /** @type {React.Ref<SVGAnimateElement>} */
     const animationRef = React.useRef(null);
+
     const [animation, setAnimation] = React.useState({
-        state: PlaybackStore.state,
         start: 0,
         end: 0,
         duration: 0
@@ -30,7 +30,6 @@ export default function TimePositionSlider(props) {
             animationRef.current.endElement();
             const trackPercentage = PlaybackStore.track.length ? 100*PlaybackStore.timePosition/PlaybackStore.track.length : 0;
             setAnimation({
-                state: PlaybackStore.state,
                 start: trackPercentage,
                 end: 100,
                 duration: PlaybackStore.track.length - PlaybackStore.timePosition
@@ -63,12 +62,15 @@ export default function TimePositionSlider(props) {
     }, []);
 
     React.useEffect(() => {
-        if(animation.state === "playing") {
-            animationRef.current.beginElement();
-        }
-        else {
-            animationRef.current.endElement();
-        }
+        // Timeout needed if renedering to slow...
+        setTimeout(() =>{
+            if(PlaybackStore.state === "playing") {
+                animationRef.current.beginElement();
+            }
+            else {
+                animationRef.current.endElement();
+            }
+        },500);
     }, [animation]);
 
     /**
