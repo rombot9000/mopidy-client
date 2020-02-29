@@ -19,11 +19,6 @@ mopidy.on("state:online", () => {
     PlaybackActions.fetch();
 });
 
-window.addEventListener('focus', () => {
-    TracklistActions.fetch();
-    PlaybackActions.fetch();
-});
-
 mopidy.on("event", (event, args) => {
 
     console.log(event);
@@ -89,6 +84,11 @@ mopidy.on("event", (event, args) => {
 
 // connect to server
 mopidy.connect();
+// reconnect on focus
+window.addEventListener('focus', () => {
+    mopidy.connect();
+});
+ 
 
 
 
