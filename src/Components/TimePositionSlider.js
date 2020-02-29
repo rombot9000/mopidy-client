@@ -26,7 +26,6 @@ export default function TimePositionSlider(props) {
         duration: 0
     });
     React.useEffect(() => {
-
         const updateAnimationState = () => {
             animationRef.current.endElement();
             const trackPercentage = PlaybackStore.track.length ? 100*PlaybackStore.timePosition/PlaybackStore.track.length : 0;
@@ -38,12 +37,27 @@ export default function TimePositionSlider(props) {
             });
         }
         PlaybackStore.on("update", updateAnimationState);
-        window.addEventListener('focus', updateAnimationState);
+
+
+        // Keep svg active when window in background
+        let backgroundUpdateInterval;
+        const handleBlur = () => {
+            backgroundUpdateInterval = setInterval(updateAnimationState, 5000);
+        };
+        window.addEventListener('blur', handleBlur);
+
+        // clear interval and update state once
+        const handleFocus = () => {
+            clearInterval(backgroundUpdateInterval);
+            updateAnimationState();
+        };
+        window.addEventListener('focus', handleFocus);
 
         // return clean up function
         return () => {
             PlaybackStore.removeListener("update", updateAnimationState);
-            window.removeEventListener("focus", updateAnimationState);
+            window.removeEventListener("focus", handleFocus);
+            window.removeEventListener("blur", handleBlur);
         };
 
     }, []);
