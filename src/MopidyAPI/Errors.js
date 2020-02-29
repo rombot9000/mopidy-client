@@ -5,7 +5,7 @@ export class UnknownPlaybackCmdError extends Error {
     constructor(cmd) {
         super(`Unknown Playback state: ${cmd}`);
         this.name = this.constructor.name;
-        Error.captureStackTrace(this, this.constructor);
+        if(Error.captureStackTrace) Error.captureStackTrace(this, this.constructor);
     }
 }
 
@@ -17,6 +17,6 @@ export class UnknownPlaybackStateError extends Error {
     constructor(state) {
         super(`Unknown Playback state: ${state}`);
         this.name = this.constructor.name;
-        Error.captureStackTrace(this, this.constructor);
+        if(Error.captureStackTrace) Error.captureStackTrace(this, this.constructor);
     }
 }
