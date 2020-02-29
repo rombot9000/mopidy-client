@@ -14,14 +14,35 @@ export default class NetworkStore extends EventEmitter {
 
             case NETWORK_ACTIONS.SET_SERVER_STATE:
                 this._serverState = action.state;
+                this.emit("update")
             break;
 
             case NETWORK_ACTIONS.SET_SOCKET_STATE:
                 this._socketState = action.state;
+                this.emit("update")
             break;
             
             default:
 
         }
     }
+
+    /**
+     * @readonly
+     * @type {import("Actions/NetworkActions").ServerState}
+     */
+    get serverState() {
+        return this._serverState;
+    }
+    
+    /**
+     * @readonly
+     * @type {import("Actions/NetworkActions").SocketState}
+     */
+    get socketState() {
+        return this._socketState;
+    }
+
+
+
 };

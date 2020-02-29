@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Box } from '@material-ui/core';
+import { Box, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
 import { AlbumGrid, AlbumDetails, ScrollableModal, PlaybackCtrlBar, SearchBar, MenuDrawer, SettingsMenu } from "Components"; 
-import { LibraryStore, ViewStore } from "Stores";
+import { LibraryStore, ViewStore, NetworkStore } from "Stores";
 
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function MainView(props) {
+function MainView() {
     const classes = useStyles();
 
     /** 
@@ -40,15 +40,13 @@ function MainView(props) {
         * Add components to view
         * @param {ViewComponents} newComp 
         */
-        function addComponent(newComp) {
-            setComponents(comps => {return {...comps, ...newComp}});
-        }
+        const addComponent = (newComp) => { setComponents(comps => {return {...comps, ...newComp}} ) };
 
         /**
          * Remove componentes from view
          * @param {string} key 
          */
-        function delComponent(key) {
+        const delComponent = (key) => {
             setComponents(comps => {
                 delete comps[key];
                 return {...comps};
@@ -122,6 +120,11 @@ function MainView(props) {
                 <AlbumGrid albums={albums} />
             </Box>
             <PlaybackCtrlBar ref={ctrlBarRef} />
+            {/* <Snackbar
+                open={true}
+                message={NetworkStore._serverState}
+                autoHideDuration={5000}
+            /> */}
             {Object.values(components)}
         </React.Fragment>
     );
