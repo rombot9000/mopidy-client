@@ -28,7 +28,7 @@ function MenuDrawer() {
 
     const classes = useStyles();
 
-    const [drawerState, setDrawerState] = React.useState(true);
+    const [drawerState, setDrawerState] = React.useState(false);
     React.useEffect(() => {
         
         const toggleDrawerState = () => setDrawerState(s => !s);

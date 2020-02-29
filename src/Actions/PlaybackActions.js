@@ -15,7 +15,8 @@ export const PLAYBACK_ACTIONS = {
     STOP: "playbackActions.Stop",
     TOGGLE: "playbackActions.Toggle",
     NEXT: "playbackActions.Next",
-    PREVIOUS: "playbackActions.Previous"
+    PREVIOUS: "playbackActions.Previous",
+    SEEK: "playbackActions.Seek",
 };
 
 export async function fetch() {
@@ -132,5 +133,17 @@ export function previous() {
     Playback.previous();
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.PREVIOUS
+    });
+};
+
+/**
+ * 
+ * @param {number} timePosition
+ */
+export function seek(timePosition) {
+    Playback.seek(timePosition);
+    Dispatcher.dispatch({
+        type: PLAYBACK_ACTIONS.SEEK,
+        timePosition: timePosition
     });
 };

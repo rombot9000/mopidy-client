@@ -19,6 +19,11 @@ mopidy.on("state:online", () => {
     PlaybackActions.fetch();
 });
 
+window.addEventListener('focus', () => {
+    TracklistActions.fetch();
+    PlaybackActions.fetch();
+});
+
 mopidy.on("event", (event, args) => {
 
     console.log(event);
@@ -56,6 +61,13 @@ mopidy.on("event", (event, args) => {
         case "event:trackPlaybackPaused":
             PlaybackActions.update({
                 state: "paused",
+                timePosition: args.time_position,
+                timePositionUpdated: Date.now()
+            });
+        break;
+
+        case "event:seeked":
+            PlaybackActions.update({
                 timePosition: args.time_position,
                 timePositionUpdated: Date.now()
             });

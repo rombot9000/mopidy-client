@@ -2,18 +2,29 @@ import React from "react";
 
 import {makeStyles} from "@material-ui/core";
 import {Typography} from "@material-ui/core";
-import {AppBar, Toolbar, Box} from "@material-ui/core";
+import {AppBar, Toolbar, Box } from "@material-ui/core";
 
 import {ButtonGroup, IconButton} from "@material-ui/core";
 import {PlayArrow, Pause, SkipNext, SkipPrevious} from "@material-ui/icons";
+
+import TimePositionSlider from "./TimePositionSlider";
 
 import { PlaybackActions } from "Actions";
 import { PlaybackStore } from "Stores";
 
 const useStyles = makeStyles(theme => ({
-    appBar: {
+    appbar: {
         top: 'auto',
         bottom: 0,
+    },
+    slider: {
+        position: "absolute",
+        top: 0,
+        transform: "translate(0,-100%)",
+        padding: theme.spacing(0, 0.5),
+        width: "100%",
+        height: theme.spacing(0.5),
+        zIndex: theme.zIndex["appBar"],
     }
 }));
 
@@ -46,7 +57,7 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
         const handlePlaybackUpdate = () => {
             setPlaybackInfo({
                 state: PlaybackStore.state,
-                track: PlaybackStore.track
+                track: PlaybackStore.track,
             });
         };
         PlaybackStore.on("update", handlePlaybackUpdate);
@@ -59,7 +70,10 @@ const PlaybackCtrlBar = React.forwardRef((props, ref) => {
     }, []); // prevents call on each render
 
     return (
-        <AppBar {...props} ref={ref} position="fixed" color="primary" className={classes.appBar}>
+        <AppBar {...props} ref={ref} position="fixed" color="primary" className={classes.appbar}>
+            <div className={classes.slider}>
+                <TimePositionSlider/>
+            </div>
             <Toolbar>
                 <ButtonGroup>
                     <PlaybackButton onClick={() => PlaybackActions.previous()}>

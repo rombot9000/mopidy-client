@@ -76,7 +76,10 @@ export default class PlaybackAPI {
                 throw new UnknownPlaybackStateError(this._state);
         }
     }
-
+    
+    /**
+     * @param {number} tlid 
+     */
     async play(tlid) {
         await this._mopidy.playback.play({tlid: tlid});
     }
@@ -99,5 +102,12 @@ export default class PlaybackAPI {
 
     async previous() {
         await this._mopidy.playback.previous({});
+    }
+
+    /**
+     * @param {number} timePosition 
+     */
+    async seek(timePosition) {
+        await this._mopidy.playback.seek({"time_position": timePosition});
     }
 };

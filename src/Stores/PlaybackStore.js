@@ -105,7 +105,7 @@ export default class PlaybackStore extends EventEmitter {
                 return null;
 
             default:
-                console.warn(UnknownPlaybackStateError(this._state));
+                console.warn(new UnknownPlaybackStateError(this._state));
                 return null;
         }
     }
