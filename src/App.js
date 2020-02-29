@@ -2,96 +2,20 @@ import React from "react";
 
 import { CssBaseline } from '@material-ui/core';
 
-import { mopidy } from "MopidyAPI";
 
 import MainView from "Components/MainView";
-import { LibraryActions, TracklistActions, PlaybackActions } from "Actions";
-import { Track } from "ViewModel";
+import { LibraryActions, NetworkActions } from "Actions";
 
 // Init stores
 LibraryActions.init();
 
-// Setup API callbacks here for now
-mopidy.on("state:online", () => {
-    console.log("Mopidy server online. Initializing stores...");
-    LibraryActions.fetch();
-    TracklistActions.fetch();
-    PlaybackActions.fetch();
-});
-
-mopidy.on("event", (event, args) => {
-
-    console.log(event);
-    console.log(args);
-    
-    switch(event) {
-        case "event:playbackStateChanged":
-            if(args.new_state === "stopped"){
-                PlaybackActions.update({
-                    state: "stopped",
-                    track: Track(null),
-                    timePosition: 0,
-                    timePositionUpdated: 0
-                });
-            }
-        break;
-        
-        case "event:trackPlaybackStarted":
-            PlaybackActions.update({
-                state: "playing",
-                track: Track(args.tl_track.track),
-                timePosition: 0,
-                timePositionUpdated: Date.now()
-            });
-        break;
-
-        case "event:trackPlaybackResumed":
-            PlaybackActions.update({
-                state: "playing",
-                timePosition: args.time_position,
-                timePositionUpdated: Date.now()
-            });
-        break;
-        
-        case "event:trackPlaybackPaused":
-            PlaybackActions.update({
-                state: "paused",
-                timePosition: args.time_position,
-                timePositionUpdated: Date.now()
-            });
-        break;
-
-        case "event:seeked":
-            PlaybackActions.update({
-                timePosition: args.time_position,
-                timePositionUpdated: Date.now()
-            });
-        break;
-
-        case "event:trackPlaybackEnded":
-        case "event:trackPlaybackStopped":
-        break;
-
-        case "event:tracklistChanged":
-            TracklistActions.fetch();
-        break;
-
-        default:
-            console.debug(`Event not handled here: ${event}`);
-            break;
-    }
-});
-
 // connect to server
-mopidy.connect();
+NetworkActions.connectToServer();
 // reconnect on focus
 window.addEventListener('focus', () => {
-    mopidy.connect();
+    NetworkActions.connectToServer();
 });
  
-
-
-
 function App() {
     return (
         <React.Fragment>
