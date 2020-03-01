@@ -14,12 +14,12 @@ export default class NetworkStore extends EventEmitter {
 
             case NETWORK_ACTIONS.SET_SERVER_STATE:
                 this._serverState = action.state;
-                this.emit("update")
+                this.emit("update", "serverState");
             break;
 
             case NETWORK_ACTIONS.SET_SOCKET_STATE:
-                this._socketState = action.state;
-                this.emit("update")
+                this._socketState = action.state.replace("websocket:","");
+                this.emit("update", "socketState");
             break;
             
             default:

@@ -7,6 +7,7 @@ import ScrollableModal from "./ScrollableModal";
 import SearchBar from "./SearchBar";
 import SettingsMenu from "./SettingsMenu";
 import Tracklist from "./Tracklist";
+import MsgSnackBar from "./MsgSnackBar";
 
 export {
     AlbumDetails,
@@ -17,5 +18,6 @@ export {
     SearchBar,
     MenuDrawer,
     SettingsMenu,
-    Tracklist
+    Tracklist,
+    MsgSnackBar
 };

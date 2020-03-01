@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Box, Snackbar } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
-import { AlbumGrid, AlbumDetails, ScrollableModal, PlaybackCtrlBar, SearchBar, MenuDrawer, SettingsMenu } from "Components"; 
-import { LibraryStore, ViewStore, NetworkStore } from "Stores";
+import { AlbumGrid, AlbumDetails, ScrollableModal, PlaybackCtrlBar, SearchBar, MenuDrawer, SettingsMenu, MsgSnackBar } from "Components"; 
+import { LibraryStore, ViewStore } from "Stores";
 
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function MainView() {
+export default function MainView() {
     const classes = useStyles();
 
     /** 
@@ -119,15 +119,9 @@ function MainView() {
             <Box className={classes.rootBox} marginBottom={`${view.height}px`} paddingTop={`${view.paddingTop}px`} >
                 <AlbumGrid albums={albums} />
             </Box>
+            <MsgSnackBar/>
             <PlaybackCtrlBar ref={ctrlBarRef} />
-            {/* <Snackbar
-                open={true}
-                message={NetworkStore._serverState}
-                autoHideDuration={5000}
-            /> */}
             {Object.values(components)}
         </React.Fragment>
     );
 };
-
-export default MainView;

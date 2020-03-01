@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Paper, List, ListItem, ListItemIcon, ListItemText, FormControl, InputLabel, NativeSelect } from "@material-ui/core";
+import { Paper, List, ListItem, ListItemText, FormControl, NativeSelect } from "@material-ui/core";
 
 import { Album } from "ViewModel";
 
