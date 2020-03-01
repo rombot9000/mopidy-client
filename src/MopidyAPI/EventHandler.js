@@ -1,6 +1,6 @@
 
 import { Track } from "ViewModel";
-import { LibraryActions, TracklistActions, PlaybackActions, NetworkActions } from "Actions";
+import { LibraryActions, TracklistActions, PlaybackActions, NetworkActions, NotifyActions } from "Actions";
 
 /** @typedef {
     "event:playbackStateChanged"|
@@ -28,6 +28,27 @@ export function handleServerEvent(state) {
 
     // Set network state
     NetworkActions.setServerState(state)
+
+    // Notify user
+    switch(state) {
+        case "state:online":
+            NotifyActions.notifyUser("info", "Server online.");
+        break;
+
+        case "reconnecting":
+            NotifyActions.notifyUser("info", "Reconnecting...");
+        break;
+
+        case "reconnectionPending":
+            NotifyActions.notifyUser("error", "Server offline, waiting to reconnect...");
+        break;
+
+        case "state:offline":
+            NotifyActions.notifyUser("error", "Server offline.");
+        break;
+
+        default:
+    }
     
     // fetch info from server
     if(state === "state:online") {

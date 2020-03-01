@@ -1,6 +1,7 @@
 import Dispatcher from "Dispatcher";
 
-import { Tracklist, Playback } from "MopidyAPI";
+import { Playback } from "MopidyAPI";
+import * as Mopidy from "MopidyAPI/Utils";
 
 export const PLAYBACK_ACTIONS = {
     INIT: "playbackActions.Init",
@@ -86,51 +87,49 @@ export function updateTrack(track) {
  * @param {import("ViewModel/Track").Track[]} tracks 
  */
 export async function play(track, tracks) {
-    await Tracklist.set(tracks);
-    const tlid = Tracklist.getTrackId(track);
-    await Playback.play(tlid);
+    Mopidy.playTracklist(track, tracks);
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.PLAY
     });
 };
 
 export function pause() {
-    Playback.pause();
+    Mopidy.sendPlaybackCmd("pause");
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.PAUSE
     });
 };
 
 export function resume() {
-    Playback.resume();
+    Mopidy.sendPlaybackCmd("resume");
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.RESUME
     });
 };
 
 export function stop() {
-    Playback.stop();
+    Mopidy.sendPlaybackCmd("stop");
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.STOP
     });
 };
 
 export function toggle() {
-    Playback.togglePlayback();
+    Mopidy.togglePlayback();
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.TOGGLE
     });
 };
 
 export function next() {
-    Playback.next();
+    Mopidy.sendPlaybackCmd("next");
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.NEXT
     });
 };
 
 export function previous() {
-    Playback.previous();
+    Mopidy.sendPlaybackCmd("previous");
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.PREVIOUS
     });
@@ -141,7 +140,7 @@ export function previous() {
  * @param {number} timePosition
  */
 export function seek(timePosition) {
-    Playback.seek(timePosition);
+    Mopidy.seekTimePosition(timePosition);
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.SEEK,
         timePosition: timePosition

@@ -13,6 +13,7 @@ export const NETWORK_ACTIONS = {
     CONNECT: "networkActions.Connect",
     SET_SERVER_STATE: "networkActions.SetServerState",
     SET_SOCKET_STATE: "networkActions.SetSocketState",
+    NOTFY_USER: "networkActions.NotifyUser"
 };
 
 /**

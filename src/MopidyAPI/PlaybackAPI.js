@@ -58,19 +58,16 @@ export default class PlaybackAPI {
     /**
      * Toggles Playback: STOPPED -> PLAYING <-> PAUSED
      */
-    async togglePlayback() {
+    togglePlayback() {
         switch(this._state) {
             case "stopped":
-                await this._mopidy.playback.play({});
-            break;
+                return this._mopidy.playback.play({});
 
             case "paused":
-                await this._mopidy.playback.resume({});
-            break;
+                return this._mopidy.playback.resume({});
             
             case "playing":
-                await this._mopidy.playback.pause({});
-            break;
+                return this._mopidy.playback.pause({});
             
             default:
                 throw new UnknownPlaybackStateError(this._state);
@@ -80,34 +77,23 @@ export default class PlaybackAPI {
     /**
      * @param {number} tlid 
      */
-    async play(tlid) {
-        await this._mopidy.playback.play({tlid: tlid});
+    playTrack(tlid) {
+        return this._mopidy.playback.play({tlid: tlid});
     }
 
-    async pause() {
-        await this._mopidy.playback.pause({});
-    }
-
-    async resume() {
-        await this._mopidy.playback.resume({});
-    }
-
-    async stop() {
-        await this._mopidy.playback.stop({});
-    }
-
-    async next() {
-        await this._mopidy.playback.next({});
-    }
-
-    async previous() {
-        await this._mopidy.playback.previous({});
+    /**
+     * Since most playback api calls do not require arguments, we use a single api wrapper frunction
+     * @param {PlaybackCmd} cmd 
+     * @param {Object.<string,any>} args Optional arguments for cmd
+     */
+    async sendCmd(cmd, args={}) {            
+        return this._mopidy.playback[cmd](args);
     }
 
     /**
      * @param {number} timePosition 
      */
-    async seek(timePosition) {
-        await this._mopidy.playback.seek({"time_position": timePosition});
+    seek(timePosition) {
+        return this._mopidy.playback.seek({"time_position": timePosition});
     }
 };
