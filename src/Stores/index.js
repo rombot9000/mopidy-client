@@ -1,10 +1,10 @@
 import Dispatcher from "Dispatcher";
 
-import networkStore from "./NetworkStore";
-import viewStore from "./ViewStore";
-import libraryStore from "./LibraryStore";
-import tracklistStore from "./TracklistStore";
-import playbackStore from "./PlaybackStore";
+import networkStore from "./networkStore";
+import viewStore from "./viewStore";
+import libraryStore from "./libraryStore";
+import tracklistStore from "./tracklistStore";
+import playbackStore from "./playbackStore";
 
 export const NetworkStore = new networkStore();
 Dispatcher.register(NetworkStore.handleAction.bind(NetworkStore));
