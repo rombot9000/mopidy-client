@@ -3,8 +3,8 @@ import Dispatcher from "Dispatcher";
 // Server API
 import { mopidy } from "MopidyAPI";
 
-/** @typedef {"online"|"offline"|"reconnectionPending"|"reconnecting"} ServerState */
-/** @typedef {"open"|"close"|"error"} SocketState */
+/** @typedef {import("MopidyAPI/EventHandler").ServerState} ServerState */
+/** @typedef {import("MopidyAPI/EventHandler").SocketState} SocketState */
 
 /**
  * @readonly
@@ -20,6 +20,7 @@ export const NETWORK_ACTIONS = {
  * @param {ServerState} state 
  */
 export function setServerState(state) {
+    console.log("Server state:", state);
     Dispatcher.dispatch({
         type: NETWORK_ACTIONS.SET_SERVER_STATE,
         state: state
@@ -31,6 +32,7 @@ export function setServerState(state) {
  * @param {SocketState} state 
  */
 export function setSocketState(state) {
+    console.log("Socket state:", state);
     Dispatcher.dispatch({
         type: NETWORK_ACTIONS.SET_SOCKET_STATE,
         state: state
