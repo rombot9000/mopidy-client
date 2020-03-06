@@ -48,6 +48,7 @@ export function handleServerEvent(state) {
         break;
 
         default:
+            console.debug("Server state not handled:", state);
     }
     
     // fetch info from server
@@ -64,6 +65,7 @@ export function handleServerEvent(state) {
  */
 export function handleSocketEvent(state) {
     NetworkActions.setSocketState(state);
+    console.debug("Server state not handled:", state);
 };
 
 /**

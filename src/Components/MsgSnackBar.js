@@ -5,7 +5,8 @@ import { Snackbar, Button } from '@material-ui/core';
 import { NotifyStore } from "Stores";
 import { NetworkActions } from "Actions";
 
-export default function() {
+
+export default function(props) {
 
     const [state, setState] = React.useState({
         open: false,
@@ -14,7 +15,7 @@ export default function() {
         action: null
     });
     React.useEffect(() => {
-        const connectButton = (<Button color="inherit" size="small" onClick={NetworkActions.connectToServer}>Connect</Button>)
+        const connectButton = (<Button color="secondary" size="small" onClick={NetworkActions.connectToServer}>Connect</Button>)
         
         /**
          * 
@@ -43,6 +44,7 @@ export default function() {
                         open: true,
                         msg: NotifyStore.notifyMsg,
                         autoHideDuration: 2000,
+                        //action: connectButton
                     });
                 break;
 
@@ -60,6 +62,7 @@ export default function() {
 
     return (
         <Snackbar
+            {...props}
             open={state.open}
             message={state.msg}
             autoHideDuration={state.autoHideDuration}

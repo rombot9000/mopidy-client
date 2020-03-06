@@ -4,16 +4,23 @@ import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
 import { AlbumGrid, AlbumDetails, ScrollableModal, PlaybackCtrlBar, SearchBar, MenuDrawer, SettingsMenu, MsgSnackBar } from "Components"; 
-import { LibraryStore, ViewStore } from "Stores";
+import { ViewStore } from "Stores";
 
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents
  */
 
 const useStyles = makeStyles(theme => ({
-    rootBox: {
-        width: '100%',
-        height: '100%',
+    viewBox: {
+        position: "absolute",
+        top: 0,
+        width: "100%",
+    },
+    scrollBox: {
+        width: "100%",
+        height: "100%",
+        overflowY: "scroll",
+        overflowX: "hidden"
     },
     searchBar: {
         zIndex: 1100,
@@ -23,7 +30,11 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(1,1,0,1),//top-right-bottom-left
         left: "50%",
         transform: "translate(-50%,0)",
-    }
+    },
+    snackBar: {
+        position: "absolute",
+        bottom: theme.spacing(1),
+    },
 }));
 
 
@@ -76,22 +87,10 @@ export default function MainView() {
         ViewStore.on("openSettingsModal", openSettingsModal);
 
         return () => {
-            LibraryStore.removeListener("openAlbumDetailsModal", openAlbumDetailsModal);
-            LibraryStore.removeListener("openSettingsModal", openSettingsModal);
+            ViewStore.removeListener("openAlbumDetailsModal", openAlbumDetailsModal);
+            ViewStore.removeListener("openSettingsModal", openSettingsModal);
         };
     }, [])
-
-    // Setup states and listeners
-    const [albums, setAlbums] = React.useState(LibraryStore.albums);
-    React.useEffect(() => {
-
-        const handleLibraryUpdate = () => {setAlbums(LibraryStore.albums)};
-        LibraryStore.on("update", handleLibraryUpdate);
-        
-        return () => {
-            LibraryStore.removeListener("update", handleLibraryUpdate);
-        };
-    }, []);
 
     /*
      * Listen for view changes
@@ -106,6 +105,7 @@ export default function MainView() {
     React.useEffect(() => {
         const height = ctrlBarRef.current ? ctrlBarRef.current.offsetHeight : 0;
         const paddingTop = srchBarRef.current ? srchBarRef.current.offsetHeight : 0;
+        console.log(window.innerHeight, window.outerHeight, height);
         setView({
             height: height,
             paddingTop: paddingTop
@@ -116,10 +116,12 @@ export default function MainView() {
         <React.Fragment>
             <SearchBar className={classes.searchBar} ref={srchBarRef} />
             <MenuDrawer/>
-            <Box className={classes.rootBox} marginBottom={`${view.height}px`} paddingTop={`${view.paddingTop}px`} >
-                <AlbumGrid albums={albums} />
+            <Box className={classes.viewBox} bottom={`${view.height}px`}>
+                <Box className={classes.scrollBox} paddingTop={`${view.paddingTop}px`}>
+                    <AlbumGrid/>
+                </Box>
+                <MsgSnackBar className={classes.snackBar}/>
             </Box>
-            <MsgSnackBar/>
             <PlaybackCtrlBar ref={ctrlBarRef} />
             {Object.values(components)}
         </React.Fragment>

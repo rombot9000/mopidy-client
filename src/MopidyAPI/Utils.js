@@ -1,4 +1,4 @@
-import {Tracklist, Playback} from "."
+import { Tracklist, Playback } from "."
 import { NotifyActions } from "Actions";
 
 export async function playTracklist(track, tracks) {
