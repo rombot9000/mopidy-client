@@ -11,6 +11,7 @@ export const PLAYBACK_ACTIONS = {
     UPDATE_TIME_POSITION: "playbackActions.UpdateTimePosition",
     UPDATE_TRACK: "playbackActions.UpdateTrack",
     PLAY: "playbackActions.Play",
+    PLAY_ALBUM: "playbackActions.PlayAlbum",
     PAUSE: "playbackActions.Pause",
     RESUME: "playbackActions.Resume",
     STOP: "playbackActions.Stop",
@@ -87,9 +88,20 @@ export function updateTrack(track) {
  * @param {import("ViewModel/Track").Track[]} tracks 
  */
 export async function play(track, tracks) {
-    Mopidy.playTracklist(track, tracks);
+    Mopidy.playTracklist(tracks, track);
     Dispatcher.dispatch({
         type: PLAYBACK_ACTIONS.PLAY
+    });
+};
+
+/**
+ * 
+ * @param {import("ViewModel/Album").Album} album 
+ */
+export async function playAlbum(album) {
+    Mopidy.playTracklist(album.tracks);
+    Dispatcher.dispatch({
+        type: PLAYBACK_ACTIONS.PLAY_ALBUM
     });
 };
 

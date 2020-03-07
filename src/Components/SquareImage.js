@@ -17,17 +17,16 @@ const useStyles = makeStyles(theme => ({
  */
 
 /**
- * 
  * @param {SquareImageProps} props 
  */
 function SquareImage(props) {
 
-    const {to, src, ...paperProps} = props;
+    const {src, className, ...paperProps} = props;
 
     const classes = useStyles();
 
     return (
-        <Paper className={classes.paper} {...paperProps}
+        <Paper className={`${className} ${classes.paper}`} {...paperProps}
             style={{
                 backgroundImage: `url(${src})`,
                 backgroundRepeat: "no-repeat",

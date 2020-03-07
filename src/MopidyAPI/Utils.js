@@ -1,10 +1,15 @@
 import { Tracklist, Playback } from "."
 import { NotifyActions } from "Actions";
 
-export async function playTracklist(track, tracks) {
+/**
+ * Play tracklist. If track is omitted, playback starts with first track
+ * @param {import("ViewModel/Track").Track[]} tracks 
+ * @param {import("ViewModel/Track").Track} track 
+ */
+export async function playTracklist(tracks, track) {
     try {
         await Tracklist.set(tracks);
-        const tlid = Tracklist.getTrackId(track);
+        const tlid = track ? Tracklist.getTrackId(track): null;
         await Playback.playTrack(tlid);
     } catch (error) {
         NotifyActions.notifyUser("error", error);

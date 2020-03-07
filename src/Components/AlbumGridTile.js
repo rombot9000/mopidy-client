@@ -1,9 +1,30 @@
 import React from "react";
 
-import { Typography } from "@material-ui/core";
+import { Typography, Grid, Fab, Fade, makeStyles } from "@material-ui/core";
+import { PlayArrow } from "@material-ui/icons";
+
 import SquareImage from "./SquareImage";
 
-import { ViewActions } from "Actions";
+import { ViewActions, PlaybackActions } from "Actions";
+
+/** 
+ * @typedef {Object} AlbumProp
+ * @property {import("ViewModel/Album").Album} album
+ *
+ * @typedef {AlbumProp & import("@material-ui/core").GridProps} AlbumGridTileProps
+ */
+
+const useStyles = makeStyles(theme => ({
+    cover: {
+        position: "relative"
+    },
+    iconBar: {
+        position: "absolute",
+        bottom: theme.spacing(0.5),
+        left: theme.spacing(0.5)
+    }
+}));
+
 
 /**
  * 
@@ -12,25 +33,48 @@ import { ViewActions } from "Actions";
  * @returns {boolean} True if component should NOT rerender, false otherwise
  */
 function checkProps(prevProps, nextProps) {
-    return prevProps.size === nextProps.size && prevProps.album._uri === nextProps.album._uri;
+    return prevProps.album._uri === nextProps.album._uri;
 };
 
 /**
  * Use Memo to prevent rerender when onClick is called
  * NOTE: we use backgound-image hack since the Paper component adds white space below a child img...
- * @param {AlbumGridTileProps} props
+ * @param {AlbumGridTileProps} props 
  */
-const AlbumGridTile = React.memo(props => {
+function AlbumGridTile(props) {
+
+    const {album, ...gridProps} = props;
+
+    const classes = useStyles();
+
+    const [highlight, setHighlight] = React.useState(false);
     
     return (
-        <div onClick={() => ViewActions.openAlbumDetailsModal(props.album)}>
-            <SquareImage src={props.album.cover}/>
-            <Typography variant="button">{props.album.name}</Typography>
+        <Grid item {...gridProps} >
+            <SquareImage
+                className={classes.cover}
+                src={album.cover}
+                onClick={() => ViewActions.openAlbumDetailsModal(album)}
+                onMouseEnter={() => {setHighlight(true)}}
+                onMouseLeave={() => {setHighlight(false)}}
+                elevation={highlight ? 8 : 1}
+            >
+                <Fade in={highlight}>
+                    <Fab
+                        className={classes.iconBar}
+                        size="small"
+                        onClick={() => {PlaybackActions.playAlbum(album)}}
+                    >
+                            <PlayArrow/>
+                    </Fab>
+                </Fade>
+            </SquareImage>
+            <Typography variant="button">{album.name}</Typography>
             <br/>
-            <Typography variant="caption">{props.album.artist}</Typography>
-        </div>
+            <Typography variant="caption">{album.artist}</Typography>
+        </Grid>
     );
 
-}, checkProps);
+};
 
-export default AlbumGridTile;
+export default React.memo(AlbumGridTile, checkProps);

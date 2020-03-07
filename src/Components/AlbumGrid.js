@@ -42,14 +42,7 @@ function AlbumGrid(props) {
             spacing={GRID_SPACING}
             className={classes.gridList}
         >
-        {albums.map((a,i) => (
-            <Grid item key={i} xl={1} lg={2} md={3} sm={4} xs={6}>
-                <AlbumGridTile
-                    album={a}
-                    onClick={props.onTileClick} 
-                />
-            </Grid>
-        ))}
+        {albums.map((a,i) => (<AlbumGridTile key={i} xl={1} lg={2} md={3} sm={4} xs={6} album={a}/>))}
         </Grid>
     );
 };
