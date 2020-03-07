@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 function PlaybackButton(props) {
 
     // remove warning msg
-    const { to, fullWidth, children, ...filteredProps } = props;
+    const { fullWidth, children, ...filteredProps } = props;
     filteredProps.fullwidth = props.fullWidth.toString();
     
     return (
