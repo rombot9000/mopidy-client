@@ -66,7 +66,7 @@ export default function(props) {
             open={state.open}
             message={state.msg}
             autoHideDuration={state.autoHideDuration}
-            onClose={() => setState(s => s.open = false)}
+            onClose={() => setState({open: false})}
             action={state.action}
         />
     );
