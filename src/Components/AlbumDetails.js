@@ -1,7 +1,7 @@
 import React from "react";
 
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Paper, Grid } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { Typography, Paper, Grid, useMediaQuery } from "@material-ui/core";
 
 import Tracklist from "./Tracklist";
 import SquareImage from "./SquareImage";
@@ -35,14 +35,11 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         padding: theme.spacing(2),
-        heigth: "100%",
-        [theme.breakpoints.up('md')]: {
-            width: "100%",
-            overflowY: "scroll",
-            "&::-webkit-scrollbar": {
-                display: "none"
-            },
-            "-msOverflowStyle": "none",
+    },
+    flexGrow : {
+        flexGrow: 1,
+        [theme.breakpoints.down('sm')]: {
+            flexShrink: 0,
         }
     }
 }));
@@ -54,8 +51,10 @@ const useStyles = makeStyles(theme => ({
  */
 function AlbumDetails(props){
 
-    const {to, album, ...filteredProps} = props;
+    const {album, ...filteredProps} = props;
     const classes = useStyles();
+    const useFullHeight = useMediaQuery(useTheme().breakpoints.down('sm'));
+
 
     return (
         <Paper {...filteredProps} className={classes.root}>
@@ -67,7 +66,9 @@ function AlbumDetails(props){
                         <Typography variant="h5">{album.name}</Typography>
                         <Typography variant="h6">{album.artist}</Typography>
                         <Typography variant="overline">{album.year}</Typography>
-                        <Tracklist tracks={album.tracks}/>
+                        <div className={classes.flexGrow}>
+                            <Tracklist tracks={album.tracks} height={useFullHeight ? "full" : "auto"}/>
+                        </div>
                 </Grid>
             </Grid>
         </Paper>

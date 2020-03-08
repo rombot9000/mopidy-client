@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
  * @param {AlbumGridTileProps} nextProps 
  * @returns {boolean} True if component should NOT rerender, false otherwise
  */
-function checkProps(prevProps, nextProps) {
+function propsAreEqual(prevProps, nextProps) {
     return prevProps.album._uri === nextProps.album._uri;
 };
 
@@ -57,13 +57,16 @@ function AlbumGridTile(props) {
                 onClick={() => ViewActions.openAlbumDetailsModal(album)}
                 onMouseEnter={() => {setHighlight(true)}}
                 onMouseLeave={() => {setHighlight(false)}}
-                elevation={highlight ? 8 : 1}
+                //elevation={highlight ? 8 : 1}
             >
                 <Fade in={highlight}>
                     <Fab
                         className={classes.iconBar}
                         size="small"
-                        onClick={() => {PlaybackActions.playAlbum(album)}}
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            PlaybackActions.playAlbum(album);
+                        }}
                     >
                             <PlayArrow/>
                     </Fab>
@@ -77,4 +80,4 @@ function AlbumGridTile(props) {
 
 };
 
-export default React.memo(AlbumGridTile, checkProps);
+export default React.memo(AlbumGridTile, propsAreEqual);
