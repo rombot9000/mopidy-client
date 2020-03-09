@@ -11,15 +11,25 @@ export default class notifyStore extends EventEmitter {
         this._notifyLevel = null;
         /** @type {string} */
         this._notifyMsg = null;
+        /** @type {boolean} */
+        this._enabled = true;
     }
 
     handleAction(action) {
         switch(action.type) {
 
+            case NOTIFY_ACTIONS.INIT:
+                this._enabled = action.enabled;
+            break;
+
             case NOTIFY_ACTIONS.NOTFY_USER:
                 this._notifyMsg = action.arg.toString();
                 this._notifyLevel = action.level;
-                this.emit("update", action.level);
+                if(this._enabled) this.emit("update", action.level);
+            break;
+
+            case NOTIFY_ACTIONS.ENABLE_NOTIFICATIONS:
+                this._enabled = action.enabled;
             break;
             
             default:
@@ -39,6 +49,13 @@ export default class notifyStore extends EventEmitter {
      */
     get notifyLevel() {
         return this._notifyLevel;
+    }
+
+    /**
+     * @readonly
+     */
+    get enabled() {
+        return this._enabled;
     }
 
 };

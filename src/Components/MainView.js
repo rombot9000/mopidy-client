@@ -105,7 +105,6 @@ export default function MainView() {
     React.useEffect(() => {
         const height = ctrlBarRef.current ? ctrlBarRef.current.offsetHeight : 0;
         const paddingTop = srchBarRef.current ? srchBarRef.current.offsetHeight : 0;
-        console.log(window.innerHeight, window.outerHeight, height);
         setView({
             height: height,
             paddingTop: paddingTop

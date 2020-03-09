@@ -4,7 +4,7 @@ import Dispatcher from "Dispatcher";
 import { Library } from "MopidyAPI";
 
 // Storage
-import { LibraryDB, SettingsDB } from "StorageAPI";
+import { writeSetting, readSetting, getAlbumsFromDB, writeAlbumsToDB } from "StorageAPI/Utils";
 
 
 /**
@@ -21,31 +21,11 @@ export const LIBRARY_ACTIONS = {
  * Load albums from Library database
  */
 export async function init() {
-    
-    let albums = [];
-    let albumSortKey;
-    try {
-
-        const albumObjectStoreReader = await LibraryDB.getObjectStoreReader("Albums"); 
-        albums = await albumObjectStoreReader.getAll();
-        
-        const settingsObjectStoreReader = await SettingsDB.getObjectStoreReader("Settings");
-        const albumSortKeyObject = await settingsObjectStoreReader.get("albumSortKey");
-        albumSortKey = albumSortKeyObject.value;
-    
-    } catch(err) {
-    
-        console.warn("Could not read from indexedDB:", err);
-        
-    } finally {
-    
-        Dispatcher.dispatch({
-            type: LIBRARY_ACTIONS.INIT,
-            albums: albums,
-            albumSortKey: albumSortKey
-        });
-    
-    }
+    Dispatcher.dispatch({
+        type: LIBRARY_ACTIONS.INIT,
+        albums: await getAlbumsFromDB(),
+        albumSortKey: await readSetting("albumSortKey")
+    });
 };
 
 /**
@@ -57,9 +37,7 @@ export async function fetch() {
         type: LIBRARY_ACTIONS.FETCH,
         albums: albums
     });
-    const albumObjectStoreWriter = await LibraryDB.getObjectStoreWriter("Albums"); 
-    await albumObjectStoreWriter.clear();
-    await albumObjectStoreWriter.add(albums);
+    writeAlbumsToDB();
 };
 
 /**
@@ -82,6 +60,5 @@ export async function sortAlbums(albumSortKey) {
         type: LIBRARY_ACTIONS.SORT_ALBUMS,
         albumSortKey: albumSortKey
     });
-    const settingsObjectStoreWriter = await SettingsDB.getObjectStoreWriter("Settings");
-    settingsObjectStoreWriter.add([{name: "albumSortKey", value: albumSortKey}]);
+    writeSetting("albumSortKey", albumSortKey);
 };

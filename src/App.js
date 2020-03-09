@@ -4,9 +4,10 @@ import { CssBaseline } from '@material-ui/core';
 
 
 import MainView from "Components/MainView";
-import { LibraryActions, NetworkActions } from "Actions";
+import { LibraryActions, NetworkActions, NotifyActions } from "Actions";
 
 // Init stores
+NotifyActions.init();
 LibraryActions.init();
 
 // connect to server

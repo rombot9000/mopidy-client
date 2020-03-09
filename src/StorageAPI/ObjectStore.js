@@ -47,6 +47,14 @@ export default class ObjectStore {
         })));
     }
 
+    put(entry) {
+        return new Promise((resolve, reject) => {
+            const request = this._store.put(entry);
+            request.onsuccess = resolve;
+            request.onerror = reject;
+        });
+    }
+
     getAll() {
         return new Promise((resolve, reject) => {
             const request = this._store.getAll();

@@ -1,15 +1,13 @@
 import React from "react";
 
-import { Paper, List, ListItem, ListItemText, FormControl, NativeSelect } from "@material-ui/core";
+import { Paper, List, ListItem, ListItemText, ListItemSecondaryAction, NativeSelect, Divider, Switch } from "@material-ui/core";
 
 import { Album } from "ViewModel";
 
-import { LibraryActions } from "Actions";
-import { LibraryStore, NetworkStore } from "Stores";
+import { LibraryActions, NotifyActions } from "Actions";
+import { LibraryStore, NetworkStore, NotifyStore } from "Stores";
 
 export default function SettingsMenu() {
-
-    const [albumSortKey, setAlbumSortKey] = React.useState(LibraryStore.albumSortKey);
 
     const [networkState, setNetworkState] = React.useState({
         socketState: NetworkStore.socketState,
@@ -33,27 +31,48 @@ export default function SettingsMenu() {
         
     }, []);
 
+    const [albumSortKey, setAlbumSortKey] = React.useState(LibraryStore.albumSortKey);
+    function handleSortKeySelect(event) {
+        event.preventDefault();
+        LibraryActions.sortAlbums(event.target.value);
+        setAlbumSortKey(event.target.value);
+    };
+
+    const [doNotify, setDoNotify] = React.useState(NotifyStore.enabled);
+    function handleNotifyToggle(event) {
+        event.preventDefault();
+        NotifyActions.enableNotifications(event.target.checked);
+        setDoNotify(event.target.checked);
+    }
+
 
     return (
         <Paper>
             <List>
                 <ListItem>
                     <ListItemText>Sort albums by</ListItemText>
-                    <FormControl>
+                    <ListItemSecondaryAction>
                         <NativeSelect
                             value={albumSortKey}
-                            onInput={(event) => {
-                                event.preventDefault();
-                                LibraryActions.sortAlbums(event.target.value);
-                                setAlbumSortKey(event.target.value);
-                            }}
+                            onInput={handleSortKeySelect}
                         >
                             {Object.keys(Album(null)).map(key => (
                                 <option key={key} value={key}>{key}</option>
                             ))}
                         </NativeSelect>
-                    </FormControl>
+                    </ListItemSecondaryAction>
                 </ListItem>
+                <ListItem>
+                    <ListItemText>Server messages</ListItemText>
+                    <ListItemSecondaryAction>
+                        <Switch
+                            edge="end"
+                            onChange={handleNotifyToggle}
+                            checked={doNotify}
+                       />
+                    </ListItemSecondaryAction>
+                </ListItem>
+                <Divider/>
                 <ListItem>
                     <ListItemText>Server State: {networkState.serverState}</ListItemText>
                 </ListItem>
