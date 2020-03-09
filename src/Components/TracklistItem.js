@@ -90,13 +90,13 @@ function TracklistItem(props) {
             spacing={2}
         >
             <Grid item xs={1}>
-                <Typography align="right">{firstCell}</Typography>
+                <Typography variant="body2" align="right">{firstCell}</Typography>
             </Grid>
             <Grid item xs={9}>
-                <Typography align="left">{props.track.name}</Typography>
+                <Typography variant="body2" align="left">{props.track.name}</Typography>
             </Grid>
             <Grid item xs={2}>
-                <Typography align="right">{Math.floor(seconds/60)}:{`00${seconds%60}`.slice(-2)}</Typography>
+                <Typography variant="body2" align="right">{Math.floor(seconds/60)}:{`00${seconds%60}`.slice(-2)}</Typography>
             </Grid>
         </Grid>
     );
