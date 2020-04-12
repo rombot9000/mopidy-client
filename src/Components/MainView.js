@@ -15,12 +15,8 @@ const useStyles = makeStyles(theme => ({
         position: "absolute",
         top: 0,
         width: "100%",
-    },
-    scrollBox: {
-        width: "100%",
-        height: "100%",
         overflowY: "scroll",
-        overflowX: "hidden"
+        overflowX: "hidden",
     },
     searchBar: {
         zIndex: 1100,
@@ -103,6 +99,7 @@ export default function MainView() {
     const ctrlBarRef = React.useRef(null);
     const srchBarRef = React.useRef(null);
     React.useEffect(() => {
+        console.log("changes");
         const height = ctrlBarRef.current ? ctrlBarRef.current.offsetHeight : 0;
         const paddingTop = srchBarRef.current ? srchBarRef.current.offsetHeight : 0;
         setView({
@@ -111,16 +108,19 @@ export default function MainView() {
         });
     }, [ctrlBarRef, srchBarRef]); // listen for ctrl bar changes
 
+    console.log("render main view.")
     return (
         <React.Fragment>
             <SearchBar className={classes.searchBar} ref={srchBarRef} />
             <MenuDrawer/>
-            <Box className={classes.viewBox} bottom={`${view.height}px`}>
-                <Box className={classes.scrollBox} paddingTop={`${view.paddingTop}px`}>
-                    <AlbumGrid/>
-                </Box>
-                <MsgSnackBar className={classes.snackBar}/>
+            <Box
+                className={classes.viewBox}
+                bottom={`${view.height}px`}
+                paddingTop={`${view.paddingTop}px`}
+            >
+                <AlbumGrid/>
             </Box>
+            <MsgSnackBar className={classes.snackBar}/>
             <PlaybackCtrlBar ref={ctrlBarRef} />
             {Object.values(components)}
         </React.Fragment>
