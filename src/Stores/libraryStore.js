@@ -10,7 +10,7 @@ export default class LibraryStore extends EventEmitter {
         this._tokenToAlbumList = { "" : [] };
         /** @type {string} */
         this._filterToken = "";
-        this._albumSortKey = null;
+        this._albumSortKey = undefined;
 
     }
 
