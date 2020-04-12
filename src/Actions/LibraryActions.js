@@ -37,7 +37,7 @@ export async function fetch() {
         type: LIBRARY_ACTIONS.FETCH,
         albums: albums
     });
-    writeAlbumsToDB();
+    writeAlbumsToDB(albums);
 };
 
 /**
