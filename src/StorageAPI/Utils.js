@@ -70,6 +70,7 @@ export async function writeAlbumsToDB(albums) {
         
         const albumObjectStoreWriter = await LibraryDB.getObjectStoreWriter("Albums"); 
         await albumObjectStoreWriter.clear();
+        console.log(albums);
         await albumObjectStoreWriter.add(albums);
 
     } catch(error) {

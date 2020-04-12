@@ -5,21 +5,25 @@ import IndexedDB from "./IndexedDB";
 import { Album } from "ViewModel";
 
 // Library
-export const LibraryDB = new IndexedDB("Library", 3);
-LibraryDB.addSchema({
-    store: "Albums",
+const LibraryDB = new IndexedDB("Library", 4);
+LibraryDB.addStore({
+    name: "Albums",
     params: {keyPath: "_uri"},
     indexSchemes: Object.keys(Album(null)).map(key => {
         return {index: key, params: null};
     })
 });
+LibraryDB.init();
 
 // Settings
-export const SettingsDB = new IndexedDB("Settings", 3);
-SettingsDB.addSchema({
-    store: "Settings",
+const SettingsDB = new IndexedDB("Settings", 4);
+SettingsDB.addStore({
+    name: "Settings",
     params: { keyPath : "name" },
     indexSchemes: [
         { index: "value", params: null }
     ]
 });
+SettingsDB.init();
+
+export {LibraryDB, SettingsDB};

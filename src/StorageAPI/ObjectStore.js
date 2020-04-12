@@ -40,6 +40,7 @@ export default class ObjectStore {
      * @param {any[]} entries 
      */
     add(entries) {
+        
         return Promise.all(entries.map(entry => new Promise( (resolve, reject) => {
             const request = this._store.add(entry);
             request.onsuccess = resolve;
