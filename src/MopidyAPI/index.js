@@ -25,3 +25,10 @@ mopidy.on("websocket:close", () => {handleSocketEvent("websocket:close")} );
 mopidy.on("websocket:error", () => {handleSocketEvent("websocket:error")} );
 mopidy.on("websocket:open",  () => {handleSocketEvent("websocket:open")}  );
 mopidy.on("event", handleMpdEvent);
+
+// print mopidy object
+if(process.env.NODE_ENV !== "production") {
+    mopidy.on("state:online", () => {
+        console.log(mopidy);
+    })
+};

@@ -79,7 +79,6 @@ function TracklistItem(props) {
         setFirstCell(props.playbackState === "playing" ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
     }
 
-    console.log("Render:", props.track.track_no);
     return (
         <Grid
             container

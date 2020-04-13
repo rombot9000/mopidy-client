@@ -32,7 +32,6 @@ export async function readSetting(name, defaultValue) {
         
         const settingsObjectStoreReader = await SettingsDB.getObjectStoreReader("Settings");
         const settingObject = await settingsObjectStoreReader.get(name);
-        console.log("Read setting from db:", settingObject);
         return settingObject ? settingObject.value : defaultValue;
 
     } catch(error) {
@@ -70,7 +69,6 @@ export async function writeAlbumsToDB(albums) {
         
         const albumObjectStoreWriter = await LibraryDB.getObjectStoreWriter("Albums"); 
         await albumObjectStoreWriter.clear();
-        console.log(albums);
         await albumObjectStoreWriter.add(albums);
 
     } catch(error) {
