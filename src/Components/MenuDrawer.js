@@ -4,10 +4,10 @@ import { NavLink, useRouteMatch } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Typography} from "@material-ui/core";
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Typography, Container} from "@material-ui/core";
 import { QueueMusic, MusicNote, LibraryMusic, AlbumRounded, Tune } from "@material-ui/icons";
 
-import TrackList from "Components/Tracklist";
+import TrackList from "./Tracklist";
 
 import { TracklistStore, ViewStore } from "Stores";
 import { ViewActions } from "Actions";
@@ -89,7 +89,9 @@ function MenuDrawer() {
                 <ListItem>
                     <ListItemText>Now Playing</ListItemText>
                 </ListItem>
-                <TrackList tracks={TracklistStore.tracks}/>
+                <Container>
+                    <TrackList tracks={TracklistStore.tracks}/>
+                </Container>
             </List>
         </Drawer>
     );

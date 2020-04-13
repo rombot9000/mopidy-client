@@ -1,25 +1,19 @@
-import AlbumDetails from "./AlbumDetails";
-import AlbumGrid from "./AlbumGrid";
 import MainView from "./MainView";
 import MenuDrawer from "./MenuDrawer";
-import Modals from "./Modals";
-import PlaybackCtrlBar from "./PlaybackCtrlBar";
-import ScrollableModal from "./ScrollableModal";
 import SearchBar from "./SearchBar";
-import SettingsMenu from "./SettingsMenu";
-import Tracklist from "./Tracklist";
+import PlaybackCtrlBar from "./PlaybackCtrlBar";
 import MsgSnackBar from "./MsgSnackBar";
+import Modals from "./Modals";
+import AlbumGrid from "./AlbumGrid";
+import TracksView from "./TracksView";
 
 export {
-    AlbumDetails,
-    AlbumGrid,
     MainView,
-    ScrollableModal,
-    PlaybackCtrlBar,
-    SearchBar,
     MenuDrawer,
+    SearchBar,
+    PlaybackCtrlBar,
+    MsgSnackBar,
     Modals,
-    SettingsMenu,
-    Tracklist,
-    MsgSnackBar
+    AlbumGrid,
+    TracksView
 };

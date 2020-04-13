@@ -3,7 +3,7 @@ import React from 'react';
 import {makeStyles, Paper, IconButton, Input} from "@material-ui/core";
 import {Search, Menu, Clear} from "@material-ui/icons";
 
-import { LibraryActions, ViewActions }  from 'Actions';
+import { ViewActions }  from 'Actions';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -16,12 +16,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /**
- * 
- * @param {Object} props
- * @param {function} props.onMenuIconClick
- * @param {string} props.className 
+ *  * @param {function} onInput
  */
-const SearchBar = React.forwardRef((props, ref) => {
+const SearchBar = ({onInput}) => {
 
     const classes = useStyles();
     const inputRef = React.useRef(null);
@@ -44,7 +41,7 @@ const SearchBar = React.forwardRef((props, ref) => {
     function clear(event) {
         event.preventDefault();
         setInputValue("");
-        LibraryActions.filter("");
+        onInput("");
     }
 
     /**
@@ -54,7 +51,7 @@ const SearchBar = React.forwardRef((props, ref) => {
     function handleInput(event) {
         event.preventDefault();
         setInputValue(event.target.value);
-        LibraryActions.filter(event.target.value);
+        onInput(event.target.value);
     }
 
     function rightHandButton() {
@@ -71,27 +68,25 @@ const SearchBar = React.forwardRef((props, ref) => {
     }
     
     return (
-        <div className={props.className} ref={ref}>
-            <Paper
-                className={classes.paper}
-                elevation={4}
-            >
-                <IconButton onClick={ViewActions.toggleMenuDrawer}>
-                    <Menu fontSize="inherit"/>
-                </IconButton>
-                <Input 
-                    className={classes.input}
-                    inputRef={inputRef}
-                    disableUnderline
-                    value={inputValue}
-                    placeholder="Search for Albums or Artists..."
-                    onInput={handleInput}
-                    onKeyDown={handleKeyDown}
-                />
-                {rightHandButton()}
-            </Paper>
-        </div>
+        <Paper
+            className={classes.paper}
+            elevation={4}
+        >
+            <IconButton onClick={ViewActions.toggleMenuDrawer}>
+                <Menu fontSize="inherit"/>
+            </IconButton>
+            <Input 
+                className={classes.input}
+                inputRef={inputRef}
+                disableUnderline
+                value={inputValue}
+                placeholder="Search for Albums or Artists..."
+                onInput={handleInput}
+                onKeyDown={handleKeyDown}
+            />
+            {rightHandButton()}
+        </Paper>
     );
-});
+};
 
 export default SearchBar;

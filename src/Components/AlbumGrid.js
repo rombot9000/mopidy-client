@@ -3,8 +3,6 @@ import React from "react";
 import { makeStyles, Grid } from "@material-ui/core"
 import AlbumGridTile from "./AlbumGridTile"
 
-import { LibraryStore } from "Stores";
-
 const GRID_SPACING = 1
 
 const useStyles = makeStyles(theme => ({
@@ -20,21 +18,9 @@ const useStyles = makeStyles(theme => ({
  * @function AlbumGrid
  * @param {Object} props
  */
-function AlbumGrid(props) {
+export default ({albums}) => {
     // calc classes
     const classes = useStyles();
-
-    // Setup states and listeners
-    const [albums, setAlbums] = React.useState(LibraryStore.albums);
-    React.useEffect(() => {
-
-        const handleLibraryUpdate = () => {setAlbums(LibraryStore.albums)};
-        LibraryStore.on("update", handleLibraryUpdate);
-        
-        return () => {
-            LibraryStore.removeListener("update", handleLibraryUpdate);
-        };
-    }, []);
 
     return (
         <Grid
@@ -46,5 +32,3 @@ function AlbumGrid(props) {
         </Grid>
     );
 };
-
-export default AlbumGrid;

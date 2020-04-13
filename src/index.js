@@ -1,15 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
 
-import 'typeface-roboto';
-import './index.css';
+import { render } from "react-dom";
 
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { Provider } from "react-redux"
+import { createStore, applyMiddleware } from "redux"
+import thunkMiddleware from "redux-thunk";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import "typeface-roboto";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import App from "./App";
+import reducer from "./Reducers";
+import { LibraryActions, NetworkActions, NotifyActions } from "Actions";
+
+// set store and make initial dispatches
+const store = createStore(reducer, applyMiddleware(thunkMiddleware));
+store.dispatch(LibraryActions.init());
+
+render(
+    <Provider store={store}>
+        <App /> 
+    </Provider>,
+    document.getElementById("root")
+);

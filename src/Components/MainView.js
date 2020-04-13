@@ -5,7 +5,10 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
-import { AlbumGrid, PlaybackCtrlBar, SearchBar, MenuDrawer, MsgSnackBar, Modals } from "Components"; 
+import { PlaybackCtrlBar, MenuDrawer, MsgSnackBar, Modals, TracksView} from "Components"; 
+
+import AlbumGrid from "Containers/AlbumGrid";
+import AlbumSearchBar from "Containers/AlbumSearchBar";
 
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents
@@ -66,9 +69,10 @@ export default function MainView() {
             >
                 <Switch>
                     <Route path="/albums"><AlbumGrid/></Route>
+                    <Route patch="/tracks"><TracksView/></Route>
                 </Switch>
             </Box>
-            <SearchBar className={classes.searchBar} ref={srchBarRef} />
+            <AlbumSearchBar className={classes.searchBar} ref={srchBarRef} />
             <MenuDrawer/>
             <Modals/>
             <MsgSnackBar className={classes.snackBar}/>

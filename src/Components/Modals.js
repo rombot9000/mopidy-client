@@ -1,7 +1,10 @@
 import React from "react";
 
-import { AlbumDetails, ScrollableModal, SettingsMenu } from "Components"; 
 import { ViewStore } from "Stores";
+
+import ScrollableModal from "./ScrollableModal";
+import AlbumDetails from "./AlbumDetails";
+import SettingsMenu from "./SettingsMenu"; 
 
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents
