@@ -1,5 +1,7 @@
 import React from "react";
 
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
@@ -56,19 +58,21 @@ export default function MainView() {
     }, [ctrlBarRef, srchBarRef]); // listen for ctrl bar changes
 
     return (
-        <React.Fragment>
-            <SearchBar className={classes.searchBar} ref={srchBarRef} />
-            <MenuDrawer/>
+        <Router>
             <Box
                 className={classes.viewBox}
                 bottom={`${view.height}px`}
                 paddingTop={`${view.paddingTop}px`}
             >
-                <AlbumGrid/>
+                <Switch>
+                    <Route path="/albums"><AlbumGrid/></Route>
+                </Switch>
             </Box>
+            <SearchBar className={classes.searchBar} ref={srchBarRef} />
+            <MenuDrawer/>
             <Modals/>
             <MsgSnackBar className={classes.snackBar}/>
             <PlaybackCtrlBar ref={ctrlBarRef} />
-        </React.Fragment>
+        </Router>
     );
 };

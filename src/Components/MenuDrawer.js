@@ -1,5 +1,7 @@
 import React from "react";
 
+import { NavLink, useRouteMatch } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Typography} from "@material-ui/core";
@@ -23,6 +25,26 @@ const useStyles = makeStyles(theme => ({
         width: "100%"
     }
 }));
+
+function LinkItem(props) {
+    const {to, text, icon, ...listItemProps} = props;
+
+    const renderLink = React.useMemo(
+        () => React.forwardRef((itemProps, ref) => <NavLink to={to} ref={ref} {...itemProps}/>)
+    , [to]);
+
+    return (
+        <ListItem
+            button
+            selected={useRouteMatch(to)}
+            {...listItemProps} 
+            component={renderLink}
+        >
+            <ListItemIcon>{icon}</ListItemIcon>
+            <ListItemText>{text}</ListItemText>
+        </ListItem>
+    );
+}
 
 function MenuDrawer() {
 
@@ -54,22 +76,11 @@ function MenuDrawer() {
                     </ListItemText>
                 </ListItem>
                 <Divider/>
-                <ListItem>
-                    <ListItemIcon><AlbumRounded/></ListItemIcon>
-                    <ListItemText>Albums</ListItemText>
-                </ListItem>
-                <ListItem>
-                    <ListItemIcon><LibraryMusic/></ListItemIcon>
-                    <ListItemText>Artists</ListItemText>
-                </ListItem>
-                <ListItem>
-                    <ListItemIcon><MusicNote/></ListItemIcon>
-                    <ListItemText>Tracks</ListItemText>
-                </ListItem>
-                <ListItem>
-                    <ListItemIcon><QueueMusic/></ListItemIcon>
-                    <ListItemText>Playlists</ListItemText>
-                </ListItem>
+                <LinkItem to="/albums" icon={<AlbumRounded/>} text="Albums"/>
+                <LinkItem to="/artists" icon={<LibraryMusic/>} text="Artists"/>
+                <LinkItem to="/tracks" icon={<MusicNote/>} text="Tracks"/>
+                <LinkItem to="/playlists" icon={<QueueMusic/>} text="Playlists"/>
+                <Divider/>
                 <ListItem button onClick={ViewActions.openSettingsModal}>
                     <ListItemIcon><Tune/></ListItemIcon>
                     <ListItemText>Settings</ListItemText>
