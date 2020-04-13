@@ -2,6 +2,7 @@ import AlbumDetails from "./AlbumDetails";
 import AlbumGrid from "./AlbumGrid";
 import MainView from "./MainView";
 import MenuDrawer from "./MenuDrawer";
+import Modals from "./Modals";
 import PlaybackCtrlBar from "./PlaybackCtrlBar";
 import ScrollableModal from "./ScrollableModal";
 import SearchBar from "./SearchBar";
@@ -17,6 +18,7 @@ export {
     PlaybackCtrlBar,
     SearchBar,
     MenuDrawer,
+    Modals,
     SettingsMenu,
     Tracklist,
     MsgSnackBar

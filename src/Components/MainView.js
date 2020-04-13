@@ -3,8 +3,7 @@ import React from "react";
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
-import { AlbumGrid, AlbumDetails, ScrollableModal, PlaybackCtrlBar, SearchBar, MenuDrawer, SettingsMenu, MsgSnackBar } from "Components"; 
-import { ViewStore } from "Stores";
+import { AlbumGrid, PlaybackCtrlBar, SearchBar, MenuDrawer, MsgSnackBar, Modals } from "Components"; 
 
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents
@@ -37,57 +36,6 @@ const useStyles = makeStyles(theme => ({
 export default function MainView() {
     const classes = useStyles();
 
-    /** 
-     * State var for holding additional view components
-     * @type {[ViewComponents, React.Dispatch<React.SetStateAction<ViewComponents>>]} 
-     */
-    const [components, setComponents] = React.useState({});
-    React.useEffect(() => {
-       /**
-        * Add components to view
-        * @param {ViewComponents} newComp 
-        */
-        const addComponent = (newComp) => { setComponents(comps => {return {...comps, ...newComp}} ) };
-
-        /**
-         * Remove componentes from view
-         * @param {string} key 
-         */
-        const delComponent = (key) => {
-            setComponents(comps => {
-                delete comps[key];
-                return {...comps};
-            });
-        }
-
-        const openAlbumDetailsModal = () => {
-            addComponent({
-                "detailsModal": (
-                    <ScrollableModal key="detailsModal" open onClose={() => delComponent("detailsModal")}>
-                        <AlbumDetails album={ViewStore.detailsModalAlbum}/>
-                    </ScrollableModal>
-                )
-            });
-        }
-        ViewStore.on("openAlbumDetailsModal", openAlbumDetailsModal);
-
-        const openSettingsModal = () => {
-            addComponent({
-                "settingsModal": (
-                    <ScrollableModal key="settingsModal" open onClose={() => delComponent("settingsModal")}>
-                        <SettingsMenu/>
-                    </ScrollableModal>
-                )
-            });
-        }
-        ViewStore.on("openSettingsModal", openSettingsModal);
-
-        return () => {
-            ViewStore.removeListener("openAlbumDetailsModal", openAlbumDetailsModal);
-            ViewStore.removeListener("openSettingsModal", openSettingsModal);
-        };
-    }, [])
-
     /*
      * Listen for view changes
      */
@@ -99,7 +47,6 @@ export default function MainView() {
     const ctrlBarRef = React.useRef(null);
     const srchBarRef = React.useRef(null);
     React.useEffect(() => {
-        console.log("changes");
         const height = ctrlBarRef.current ? ctrlBarRef.current.offsetHeight : 0;
         const paddingTop = srchBarRef.current ? srchBarRef.current.offsetHeight : 0;
         setView({
@@ -108,7 +55,6 @@ export default function MainView() {
         });
     }, [ctrlBarRef, srchBarRef]); // listen for ctrl bar changes
 
-    console.log("render main view.")
     return (
         <React.Fragment>
             <SearchBar className={classes.searchBar} ref={srchBarRef} />
@@ -120,9 +66,9 @@ export default function MainView() {
             >
                 <AlbumGrid/>
             </Box>
+            <Modals/>
             <MsgSnackBar className={classes.snackBar}/>
             <PlaybackCtrlBar ref={ctrlBarRef} />
-            {Object.values(components)}
         </React.Fragment>
     );
 };
