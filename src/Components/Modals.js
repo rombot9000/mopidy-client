@@ -4,7 +4,7 @@ import { ViewStore } from "Stores";
 
 import ScrollableModal from "./ScrollableModal";
 import AlbumDetails from "./AlbumDetails";
-import SettingsMenu from "./SettingsMenu"; 
+import SettingsMenu from "Containers/SettingsMenu"; 
 
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents

@@ -1,50 +1,39 @@
 import React from "react";
 
+import { connect } from "react-redux";
+
 import { Paper, List, ListItem, ListItemText, ListItemSecondaryAction, NativeSelect, Divider, Switch } from "@material-ui/core";
 
 import { Album } from "ViewModel";
 
 import { LibraryActions, NotifyActions } from "Actions";
-import { LibraryStore, NetworkStore, NotifyStore } from "Stores";
 
-export default function SettingsMenu() {
+const mapStateToProps = (state, ownProps) => ({
+    albumSortKey: state.library.albumSortKey,
+    networkState: state.network,
+    doNotify: state.notify.enabled
+});
+  
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    onSetAlbumSortKey: event => { dispatch(LibraryActions.sortAlbums(event.target.value)) },
+    onToggleDoNotify: event => { dispatch(NotifyActions.enableNotifications(event.target.checked))}
+});
 
-    const [networkState, setNetworkState] = React.useState({
-        socketState: NetworkStore.socketState,
-        serverState: NetworkStore.serverState
-    })
+/**
+ * @callback SettingsCallback
+ * @param {MouseEvent}
+ * @returns {void} 
+ */
 
-    React.useEffect(() => {
-        
-        const handleNetworkUpdate = () => {
-            setNetworkState({
-                socketState: NetworkStore.socketState,
-                serverState: NetworkStore.serverState
-            });
-        }
-        
-        NetworkStore.on("update", handleNetworkUpdate);
-        
-        return () => {
-            NetworkStore.removeListener("update", handleNetworkUpdate);
-        }
-        
-    }, []);
-
-    const [albumSortKey, setAlbumSortKey] = React.useState(LibraryStore.albumSortKey);
-    function handleSortKeySelect(event) {
-        event.preventDefault();
-        LibraryActions.sortAlbums(event.target.value);
-        setAlbumSortKey(event.target.value);
-    };
-
-    const [doNotify, setDoNotify] = React.useState(NotifyStore.enabled);
-    function handleNotifyToggle(event) {
-        event.preventDefault();
-        NotifyActions.enableNotifications(event.target.checked);
-        setDoNotify(event.target.checked);
-    }
-
+/**
+ * @param {Object} props
+ * @param {string} props.albumSortKey
+ * @param {SettingsCallback} props.onSetAlbumSortKey
+ * @param {{socketState: string, serverState: string}} props.networkState
+ * @param {boolean} doNotify
+ * @param {SettingsCallback} onToggleDoNotify
+ */
+function SettingsMenu({albumSortKey, onSetAlbumSortKey, networkState, doNotify, onToggleDoNotify}) {
 
     return (
         <Paper>
@@ -54,7 +43,7 @@ export default function SettingsMenu() {
                     <ListItemSecondaryAction>
                         <NativeSelect
                             value={albumSortKey}
-                            onInput={handleSortKeySelect}
+                            onInput={onSetAlbumSortKey}
                         >
                             {Object.keys(Album(null)).map(key => (
                                 <option key={key} value={key}>{key}</option>
@@ -67,7 +56,7 @@ export default function SettingsMenu() {
                     <ListItemSecondaryAction>
                         <Switch
                             edge="end"
-                            onChange={handleNotifyToggle}
+                            onChange={onToggleDoNotify}
                             checked={doNotify}
                        />
                     </ListItemSecondaryAction>
@@ -83,3 +72,5 @@ export default function SettingsMenu() {
         </Paper>
     );
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsMenu);

@@ -3,8 +3,6 @@ import React from 'react';
 import {makeStyles, Paper, IconButton, Input} from "@material-ui/core";
 import {Search, Menu, Clear} from "@material-ui/icons";
 
-import { ViewActions }  from 'Actions';
-
 const useStyles = makeStyles(theme => ({
     paper: {
         display: "flex",
@@ -16,9 +14,23 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /**
- *  * @param {function} onInput
+ * @callback OnInputCallback
+ * @param {KeyboardEvent|MouseEvent|InputEvent}
+ * @returns {void}
  */
-const SearchBar = ({onInput}) => {
+
+/**
+ * @callback OnClickCallback
+ * @param {MouseEvent}
+ * @returns {void}
+ */
+
+/**
+ * @param {Object} props
+ * @param {OnInputCallback} props.onInput
+ * @param {OnClickCallback} props.onMenuClick
+ */
+const SearchBar = ({onInput, onMenuClick}) => {
 
     const classes = useStyles();
     const inputRef = React.useRef(null);
@@ -72,7 +84,7 @@ const SearchBar = ({onInput}) => {
             className={classes.paper}
             elevation={4}
         >
-            <IconButton onClick={ViewActions.toggleMenuDrawer}>
+            <IconButton onClick={onMenuClick}>
                 <Menu fontSize="inherit"/>
             </IconButton>
             <Input 

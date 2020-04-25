@@ -4,23 +4,23 @@ import { AlbumGrid } from "Components";
 
 /**
  * @param {import("ViewModel/Album").Album[]} albums
- * @param {string} lowerCaseToken
+ * @param {string} token
  */
-function filterAlbumsByLowercaseToken(albums, lowerCaseToken) {
+function filterAlbumsByToken(albums, token) {
 
-    if(!lowerCaseToken || lowerCaseToken === "") return albums;
+    if(!token || token === "") return [...albums];
 
     return albums.filter(album => {
 
         // check album name
-        if(album.name.toLowerCase().search(lowerCaseToken) !== -1) return true;
+        if(album.name.toLowerCase().search(token) !== -1) return true;
 
         // check album artists
-        if(album.artist.toLowerCase().search(lowerCaseToken) !== -1) return true;
+        if(album.artist.toLowerCase().search(token) !== -1) return true;
 
         // check track artists
         for(let track of album.tracks) {
-            if(track.artist.toLowerCase().search(lowerCaseToken) !== -1) return true;
+            if(track.artist.toLowerCase().search(token) !== -1) return true;
         };
 
         // No match found
@@ -39,10 +39,10 @@ function sortAlbums(albums, albumSortKey) {
 
 
 function sortedAndFilteredAlbums(library) {
-    
-    let sortedAlbumList = sortAlbums(library.albums, library.albumSortKey);
 
-    return filterAlbumsByLowercaseToken(sortedAlbumList, library.filterToken.toLowerCase());
+    let filteredAlbums = filterAlbumsByToken(library.albums, library.filterToken);
+    
+    return sortAlbums(filteredAlbums, library.albumSortKey);
 
 }
 

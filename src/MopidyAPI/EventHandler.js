@@ -1,6 +1,7 @@
 
 import { Track } from "ViewModel";
 import { LibraryActions, TracklistActions, PlaybackActions, NetworkActions, NotifyActions } from "Actions";
+import Store from "Store";
 
 /** @typedef {
     "event:playbackStateChanged"|
@@ -27,29 +28,9 @@ import { LibraryActions, TracklistActions, PlaybackActions, NetworkActions, Noti
 export function handleServerEvent(state) {
 
     // Set network state
-    NetworkActions.setServerState(state)
+    Store.dispatch(NetworkActions.setServerState(state));
 
-    // Notify user
-    switch(state) {
-        case "state:online":
-            NotifyActions.notifyUser("info", "Server online.");
-        break;
-
-        case "reconnecting":
-            NotifyActions.notifyUser("info", "Reconnecting...");
-        break;
-
-        case "reconnectionPending":
-            NotifyActions.notifyUser("error", "Server offline, waiting to reconnect...");
-        break;
-
-        case "state:offline":
-            NotifyActions.notifyUser("error", "Server offline.");
-        break;
-
-        default:
-            console.debug("Server state not handled:", state);
-    }
+    Store.dispatch(notifyUser(state));
     
     // fetch info from server
     if(state === "state:online") {
@@ -60,12 +41,35 @@ export function handleServerEvent(state) {
 };
 
 /**
+ * 
+ * @param {ServerState} state 
+ */
+function notifyUser(state) {
+    // Notify user
+    switch(state) {
+        case "state:online":
+            return NotifyActions.notifyUser("info", "Server online.");
+
+        case "reconnecting":
+            return NotifyActions.notifyUser("info", "Reconnecting...");
+
+        case "reconnectionPending":
+            return NotifyActions.notifyUser("error", "Server offline, waiting to reconnect...");
+
+        case "state:offline":
+            return NotifyActions.notifyUser("error", "Server offline.");
+
+        default:
+            return {};
+    }
+}
+
+/**
  * Handle events of type "state"
  * @param {SocketState} state 
  */
 export function handleSocketEvent(state) {
-    NetworkActions.setSocketState(state);
-    console.debug("Server state not handled:", state);
+    Store.dispatch(NetworkActions.setSocketState(state));
 };
 
 /**
