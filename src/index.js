@@ -2,22 +2,19 @@ import React from "react";
 
 import { render } from "react-dom";
 
-import { Provider } from "react-redux"
-import { createStore, applyMiddleware } from "redux"
-import thunkMiddleware from "redux-thunk";
+import { Provider } from "react-redux";
 
 import "typeface-roboto";
 
+import Store from "./Store";
 import App from "./App";
-import reducer from "./Reducers";
-import { LibraryActions, NetworkActions, NotifyActions } from "Actions";
 
-// set store and make initial dispatches
-const store = createStore(reducer, applyMiddleware(thunkMiddleware));
-store.dispatch(LibraryActions.init());
+import { LibraryActions, NotifyActions } from "Actions";
+Store.dispatch(LibraryActions.init());
+Store.dispatch(NotifyActions.init());
 
 render(
-    <Provider store={store}>
+    <Provider store={Store}>
         <App /> 
     </Provider>,
     document.getElementById("root")

@@ -1,5 +1,3 @@
-import Dispatcher from "Dispatcher";
-
 import { writeSetting, readSetting } from "StorageAPI/Utils";
 
 
@@ -12,11 +10,17 @@ export const NOTIFY_ACTIONS = {
     ENABLE_NOTIFICATIONS: "notifyActions.EnableNotifications"
 };
 
-export async function init() {
-    Dispatcher.dispatch({
-        type: NOTIFY_ACTIONS.INIT,
-        enabled: await readSetting("enableNotifications", true)
-    });
+export function init() {
+    
+    return async dispatch =>  {
+
+        dispatch({
+            type: NOTIFY_ACTIONS.INIT,
+            enabled: await readSetting("enableNotifications", true)
+        });
+
+    };
+
 };
 
 /**
@@ -25,21 +29,21 @@ export async function init() {
  * @param {*} arg 
  */
 export function notifyUser(level, arg) {
-    Dispatcher.dispatch({
+    return {
         type: NOTIFY_ACTIONS.NOTFY_USER,
         level: level,
         arg: arg
-    });
+    };
 }
 
 /**
  * 
  * @param {boolean} enabled
  */
-export async function enableNotifications(enabled) {
-    Dispatcher.dispatch({
+export function enableNotifications(enabled) {
+    writeSetting("enableNotifications", enabled);
+    return {
         type: NOTIFY_ACTIONS.ENABLE_NOTIFICATIONS,
         enabled: enabled
-    });
-    writeSetting("enableNotifications", enabled);
+    };
 }

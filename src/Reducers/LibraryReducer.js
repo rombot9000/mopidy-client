@@ -3,7 +3,7 @@ import { LIBRARY_ACTIONS } from "Actions/LibraryActions";
 const emptyLibrary = {
     albums: [],
     albumSortKey: undefined,
-    filterToken: ""
+    filterToken: undefined
 }
 
 export default (library = emptyLibrary, action) => {

@@ -15,16 +15,26 @@ export function openAlbumDetailsModal(album) {
         type: VIEW_ACTIONS.OPEN_ALBUM_DETAILS_MODAL,
         album: album
     });
+    return {
+        type: VIEW_ACTIONS.OPEN_ALBUM_DETAILS_MODAL,
+        album: album
+    }
 };
 
 export function toggleMenuDrawer() {
     Dispatcher.dispatch({
         type: VIEW_ACTIONS.TOGGLE_MENU_DRAWER
     });
+    return {
+        type: VIEW_ACTIONS.TOGGLE_MENU_DRAWER
+    }
 };
 
 export function openSettingsModal() {
     Dispatcher.dispatch({
         type: VIEW_ACTIONS.OPEN_SETTINGS_MODAL
     });
+    return {
+        type: VIEW_ACTIONS.OPEN_SETTINGS_MODAL
+    }
 }
