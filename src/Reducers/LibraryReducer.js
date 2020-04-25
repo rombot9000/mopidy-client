@@ -1,4 +1,4 @@
-import { LibraryActions } from "Actions";
+import { LIBRARY_ACTIONS } from "Actions/LibraryActions";
 
 const emptyLibrary = {
     albums: [],
@@ -8,20 +8,20 @@ const emptyLibrary = {
 
 export default (library = emptyLibrary, action) => {
     switch (action.type) {
-        case LibraryActions.LIBRARY_ACTIONS.SET_ALBUMS:
+        case LIBRARY_ACTIONS.SET_ALBUMS:
             return {
                 ...library, 
                 albums: action.albums, 
                 albumSortKey: action.albumSortKey,
             };
         
-        case LibraryActions.LIBRARY_ACTIONS.SET_FILTER:
+        case LIBRARY_ACTIONS.SET_FILTER:
             return {
                 ...library,
                 filterToken: action.token
             };
         
-        case LibraryActions.LIBRARY_ACTIONS.SET_SORT_KEY:
+        case LIBRARY_ACTIONS.SET_SORT_KEY:
             return {
                 ...library,
                 albumSortKey: action.albumSortKey
