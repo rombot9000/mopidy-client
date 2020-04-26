@@ -45,6 +45,7 @@ export function handleServerEvent(state) {
  * @param {ServerState} state 
  */
 function notifyUser(state) {
+    console.log(state);
     // Notify user
     switch(state) {
         case "state:online":
@@ -54,10 +55,16 @@ function notifyUser(state) {
             return NotifyActions.notifyUser("info", "Reconnecting...");
 
         case "reconnectionPending":
-            return NotifyActions.notifyUser("error", "Server offline, waiting to reconnect...");
+            return NotifyActions.notifyUser("error", "Server offline, waiting to reconnect...", {
+                text: "Reconnect",
+                creator: NetworkActions.connectToServer
+            });
 
         case "state:offline":
-            return NotifyActions.notifyUser("error", "Server offline.");
+            return NotifyActions.notifyUser("error", "Server offline.", {
+                text: "Reconnect",
+                creator: NetworkActions.connectToServer
+            });
 
         default:
             return {};

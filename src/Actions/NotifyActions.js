@@ -6,33 +6,31 @@ import { writeSetting, readSetting } from "StorageAPI/Utils";
  */
 export const NOTIFY_ACTIONS = {
     INIT: "notifyActions.init",
-    NOTFY_USER: "notifyActions.NotifyUser",
+    NOTIFY_USER: "notifyActions.NotifyUser",
     ENABLE_NOTIFICATIONS: "notifyActions.EnableNotifications"
 };
 
 export function init() {
     
-    return async dispatch =>  {
-
-        dispatch({
-            type: NOTIFY_ACTIONS.INIT,
-            enabled: await readSetting("enableNotifications", true)
-        });
-
-    };
+    return async dispatch => dispatch({
+        type: NOTIFY_ACTIONS.INIT,
+        enabled: await readSetting("enableNotifications", true)
+    });
 
 };
 
 /**
  * 
  * @param {import("Stores/notifyStore").NotifyLevel} level
- * @param {*} arg 
+ * @param {string} msg
+ * @param {{text: string, creator: Function}} action
  */
-export function notifyUser(level, arg) {
+export function notifyUser(level, msg, action) {
     return {
-        type: NOTIFY_ACTIONS.NOTFY_USER,
+        type: NOTIFY_ACTIONS.NOTIFY_USER,
         level: level,
-        arg: arg
+        msg: msg,
+        action: action
     };
 }
 

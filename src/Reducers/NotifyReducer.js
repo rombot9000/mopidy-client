@@ -1,8 +1,13 @@
 import { NOTIFY_ACTIONS } from "Actions/NotifyActions";
 
 const initialState = {
-    serverState: undefined,
-    socketState: undefined
+    enabled: true,
+    level: undefined,
+    msg: undefined,
+    action: {
+        text: undefined,
+        creator: undefined
+    }
 }
 
 export default (state = initialState, action) => {
@@ -18,7 +23,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 level: action.level,
-                arg: action.arg
+                msg: action.msg,
+                action: {
+                    text: action.action ? action.action.text: undefined,
+                    creator: action.action ? action.action.creator : undefined
+                }
             };
 
         default:

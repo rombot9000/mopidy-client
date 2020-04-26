@@ -2,72 +2,35 @@ import React from "react";
 
 import { Snackbar, Button } from '@material-ui/core';
 
-import { NotifyStore } from "Stores";
-import { NetworkActions } from "Actions";
-
-
-export default function(props) {
-
-    const [state, setState] = React.useState({
-        open: false,
-        msg: null,
-        autoHideDuration: null,
-        action: null
-    });
-    React.useEffect(() => {
-        const connectButton = (<Button color="secondary" size="small" onClick={NetworkActions.connectToServer}>Connect</Button>)
-        
-        /**
-         * 
-         * @param {import("Stores/notifyStore").NotifyLevel} level 
-         */
-        function handleUpdate(level) {
-            switch(level) {
-                case "error":
-                    setState({
-                        open: true,
-                        msg: NotifyStore.notifyMsg,
-                        action: connectButton
-                    });
-                break;
-
-                case "warn":
-                    setState({
-                        open: true,
-                        msg: NotifyStore.notifyMsg,
-                        autoHideDuration: 4000,
-                    });
-                break;
-
-                case "info":
-                    setState({
-                        open: true,
-                        msg: NotifyStore.notifyMsg,
-                        autoHideDuration: 2000,
-                        //action: connectButton
-                    });
-                break;
-
-                default:
-            }
-        }
-
-        NotifyStore.on("update", handleUpdate);
-
-        return () => {
-            NotifyStore.removeListener("update", handleUpdate);
-        };
-
-    },[]);
+/**
+ * 
+ * @param {Object} props
+ * @param {string} props.msg
+ * @param {number} props.autoHideDuration
+ * @param {Function} props.onClose
+ * @param {string} props.actionText
+ * @param {Function} props.actionCreator
+ * @param {Function} props.onButtonClick
+ */
+export default function({msg, autoHideDuration, onClose, actionText, actionCreator, onButtonClick, ...props}) {
 
     return (
         <Snackbar
             {...props}
-            open={state.open}
-            message={state.msg}
-            autoHideDuration={state.autoHideDuration}
-            onClose={() => setState({open: false})}
-            action={state.action}
+            open={!!msg}
+            message={msg}
+            autoHideDuration={autoHideDuration}
+            onClose={onClose}
+            action={actionText ? (
+                <Button 
+                    color="secondary" 
+                    size="small" 
+                    onClick={() => onButtonClick(actionCreator)}
+                >
+                    {actionText}
+                </Button>
+            ) : null
+            }
         />
     );
 }

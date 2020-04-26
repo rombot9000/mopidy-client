@@ -37,5 +37,8 @@ export function setSocketState(state) {
 
 
 export function connectToServer() {
-     mopidy.connect();
+    mopidy.connect();
+    return {
+        type: NETWORK_ACTIONS.CONNECT
+    }
 };
