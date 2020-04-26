@@ -15,8 +15,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
   
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onSetAlbumSortKey: event => { dispatch(LibraryActions.sortAlbums(event.target.value)) },
-    onToggleDoNotify: event => { dispatch(NotifyActions.enableNotifications(event.target.checked))}
+    onSetAlbumSortKey: event => dispatch(LibraryActions.sortAlbums(event.target.value)),
+    onToggleDoNotify: event => dispatch(NotifyActions.enableNotifications(event.target.checked))
 });
 
 /**

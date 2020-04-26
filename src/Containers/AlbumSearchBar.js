@@ -6,14 +6,14 @@ import { LibraryActions, ViewActions } from "Actions";
 
 import { SearchBar } from "Components";
 
-const mapStateToProps = (state, ownProps) => ({});
+//const mapStateToProps = (state, ownProps) => ({});
   
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onInput: input => { dispatch(LibraryActions.setFilter(input.toLowerCase())) },
-    onMenuClick: () => { dispatch(ViewActions.toggleMenuDrawer()) }
+    onInput: input => dispatch(LibraryActions.setFilter(input.toLowerCase())),
+    onMenuClick: () => dispatch(ViewActions.toggleMenuDrawer())
 });
 
-const AlbumSearchBar = connect(mapStateToProps, mapDispatchToProps)(SearchBar);
+const AlbumSearchBar = connect(null, mapDispatchToProps)(SearchBar);
 
 export default React.forwardRef((props, ref) => {
     return (

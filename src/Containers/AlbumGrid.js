@@ -51,6 +51,6 @@ const mapStateToProps = (state, ownProps) => ({
     albums: sortedAndFilteredAlbums(state.library)
 });
   
-const mapDispatchToProps = (dispatch, ownProps) => ({});
+//const mapDispatchToProps = (dispatch, ownProps) => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlbumGrid);
+export default connect(mapStateToProps, null)(AlbumGrid);
