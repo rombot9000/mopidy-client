@@ -8,11 +8,17 @@ const emptyLibrary = {
 
 export default (library = emptyLibrary, action) => {
     switch (action.type) {
-        case LIBRARY_ACTIONS.SET_ALBUMS:
+        case LIBRARY_ACTIONS.INIT:
             return {
                 ...library, 
                 albums: action.albums, 
                 albumSortKey: action.albumSortKey,
+            };
+
+        case LIBRARY_ACTIONS.SET_ALBUMS:
+            return {
+                ...library, 
+                albums: action.albums, 
             };
         
         case LIBRARY_ACTIONS.SET_FILTER:

@@ -36,7 +36,7 @@ export function handleServerEvent(state) {
     if(state === "state:online") {
         PlaybackActions.fetch();
         TracklistActions.fetch();
-        LibraryActions.fetch();
+        Store.dispatch(LibraryActions.fetch());
     }
 };
 

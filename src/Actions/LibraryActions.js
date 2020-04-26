@@ -8,23 +8,36 @@ import { writeSetting, readSetting, getAlbumsFromDB, writeAlbumsToDB } from "Sto
  * @readonly
  */
 export const LIBRARY_ACTIONS = {
+    INIT: "libraryActions.Init",
     SET_ALBUMS: "libraryActions.SetAlbums",
     SET_FILTER: "libraryActions.SetFilter",
     SET_SORT_KEY: "libraryActions.SetSortKey"
 };
 
-/**
- * 
- * @param {import("ViewModel/Album").Album[]} albums 
- * @param {string} albumSortKey 
- */
-function setAlbums(albums, albumSortKey) {
-    return {
-        type: LIBRARY_ACTIONS.SET_ALBUMS,
-        albums: albums,
-        albumSortKey: albumSortKey
-    };
-};
+// /**
+//  * 
+//  * @param {import("ViewModel/Album").Album[]} albums 
+//  * @param {string} albumSortKey 
+//  */
+// function init(albums, albumSortKey) {
+//     return {
+//         type: LIBRARY_ACTIONS.SET_ALBUMS,
+//         albums: albums,
+//         albumSortKey: albumSortKey
+//     };
+// };
+
+// /**
+//  * 
+//  * @param {import("ViewModel/Album").Album[]} albums 
+//  * @param {string} albumSortKey 
+//  */
+// function setAlbums(albums, albumSortKey) {
+//     return {
+//         type: LIBRARY_ACTIONS.SET_ALBUMS,
+//         albums: albums,
+//     };
+// };
 
 /**
  * Filter albums by search token
@@ -56,10 +69,11 @@ export function sortAlbums(albumSortKey) {
 export function init() {
     return async dispatch => {
 
-        dispatch(setAlbums(
-            await getAlbumsFromDB(),
-            await readSetting("albumSortKey")
-        ))
+        dispatch({
+            type: LIBRARY_ACTIONS.INIT,
+            albums: await getAlbumsFromDB(),
+            albumSortKey: await readSetting("albumSortKey")
+        });
 
     };
 };
@@ -71,13 +85,13 @@ export function fetch() {
     return async dispatch => {
         
         const albums = await Library.fetchAll();
-        
-        dispatch(setAlbums(
-            albums,
-            await readSetting("albumSortKey")
-        ));
 
         writeAlbumsToDB(albums);
+        
+        dispatch({
+            type: LIBRARY_ACTIONS.SET_ALBUMS,
+            albums: albums
+        });
 
     };
 };
