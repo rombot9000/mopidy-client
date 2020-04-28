@@ -5,8 +5,6 @@ import { connect } from "react-redux";
 import { LibraryActions, ViewActions } from "Actions";
 
 import { SearchBar } from "Components";
-
-//const mapStateToProps = (state, ownProps) => ({});
   
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onInput: input => dispatch(LibraryActions.setFilter(input.toLowerCase())),

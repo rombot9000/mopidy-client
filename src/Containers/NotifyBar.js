@@ -17,6 +17,9 @@ const autoHideDuration = (level) => {
     }
 }
 
+/**
+ * @param {import("Reducers").State} state 
+ */
 const mapStateToProps = (state, ownProps) => ({
     className: ownProps.className,
     msg: state.notify.msg,

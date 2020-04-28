@@ -112,6 +112,10 @@ export async function playAlbum(album) {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.PLAY_ALBUM
     });
+    return {
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.PLAY_ALBUM
+    }
 };
 
 export function pause() {

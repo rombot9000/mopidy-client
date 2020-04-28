@@ -11,7 +11,8 @@ import { PlaybackActions, ViewActions } from "Actions";
 /** 
  * @typedef {Object} AlbumProp
  * @property {import("ViewModel/Album").Album} album
- * @property {}
+ * @property {Function} onClick
+ * @property {Function} onPlayIconClick
  *
  * @typedef {AlbumProp & import("@material-ui/core").GridProps} AlbumGridTileProps
  */
@@ -29,11 +30,9 @@ const useStyles = makeStyles(theme => ({
 
 
 /**
- * Use Memo to prevent rerender when onClick is called
- * NOTE: we use backgound-image hack since the Paper component adds white space below a child img...
  * @param {AlbumGridTileProps} props
  */
-function AlbumGridTile({album, onClick, ...gridProps}) {
+function AlbumGridTile({album, onClick, onPlayIconClick, ...gridProps}) {
 
     const classes = useStyles();
 
@@ -48,18 +47,14 @@ function AlbumGridTile({album, onClick, ...gridProps}) {
                 onClick={onClick}
                 onMouseEnter={() => {setHighlight(true)}}
                 onMouseLeave={() => {setHighlight(false)}}
-                //elevation={highlight ? 8 : 1}
             >
                 <Fade in={highlight}>
                     <Fab
                         className={classes.iconBar}
                         size="small"
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            PlaybackActions.playAlbum(album);
-                        }}
+                        onClick={onPlayIconClick}
                     >
-                            <PlayArrow/>
+                        <PlayArrow/>
                     </Fab>
                 </Fade>
             </SquareImage>
@@ -71,12 +66,16 @@ function AlbumGridTile({album, onClick, ...gridProps}) {
 
 };
 
+/**
+ * @param {import("Reducers").State} state
+ */
 const mapStateToProps = (state, ownProps) => ({
     ...ownProps
 });
   
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onClick: () => dispatch(ViewActions.toggleAlbumDetailsModal(ownProps.album))
+    onClick: () => dispatch(ViewActions.toggleAlbumDetailsModal(ownProps.album)),
+    onPlayIconClick: () => dispatch(PlaybackActions.playAlbum(ownProps.album))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlbumGridTile);

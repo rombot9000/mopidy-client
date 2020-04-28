@@ -16,31 +16,6 @@ export const LIBRARY_ACTIONS = {
     SET_SORT_KEY:   3
 };
 
-// /**
-//  * 
-//  * @param {import("ViewModel/Album").Album[]} albums 
-//  * @param {string} albumSortKey 
-//  */
-// function init(albums, albumSortKey) {
-//     return {
-//         case: LIBRARY_ACTIONS.SET_ALBUMS,
-//         albums: albums,
-//         albumSortKey: albumSortKey
-//     };
-// };
-
-// /**
-//  * 
-//  * @param {import("ViewModel/Album").Album[]} albums 
-//  * @param {string} albumSortKey 
-//  */
-// function setAlbums(albums, albumSortKey) {
-//     return {
-//         case: LIBRARY_ACTIONS.SET_ALBUMS,
-//         albums: albums,
-//     };
-// };
-
 /**
  * Filter albums by search token
  * @param {string} token
@@ -91,13 +66,13 @@ export function fetch() {
         
         const albums = await Library.fetchAll();
 
-        writeAlbumsToDB(albums);
         
         dispatch({
             type: ACTION_TYPES.LIBRARY_ACTION,
             case: LIBRARY_ACTIONS.SET_ALBUMS,
             albums: albums
         });
-
+        
+        writeAlbumsToDB(albums);
     };
 };

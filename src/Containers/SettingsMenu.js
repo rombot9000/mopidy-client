@@ -8,13 +8,16 @@ import { Album } from "ViewModel";
 
 import { LibraryActions, NotifyActions } from "Actions";
 
-const mapStateToProps = (state, ownProps) => ({
+/**
+ * @param {import("Reducers").State} state 
+ */
+const mapStateToProps = (state) => ({
     albumSortKey: state.library.albumSortKey,
     networkState: state.network,
     doNotify: state.notify.enabled
 });
   
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
     onSetAlbumSortKey: event => dispatch(LibraryActions.sortAlbums(event.target.value)),
     onToggleDoNotify: event => dispatch(NotifyActions.enableNotifications(event.target.checked))
 });

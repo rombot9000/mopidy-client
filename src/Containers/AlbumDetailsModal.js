@@ -18,12 +18,15 @@ const AlbumDetailsModal = ({open, album, onClose}) =>  (
     </ScrollableModal>
 );
 
-const mapStateToProps = (state, ownProps) => ({
+/**
+ * @param {import("Reducers").State} state 
+ */
+const mapStateToProps = (state) => ({
     open: state.view.albumDetailsModalOpen,
     album: state.view.albumDetailsAlbum
 });
   
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
     onClose: () => dispatch(ViewActions.toggleAlbumDetailsModal())
 });
 

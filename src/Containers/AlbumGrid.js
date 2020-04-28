@@ -44,12 +44,16 @@ function sortAlbums(albums, albumSortKey) {
     });
 }
 
+
 function sortedAndFilteredAlbums(library) {
     let filteredAlbums = filterAlbumsByToken(library.albums, library.filterToken);
     return sortAlbums(filteredAlbums, library.albumSortKey);
 }
 
-const mapStateToProps = (state, ownProps) => ({
+/**
+ * @param {import("Reducers").State} state 
+ */
+const mapStateToProps = (state) => ({
     albums: sortedAndFilteredAlbums(state.library)
 });
 
