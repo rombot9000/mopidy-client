@@ -1,5 +1,3 @@
-import Dispatcher from "Dispatcher";
-
 import { Tracklist } from "MopidyAPI";
 
 import { ACTION_TYPES } from ".";
