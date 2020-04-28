@@ -1,7 +1,6 @@
 import React from "react";
 
 import { makeStyles, Grid } from "@material-ui/core"
-import AlbumGridTile from "./AlbumGridTile"
 
 const GRID_SPACING = 1
 
@@ -15,11 +14,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /**
- * @function AlbumGrid
+ * @function ResponsiveGrid
  * @param {Object} props
- * @param {import("ViewModel/Album").Album[]} props.albums
+ * @param {Grid} props.GridItem
+ * @param {Object[]} props.gridItemProps
  */
-export default ({albums}) => {
+export default ({GridItem, gridItemProps}) => {
     // calc classes
     const classes = useStyles();
 
@@ -29,7 +29,7 @@ export default ({albums}) => {
             spacing={GRID_SPACING}
             className={classes.gridList}
         >
-        {albums.map((a,i) => (<AlbumGridTile key={i} xl={1} lg={2} md={3} sm={4} xs={6} album={a}/>))}
+        {gridItemProps.map((itemProps,i) => (<GridItem item key={i} xl={1} lg={2} md={3} sm={4} xs={6} {...itemProps}/>))}
         </Grid>
     );
 };

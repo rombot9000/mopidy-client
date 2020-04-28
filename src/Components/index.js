@@ -1,7 +1,7 @@
 import SearchBar from "./SearchBar";
 import PlaybackCtrlBar from "./PlaybackCtrlBar";
 import MsgSnackBar from "./MsgSnackBar";
-import AlbumGrid from "./AlbumGrid";
+import ResponsiveGrid from "./ResponsiveGrid";
 import TracksView from "./TracksView";
 import Tracklist from "./Tracklist";
 import ListLinkItem from "./ListLinkItem";
@@ -10,7 +10,7 @@ export {
     SearchBar,
     PlaybackCtrlBar,
     MsgSnackBar,
-    AlbumGrid,
+    ResponsiveGrid,
     Tracklist,
     TracksView,
     ListLinkItem

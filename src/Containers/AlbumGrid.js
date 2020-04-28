@@ -1,6 +1,8 @@
+import React from "react";
 import { connect } from "react-redux";
 
-import { AlbumGrid } from "Components";
+import { ResponsiveGrid } from "Components";
+import AlbumGridTile from "./AlbumGridTile";
 
 /**
  * @param {import("ViewModel/Album").Album[]} albums
@@ -29,6 +31,11 @@ function filterAlbumsByToken(albums, token) {
     });
 }
 
+/**
+ * 
+ * @param {import("ViewModel/Album").Album[]} albums 
+ * @param {string} albumSortKey
+ */
 function sortAlbums(albums, albumSortKey) {
     if(!albumSortKey) return albums;
 
@@ -37,20 +44,22 @@ function sortAlbums(albums, albumSortKey) {
     });
 }
 
-
 function sortedAndFilteredAlbums(library) {
-
     let filteredAlbums = filterAlbumsByToken(library.albums, library.filterToken);
-    
     return sortAlbums(filteredAlbums, library.albumSortKey);
-
 }
-
 
 const mapStateToProps = (state, ownProps) => ({
     albums: sortedAndFilteredAlbums(state.library)
 });
-  
-//const mapDispatchToProps = (dispatch, ownProps) => ({});
+
+/**
+ * 
+ * @param {Object} props
+ * @param {import("ViewModel/Album").Album[]} props.albums
+ */
+const AlbumGrid = ({albums}) => (
+    <ResponsiveGrid GridItem={AlbumGridTile} gridItemProps={albums.map(a => {return {"album": a}})}/>
+);
 
 export default connect(mapStateToProps, null)(AlbumGrid);

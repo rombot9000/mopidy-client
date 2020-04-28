@@ -1,15 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import { Typography, Grid, Fab, Fade, makeStyles } from "@material-ui/core";
 import { PlayArrow } from "@material-ui/icons";
 
-import SquareImage from "./SquareImage";
+import SquareImage from "Components/SquareImage";
 
-import { ViewActions, PlaybackActions } from "Actions";
+import { PlaybackActions, ViewActions } from "Actions";
 
 /** 
  * @typedef {Object} AlbumProp
  * @property {import("ViewModel/Album").Album} album
+ * @property {}
  *
  * @typedef {AlbumProp & import("@material-ui/core").GridProps} AlbumGridTileProps
  */
@@ -27,34 +29,23 @@ const useStyles = makeStyles(theme => ({
 
 
 /**
- * 
- * @param {AlbumGridTileProps} prevProps 
- * @param {AlbumGridTileProps} nextProps 
- * @returns {boolean} True if component should NOT rerender, false otherwise
- */
-function propsAreEqual(prevProps, nextProps) {
-    return prevProps.album._uri === nextProps.album._uri;
-};
-
-/**
  * Use Memo to prevent rerender when onClick is called
  * NOTE: we use backgound-image hack since the Paper component adds white space below a child img...
- * @param {AlbumGridTileProps} props 
+ * @param {AlbumGridTileProps} props
  */
-function AlbumGridTile(props) {
-
-    const {album, ...gridProps} = props;
+function AlbumGridTile({album, onClick, ...gridProps}) {
 
     const classes = useStyles();
 
     const [highlight, setHighlight] = React.useState(false);
     
+    console.log("Render album tile");
     return (
-        <Grid item {...gridProps} >
+        <Grid {...gridProps} >
             <SquareImage
                 className={classes.cover}
                 src={album.cover}
-                onClick={() => ViewActions.togggleAlbumDetailsModal(album)}
+                onClick={onClick}
                 onMouseEnter={() => {setHighlight(true)}}
                 onMouseLeave={() => {setHighlight(false)}}
                 //elevation={highlight ? 8 : 1}
@@ -80,4 +71,12 @@ function AlbumGridTile(props) {
 
 };
 
-export default React.memo(AlbumGridTile, propsAreEqual);
+const mapStateToProps = (state, ownProps) => ({
+    ...ownProps
+});
+  
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    onClick: () => dispatch(ViewActions.toggleAlbumDetailsModal(ownProps.album))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AlbumGridTile);

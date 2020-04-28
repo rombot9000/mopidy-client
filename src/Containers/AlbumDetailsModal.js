@@ -24,7 +24,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
   
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onClose: () => dispatch(ViewActions.togggleAlbumDetailsModal())
+    onClose: () => dispatch(ViewActions.toggleAlbumDetailsModal())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlbumDetailsModal);
