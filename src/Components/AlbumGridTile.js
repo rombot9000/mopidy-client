@@ -54,7 +54,7 @@ function AlbumGridTile(props) {
             <SquareImage
                 className={classes.cover}
                 src={album.cover}
-                onClick={() => ViewActions.openAlbumDetailsModal(album)}
+                onClick={() => ViewActions.togggleAlbumDetailsModal(album)}
                 onMouseEnter={() => {setHighlight(true)}}
                 onMouseLeave={() => {setHighlight(false)}}
                 //elevation={highlight ? 8 : 1}

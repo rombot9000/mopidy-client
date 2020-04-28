@@ -1,9 +1,8 @@
 import React from "react";
 
-import { ViewStore } from "Stores";
+import { connect } from "react-redux";
 
-import ScrollableModal from "./ScrollableModal";
-import AlbumDetails from "./AlbumDetails";
+import ScrollableModal from "Components/ScrollableModal";
 import SettingsMenu from "Containers/SettingsMenu"; 
 
 /** 
@@ -11,7 +10,7 @@ import SettingsMenu from "Containers/SettingsMenu";
  */
 
 
-export default function Modals() {
+function Modals({}) {
 
     /** 
      * State var for holding additional view components
@@ -51,3 +50,5 @@ export default function Modals() {
         </ScrollableModal>
     );
 };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Modals);
