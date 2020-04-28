@@ -1,40 +1,33 @@
-import Dispatcher from "Dispatcher";
+import { ACTION_TYPES } from ".";
 
 export const VIEW_ACTIONS = {
-    OPEN_ALBUM_DETAILS_MODAL: "viewActions.OpenAlbumDetailsModal",
-    TOGGLE_MENU_DRAWER: "viewActions.ToggleMenuDrawer",
-    OPEN_SETTINGS_MODAL: "viewActions.OpenSettingsModal"
+    TOGGLE_SETTINGS_MENU:       0,
+    TOGGLE_MENU_DRAWER:         1,
+    TOGGLE_ALBUM_DETAILS_MODAL: 2
 };
 
 /**
  * 
  * @param {import("ViewModel/Album").Album} album 
  */
-export function openAlbumDetailsModal(album) {
-    Dispatcher.dispatch({
-        type: VIEW_ACTIONS.OPEN_ALBUM_DETAILS_MODAL,
-        album: album
-    });
+export function togggleAlbumDetailsModal(album) {
     return {
-        type: VIEW_ACTIONS.OPEN_ALBUM_DETAILS_MODAL,
+        type: ACTION_TYPES.VIEW_ACTION,
+        case: VIEW_ACTIONS.TOGGLE_ALBUM_DETAILS_MODAL,
         album: album
     }
 };
 
 export function toggleMenuDrawer() {
-    Dispatcher.dispatch({
-        type: VIEW_ACTIONS.TOGGLE_MENU_DRAWER
-    });
     return {
-        type: VIEW_ACTIONS.TOGGLE_MENU_DRAWER
+        type: ACTION_TYPES.VIEW_ACTION,
+        case: VIEW_ACTIONS.TOGGLE_MENU_DRAWER
     }
 };
 
-export function openSettingsModal() {
-    Dispatcher.dispatch({
-        type: VIEW_ACTIONS.OPEN_SETTINGS_MODAL
-    });
+export function toggleSettingModal() {
     return {
-        type: VIEW_ACTIONS.OPEN_SETTINGS_MODAL
+        type: ACTION_TYPES.VIEW_ACTION,
+        case: VIEW_ACTIONS.TOGGLE_SETTINGS_MENU
     }
 }

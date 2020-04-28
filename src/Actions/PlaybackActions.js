@@ -3,6 +3,8 @@ import Dispatcher from "Dispatcher";
 import { Playback } from "MopidyAPI";
 import * as Mopidy from "MopidyAPI/Utils";
 
+import { ACTION_TYPES } from ".";
+
 export const PLAYBACK_ACTIONS = {
     INIT: "playbackActions.Init",
     FETCH: "playbackActions.Fetch",
@@ -24,7 +26,8 @@ export const PLAYBACK_ACTIONS = {
 export async function fetch() {
     const { state, track, timePosition, timePositionUpdated } = await Playback.fetchInfo();
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.FETCH,
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.FETCH,
         state: state,
         track: track,
         timePosition: timePosition,
@@ -42,7 +45,8 @@ export async function fetch() {
  */
 export function update({state, track, timePosition, timePositionUpdated}) {
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.UPDATE,
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.UPDATE,
         state: state,
         track: track,
         timePosition: timePosition,
@@ -55,7 +59,8 @@ export function update({state, track, timePosition, timePositionUpdated}) {
  */
 export function updateState(state) {
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.UPDATE_STATE,
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.UPDATE_STATE,
         state: state,
     });
 };
@@ -65,7 +70,8 @@ export function updateState(state) {
  */
 export function updateTimePosition(timePosition) {
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.UPDATE_TIME_POSITION,
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.UPDATE_TIME_POSITION,
         timePosition: timePosition,
         timePositionUpdated: Date.now()
     })
@@ -76,7 +82,8 @@ export function updateTimePosition(timePosition) {
  */
 export function updateTrack(track) {
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.UPDATE_TRACK,
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.UPDATE_TRACK,
         track: track
     });
 }
@@ -90,7 +97,8 @@ export function updateTrack(track) {
 export async function play(track, tracks) {
     Mopidy.playTracklist(tracks, track);
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.PLAY
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.PLAY
     });
 };
 
@@ -101,49 +109,55 @@ export async function play(track, tracks) {
 export async function playAlbum(album) {
     Mopidy.playTracklist(album.tracks);
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.PLAY_ALBUM
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.PLAY_ALBUM
     });
 };
 
 export function pause() {
     Mopidy.sendPlaybackCmd("pause");
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.PAUSE
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.PAUSE
     });
 };
 
 export function resume() {
     Mopidy.sendPlaybackCmd("resume");
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.RESUME
+        case: PLAYBACK_ACTIONS.RESUME
     });
 };
 
 export function stop() {
     Mopidy.sendPlaybackCmd("stop");
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.STOP
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.STOP
     });
 };
 
 export function toggle() {
     Mopidy.togglePlayback();
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.TOGGLE
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.TOGGLE
     });
 };
 
 export function next() {
     Mopidy.sendPlaybackCmd("next");
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.NEXT
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.NEXT
     });
 };
 
 export function previous() {
     Mopidy.sendPlaybackCmd("previous");
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.PREVIOUS
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.PREVIOUS
     });
 };
 
@@ -154,7 +168,8 @@ export function previous() {
 export function seek(timePosition) {
     Mopidy.seekTimePosition(timePosition);
     Dispatcher.dispatch({
-        type: PLAYBACK_ACTIONS.SEEK,
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.SEEK,
         timePosition: timePosition
     });
 };

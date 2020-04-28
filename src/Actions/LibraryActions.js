@@ -4,14 +4,16 @@ import { Library } from "MopidyAPI";
 // Storage
 import { writeSetting, readSetting, getAlbumsFromDB, writeAlbumsToDB } from "StorageAPI/Utils";
 
+import { ACTION_TYPES } from ".";
+
 /**
  * @readonly
  */
 export const LIBRARY_ACTIONS = {
-    INIT: "libraryActions.Init",
-    SET_ALBUMS: "libraryActions.SetAlbums",
-    SET_FILTER: "libraryActions.SetFilter",
-    SET_SORT_KEY: "libraryActions.SetSortKey"
+    INIT:           0,
+    SET_ALBUMS:     1,
+    SET_FILTER:     2,
+    SET_SORT_KEY:   3
 };
 
 // /**
@@ -21,7 +23,7 @@ export const LIBRARY_ACTIONS = {
 //  */
 // function init(albums, albumSortKey) {
 //     return {
-//         type: LIBRARY_ACTIONS.SET_ALBUMS,
+//         case: LIBRARY_ACTIONS.SET_ALBUMS,
 //         albums: albums,
 //         albumSortKey: albumSortKey
 //     };
@@ -34,7 +36,7 @@ export const LIBRARY_ACTIONS = {
 //  */
 // function setAlbums(albums, albumSortKey) {
 //     return {
-//         type: LIBRARY_ACTIONS.SET_ALBUMS,
+//         case: LIBRARY_ACTIONS.SET_ALBUMS,
 //         albums: albums,
 //     };
 // };
@@ -45,7 +47,8 @@ export const LIBRARY_ACTIONS = {
  */
 export function setFilter(token) {
     return {
-        type: LIBRARY_ACTIONS.SET_FILTER,
+        type: ACTION_TYPES.LIBRARY_ACTION,
+        case: LIBRARY_ACTIONS.SET_FILTER,
         token: token
     };
 };
@@ -57,7 +60,8 @@ export function setFilter(token) {
 export function sortAlbums(albumSortKey) {
     writeSetting("albumSortKey", albumSortKey);
     return {
-        type: LIBRARY_ACTIONS.SET_SORT_KEY,
+        type: ACTION_TYPES.LIBRARY_ACTION,
+        case: LIBRARY_ACTIONS.SET_SORT_KEY,
         albumSortKey: albumSortKey
     };
 };
@@ -70,7 +74,8 @@ export function init() {
     return async dispatch => {
 
         dispatch({
-            type: LIBRARY_ACTIONS.INIT,
+            type: ACTION_TYPES.LIBRARY_ACTION,
+            case: LIBRARY_ACTIONS.INIT,
             albums: await getAlbumsFromDB(),
             albumSortKey: await readSetting("albumSortKey")
         });
@@ -89,7 +94,8 @@ export function fetch() {
         writeAlbumsToDB(albums);
         
         dispatch({
-            type: LIBRARY_ACTIONS.SET_ALBUMS,
+            type: ACTION_TYPES.LIBRARY_ACTION,
+            case: LIBRARY_ACTIONS.SET_ALBUMS,
             albums: albums
         });
 

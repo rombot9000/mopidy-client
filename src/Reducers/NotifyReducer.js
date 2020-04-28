@@ -1,5 +1,14 @@
-import { NOTIFY_ACTIONS } from "Actions/NotifyActions";
+import { ACTION_TYPES, NOTIFY_ACTIONS } from "Actions";
 
+/**
+ * @typedef NotifyState
+ * @property {boolean} enabled 
+ * @property {"info"|"warn"|"error"} level 
+ * @property {string} msg 
+ * @property {{text: string, creator: Function}} action 
+ */
+
+ /** @type {NotifyState} */
 const initialState = {
     enabled: true,
     level: undefined,
@@ -10,8 +19,16 @@ const initialState = {
     }
 }
 
+/**
+ * @param {NotifyState} state
+ * @param {import("Actions").NotifyAction} action
+ * @returns {NotifyState}
+ */
 export default (state = initialState, action) => {
-    switch (action.type) {
+
+    if(action.type !== ACTION_TYPES.NOTIFY_ACTION) return state;
+
+    switch (action.case) {
         case NOTIFY_ACTIONS.INIT:
         case NOTIFY_ACTIONS.ENABLE_NOTIFICATIONS:
             return {

@@ -1,39 +1,55 @@
-import { LIBRARY_ACTIONS } from "Actions/LibraryActions";
+import { ACTION_TYPES, LIBRARY_ACTIONS } from "Actions";
 
-const emptyLibrary = {
+/**
+ * @typedef {Object} LibraryState
+ * @property {import("ViewModel/Album").Album[]} albums
+ * @property {string} albumSortKey
+ * @property {string} filterToken
+ */
+
+ /** @type {LibraryState} */
+const initialState = {
     albums: [],
     albumSortKey: undefined,
     filterToken: undefined
 }
 
-export default (library = emptyLibrary, action) => {
-    switch (action.type) {
+/**
+ * @param {LibraryState} state
+ * @param {import("Actions").LibraryAction} action
+ * @returns {LibraryState}
+ */
+export default (state = initialState, action) => {
+
+    if(action.type !== ACTION_TYPES.LIBRARY_ACTION) return state;
+
+    switch (action.case) {
         case LIBRARY_ACTIONS.INIT:
             return {
-                ...library, 
+                ...state, 
                 albums: action.albums, 
                 albumSortKey: action.albumSortKey,
             };
 
         case LIBRARY_ACTIONS.SET_ALBUMS:
             return {
-                ...library, 
+                ...state, 
                 albums: action.albums, 
             };
         
         case LIBRARY_ACTIONS.SET_FILTER:
             return {
-                ...library,
+                ...state,
                 filterToken: action.token
             };
         
         case LIBRARY_ACTIONS.SET_SORT_KEY:
             return {
-                ...library,
+                ...state,
                 albumSortKey: action.albumSortKey
             };
 
         default:
-            return library;
+            return state;
     }
 };
