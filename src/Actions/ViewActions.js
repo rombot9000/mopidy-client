@@ -10,7 +10,7 @@ export const VIEW_ACTIONS = {
  * 
  * @param {import("ViewModel/Album").Album} album 
  */
-export function togggleAlbumDetailsModal(album) {
+export function toggleAlbumDetailsModal(album) {
     return {
         type: ACTION_TYPES.VIEW_ACTION,
         case: VIEW_ACTIONS.TOGGLE_ALBUM_DETAILS_MODAL,
