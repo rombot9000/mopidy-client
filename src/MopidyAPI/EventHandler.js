@@ -35,7 +35,7 @@ export function handleServerEvent(state) {
     // fetch info from server
     if(state === "state:online") {
         PlaybackActions.fetch();
-        TracklistActions.fetch();
+        Store.dispatch(TracklistActions.fetch());
         Store.dispatch(LibraryActions.fetch());
     }
 };
@@ -134,7 +134,7 @@ export function handleMpdEvent(event, args) {
         break;
 
         case "event:tracklistChanged":
-            TracklistActions.fetch();
+            Store.dispatch(TracklistActions.fetch());
         break;
 
         default:

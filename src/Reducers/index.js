@@ -4,6 +4,7 @@ import library from "./LibraryReducer";
 import network from "./NetworkReducer";
 import notify from "./NotifyReducer";
 import view from "./ViewReducer"
+import tracklist from "./TracklistReducer"
 
 /**
  * @typedef {Object} State
@@ -11,11 +12,13 @@ import view from "./ViewReducer"
  * @property {import("./NetworkReducer").NetworkState} network
  * @property {import("./NotifyReducer").NotifyState} notify
  * @property {import("./ViewReducer").ViewState} view
+ * @property {import("./TracklistReducer").TracklistState} tracklist
  */
 
 export default combineReducers({
     library,
     network,
     notify,
-    view
+    view,
+    tracklist
 });

@@ -14,20 +14,19 @@ export const TRACKLIST_ACTIONS = {
  * 
  * @param {import("ViewModel/Track").Track[]} tracks 
  */
-export async function set(tracks) {
-    await Tracklist.set(tracks);
-    Dispatcher.dispatch({
-        type: ACTION_TYPES.TRACKLIST_ACTION,
-        case: TRACKLIST_ACTIONS.SET,
-    });
+export function set(tracks) {
+    return async dispatch => {
+        await Tracklist.set(tracks);
+        dispatch ({
+            type: ACTION_TYPES.TRACKLIST_ACTION,
+            case: TRACKLIST_ACTIONS.SET,
+        });
+    };
 };
 
-
-export async function init() {
-};
-
-export async function fetch() {
-    Dispatcher.dispatch({
+export function fetch() {
+    
+    return async dispatch => dispatch({
         type: ACTION_TYPES.TRACKLIST_ACTION,
         case: TRACKLIST_ACTIONS.FETCH,
         tracks: await Tracklist.fetch()

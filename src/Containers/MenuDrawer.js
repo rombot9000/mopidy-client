@@ -8,7 +8,6 @@ import { QueueMusic, MusicNote, LibraryMusic, AlbumRounded, Tune } from "@materi
 
 import { Tracklist, ListLinkItem } from "Components";
 
-import { TracklistStore } from "Stores";
 import { ViewActions } from "Actions";
 
 const useStyles = makeStyles(theme => ({
@@ -25,12 +24,15 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-
-const mapStateToProps = (state, ownProps) => ({
-    open: state.view.menuDrawerOpen
+/**
+ * @param {import("Reducers").State} state 
+ */
+const mapStateToProps = (state) => ({
+    open: state.view.menuDrawerOpen,
+    tracks: state.tracklist.tracks
 });
   
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
     onClose: () => dispatch(ViewActions.toggleMenuDrawer())
 });
 
@@ -40,7 +42,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
  * @param {boolean} props.open
  * @param {Function} props.onClose
  */
-function MenuDrawer({open, onClose}) {
+function MenuDrawer({open, onClose, tracks}) {
 
     const classes = useStyles();
 
@@ -73,7 +75,7 @@ function MenuDrawer({open, onClose}) {
                     <ListItemText>Now Playing</ListItemText>
                 </ListItem>
                 <Container>
-                    <Tracklist tracks={TracklistStore.tracks}/>
+                    <Tracklist tracks={tracks}/>
                 </Container>
             </List>
         </Drawer>
