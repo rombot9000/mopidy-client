@@ -12,7 +12,7 @@ export default (props) => {
     return (
         <ListItem
             button
-            selected={useRouteMatch(to)}
+            selected={!!useRouteMatch(to)}
             {...listItemProps} 
             component={renderLink}
         >
