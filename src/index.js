@@ -9,13 +9,16 @@ import "typeface-roboto";
 import Store from "./Store";
 import App from "./App";
 
-import { LibraryActions, NotifyActions, NetworkActions } from "Actions";
+import { LibraryActions, NotifyActions, NetworkActions, PlaybackActions, TracklistActions } from "Actions";
 Store.dispatch(LibraryActions.init());
 Store.dispatch(NotifyActions.init());
 Store.dispatch(NetworkActions.connectToServer());
 // reconnect on focus
 window.addEventListener('focus', () => {
+    console.log("On focus");
     Store.dispatch(NetworkActions.connectToServer());
+    Store.dispatch(PlaybackActions.fetch());
+    Store.dispatch(TracklistActions.fetch());
 });
 
 render(
