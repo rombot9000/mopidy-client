@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import ScrollableModal from "Components/ScrollableModal";
-import AlbumDetails from "Components/AlbumDetails";
+import AlbumDetails from "./AlbumDetails";
 
 import {ViewActions} from "Actions";
 

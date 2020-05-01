@@ -34,7 +34,7 @@ export function handleServerEvent(state) {
     
     // fetch info from server
     if(state === "state:online") {
-        PlaybackActions.fetch();
+        Store.dispatch(PlaybackActions.fetch());
         Store.dispatch(TracklistActions.fetch());
         Store.dispatch(LibraryActions.fetch());
     }
@@ -88,38 +88,38 @@ export function handleMpdEvent(event, args) {
     switch(event) {
         case "event:playbackStateChanged":
             if(args.new_state === "stopped"){
-                PlaybackActions.update({
+                Store.dispatch(PlaybackActions.update({
                     state: "stopped",
                     track: Track(null),
                     timePosition: 0,
                     timePositionUpdated: 0
-                });
+                }));
             }
         break;
         
         case "event:trackPlaybackStarted":
-            PlaybackActions.update({
+            Store.dispatch(PlaybackActions.update({
                 state: "playing",
                 track: Track(args.tl_track.track),
                 timePosition: 0,
                 timePositionUpdated: Date.now()
-            });
+            }));
         break;
 
         case "event:trackPlaybackResumed":
-            PlaybackActions.update({
+            Store.dispatch(PlaybackActions.update({
                 state: "playing",
                 timePosition: args.time_position,
                 timePositionUpdated: Date.now()
-            });
+            }));
         break;
         
         case "event:trackPlaybackPaused":
-            PlaybackActions.update({
+            Store.dispatch(PlaybackActions.update({
                 state: "paused",
                 timePosition: args.time_position,
                 timePositionUpdated: Date.now()
-            });
+            }));
         break;
 
         case "event:trackPlaybackEnded":
@@ -127,10 +127,10 @@ export function handleMpdEvent(event, args) {
         break;
 
         case "event:seeked":
-            PlaybackActions.update({
+            Store.dispatch(PlaybackActions.update({
                 timePosition: args.time_position,
                 timePositionUpdated: Date.now()
-            });
+            }));
         break;
 
         case "event:tracklistChanged":

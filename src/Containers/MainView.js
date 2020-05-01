@@ -5,13 +5,14 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
-import { PlaybackCtrlBar, TracksView} from "Components"; 
+import { TracksView} from "Components"; 
 
 import AlbumGrid from "./AlbumGrid";
 import AlbumSearchBar from "./AlbumSearchBar";
 import NotifyBar from "./NotifyBar";
 import MenuDrawer from "./MenuDrawer";
 import AlbumDetailsModal from "./AlbumDetailsModal";
+import PlaybackCtrlBar from "./PlaybackCtrlBar";
 
 /** 
  * @typedef {Object.<string, JSX.Element>} ViewComponents

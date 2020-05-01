@@ -6,7 +6,7 @@ import { LibraryActions, ViewActions } from "Actions";
 
 import { SearchBar } from "Components";
   
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
     onInput: input => dispatch(LibraryActions.setFilter(input.toLowerCase())),
     onMenuClick: () => dispatch(ViewActions.toggleMenuDrawer())
 });

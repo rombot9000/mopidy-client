@@ -1,37 +1,31 @@
-import Dispatcher from "Dispatcher";
-
 import { Playback } from "MopidyAPI";
 import * as Mopidy from "MopidyAPI/Utils";
 
 import { ACTION_TYPES } from ".";
 
 export const PLAYBACK_ACTIONS = {
-    INIT: "playbackActions.Init",
-    FETCH: "playbackActions.Fetch",
-    UPDATE: "playbackActions.Update",
-    UPDATE_STATE: "playbackActions.UpdateState",
-    UPDATE_TIME_POSITION: "playbackActions.UpdateTimePosition",
-    UPDATE_TRACK: "playbackActions.UpdateTrack",
-    PLAY: "playbackActions.Play",
-    PLAY_ALBUM: "playbackActions.PlayAlbum",
-    PAUSE: "playbackActions.Pause",
-    RESUME: "playbackActions.Resume",
-    STOP: "playbackActions.Stop",
-    TOGGLE: "playbackActions.Toggle",
-    NEXT: "playbackActions.Next",
-    PREVIOUS: "playbackActions.Previous",
-    SEEK: "playbackActions.Seek",
+    INIT:                    1,
+    FETCH:                   2,
+    UPDATE:                  3,
+    UPDATE_STATE:            4,
+    UPDATE_TIME_POSITION:    5,
+    UPDATE_TRACK:            6,
+    PLAY:                    7,
+    PLAY_ALBUM:              8,
+    PAUSE:                   9,
+    RESUME:                 10,
+    STOP:                   11,
+    TOGGLE:                 12,
+    NEXT:                   13,
+    PREVIOUS:               14,
+    SEEK:                   15
 };
 
-export async function fetch() {
-    const { state, track, timePosition, timePositionUpdated } = await Playback.fetchInfo();
-    Dispatcher.dispatch({
+export function fetch() {
+    return async dispatch => dispatch({
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.FETCH,
-        state: state,
-        track: track,
-        timePosition: timePosition,
-        timePositionUpdated: timePositionUpdated
+        ...await Playback.fetchInfo()
     });
 };
 
@@ -44,62 +38,62 @@ export async function fetch() {
  * @param {number} param0.timePositionUpdated
  */
 export function update({state, track, timePosition, timePositionUpdated}) {
-    Dispatcher.dispatch({
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.UPDATE,
         state: state,
         track: track,
         timePosition: timePosition,
         timePositionUpdated: timePositionUpdated
-    })
+    };
 }
 
 /**
- * @param {import("Stores/PlaybackStore").PlaybackState} state 
+ * @param {import("MopidyAPI/PlaybackAPI").PlaybackState} state 
  */
 export function updateState(state) {
-    Dispatcher.dispatch({
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.UPDATE_STATE,
         state: state,
-    });
+    };
 };
 
 /**
  * @param {number} timePosition playback time position in ms
  */
 export function updateTimePosition(timePosition) {
-    Dispatcher.dispatch({
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.UPDATE_TIME_POSITION,
         timePosition: timePosition,
         timePositionUpdated: Date.now()
-    })
+    };
 }
 
 /**
 \ * @param {import("ViewModel/Track").Track} track 
  */
 export function updateTrack(track) {
-    Dispatcher.dispatch({
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.UPDATE_TRACK,
         track: track
-    });
+    };
 }
 
 
 /**
  * 
  * @param {import("ViewModel/Track").Track} track 
- * @param {import("ViewModel/Track").Track[]} tracks 
+ * @param {import("ViewModel/Track").Track[]} tracklist 
  */
-export async function play(track, tracks) {
-    Mopidy.playTracklist(tracks, track);
-    Dispatcher.dispatch({
+export function play(track, tracklist) {
+    Mopidy.playTracklist(tracklist ? tracklist : [track], track);
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.PLAY
-    });
+    };
 };
 
 /**
@@ -108,10 +102,6 @@ export async function play(track, tracks) {
  */
 export async function playAlbum(album) {
     Mopidy.playTracklist(album.tracks);
-    Dispatcher.dispatch({
-        type: ACTION_TYPES.PLAYBACK_ACTION,
-        case: PLAYBACK_ACTIONS.PLAY_ALBUM
-    });
     return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.PLAY_ALBUM
@@ -120,49 +110,49 @@ export async function playAlbum(album) {
 
 export function pause() {
     Mopidy.sendPlaybackCmd("pause");
-    Dispatcher.dispatch({
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.PAUSE
-    });
+    };
 };
 
 export function resume() {
     Mopidy.sendPlaybackCmd("resume");
-    Dispatcher.dispatch({
+    return {
         case: PLAYBACK_ACTIONS.RESUME
-    });
+    }; 
 };
 
 export function stop() {
     Mopidy.sendPlaybackCmd("stop");
-    Dispatcher.dispatch({
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.STOP
-    });
+    }; 
 };
 
 export function toggle() {
     Mopidy.togglePlayback();
-    Dispatcher.dispatch({
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.TOGGLE
-    });
+    }; 
 };
 
 export function next() {
     Mopidy.sendPlaybackCmd("next");
-    Dispatcher.dispatch({
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.NEXT
-    });
+    }; 
 };
 
 export function previous() {
     Mopidy.sendPlaybackCmd("previous");
-    Dispatcher.dispatch({
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.PREVIOUS
-    });
+    }; 
 };
 
 /**
@@ -171,9 +161,9 @@ export function previous() {
  */
 export function seek(timePosition) {
     Mopidy.seekTimePosition(timePosition);
-    Dispatcher.dispatch({
+    return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.SEEK,
         timePosition: timePosition
-    });
+    }; 
 };

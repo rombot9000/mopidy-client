@@ -4,7 +4,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Typography, Paper, Grid, useMediaQuery } from "@material-ui/core";
 
 import Tracklist from "./Tracklist";
-import SquareImage from "./SquareImage";
+import SquareImage from "Components/SquareImage";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -47,17 +47,15 @@ const useStyles = makeStyles(theme => ({
 /**
  * 
  * @param {Object} props
- * @param {import("ViewModel/Album").Album} props.album 
+ * @param {import("ViewModel/Album").Album} props.album
  */
-function AlbumDetails(props){
+export default ({album, ...paperProps}) => {
 
-    const {album, ...filteredProps} = props;
     const classes = useStyles();
     const useFullHeight = useMediaQuery(useTheme().breakpoints.down('sm'));
 
-
     return (
-        <Paper {...filteredProps} className={classes.root}>
+        <Paper {...paperProps} className={classes.root}>
             <Grid container className={classes.container}>
                 <Grid item sm={12} md={6} className={classes.cover}>
                     <SquareImage src={album.cover} elevation={0} square={true}/>
@@ -74,5 +72,3 @@ function AlbumDetails(props){
         </Paper>
     );
 };
-
-export default AlbumDetails;
