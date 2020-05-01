@@ -43,8 +43,8 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 state: action.state || state.state,
-                timePosition: action.timePosition || state.timePosition,
-                timePositionUpdated: action.timePositionUpdated || state.timePositionUpdated,
+                timePosition: action.timePosition != null ?  action.timePosition : state.timePosition,
+                timePositionUpdated: action.timePositionUpdated != null ? action.timePositionUpdated : state.timePositionUpdated,
                 track: action.track || state.track
             };
 
