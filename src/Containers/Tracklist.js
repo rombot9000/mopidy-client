@@ -6,7 +6,6 @@ import { PlaybackActions } from "Actions";
 import { VirtualizedList } from "Components";
 
 import TracklistItem from "Components/TracklistItem";
-import { Playback } from "MopidyAPI";
 
 /**
  * @param {Object} props
@@ -16,7 +15,7 @@ import { Playback } from "MopidyAPI";
  * @param {import("ViewModel/Track").Track} props.playbackTrack
  * @param {"auto"|"full"} props.height
  */
-const Tracklist = ({tracks, onTrackClick, playbackState, playbackTrack, height}) => {
+const Tracklist = ({tracks, onTrackClick, playbackState, playbackTrack, playbackTimePosition, height}) => {
 
     const renderFunction = ({index, style, data}) => (
         <TracklistItem
@@ -24,6 +23,7 @@ const Tracklist = ({tracks, onTrackClick, playbackState, playbackTrack, height})
             style={style}
             track={data[index]}
             playbackState={data[index]._uri === playbackTrack._uri ? playbackState : "stopped"}
+            playbackTimePosition={playbackTimePosition}
             onClick={() => {onTrackClick(data[index], data, data[index]._uri === playbackTrack._uri)}}
         />
     );
@@ -39,11 +39,23 @@ const Tracklist = ({tracks, onTrackClick, playbackState, playbackTrack, height})
 };
 
 /**
+ * @param {import("Reducers/PlaybackReducer").PlaybackState} playbackState
+ */
+function extrapolateTimePosition(playbackState) {
+
+    if(playbackState !== "playing" ) return playbackState.timePosition;
+
+    return playbackState.timePosition + Date.now() - playbackState.timePositionUpdated;
+    
+}
+
+/**
  * @param {import("Reducers").State} state 
  */
 const mapStateToProps = (state) => ({
     playbackState: state.playback.state,
-    playbackTrack: state.playback.track
+    playbackTrack: state.playback.track,
+    playbackTimePosition: extrapolateTimePosition(state.playback)
 });
 
 const mapDispatchToProps = (dispatch) => ({

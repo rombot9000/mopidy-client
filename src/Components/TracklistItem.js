@@ -3,8 +3,6 @@ import React from "react";
 import { SvgIcon, Grid, Typography } from "@material-ui/core";
 import { PlayArrow, Pause } from "@material-ui/icons";
 
-import { PlaybackStore } from "Stores";
-
 /**
  * Animated eq icon
  * @param {import("@material-ui/core").SvgIconProps} props 
@@ -27,72 +25,76 @@ const AnimatedEq = (props) => (
  * 
  * @param {Object} props
  * @param {import("ViewModel/Track").Track} props.track
- * @param {import("Stores/PlaybackStore").PlaybackState} props.playbackState
+ * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
+ * @param {number} props.playbackTimePosition
  */
-function TracklistItem(props) {
+export default ({track, playbackState, playbackTimePosition, ...gridProps}) => {
 
-    const {track, playbackState, ...gridProps} = props;
+    const firstCellReducer = (firstCell, action) => {
+        switch(action) {
+            case "TRACK_NO": return track.track_no;
+            case "EQ": return <AnimatedEq fontSize="inherit"/>;
+            case "PLAY": return <PlayArrow fontSize="inherit"/>;
+            case "PAUSE": return <Pause fontSize="inherit"/>;
+            case "CTRL": return playbackState === "playing" ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>;
+            case "INFO": return playbackState === "playing" ? <AnimatedEq fontSize="inherit"/> : track.track_no;
+            default: return firstCell;
+        }
+    };
+    const [firstCell, setFirstCell] = React.useReducer(firstCellReducer, track.track_no);
+
+    const secondsReducer = (seconds, action) => {
+        switch(action.type){
+            case "SET_MS": return Math.floor(action.value/1000);
+            case "INCREMENT": return seconds + 1; 
+        }
+    };
+    const [seconds, setSeconds] = React.useReducer(secondsReducer, {type: "SET_MS", value: track.length});
 
     // set last cell content (duration or time position)
-    const [seconds, setSeconds] = React.useState(Math.floor(props.track.length/1000));
-
-    // set first cell content
-    const [firstCell, setFirstCell] = React.useState(props.track.track_no);
-    
-    // React to track changes
     React.useEffect(() => {
-
+        
         let interval = null;
-        switch(props.playbackState) {
+        switch(playbackState) {
             case "playing":
-                setFirstCell(<AnimatedEq fontSize="inherit"/>);
-                setSeconds(Math.floor(PlaybackStore.timePosition/1000));
-                interval = setInterval(() => setSeconds(Math.floor(PlaybackStore.timePosition/1000)), 1000);
+                setFirstCell("EQ");
+                setSeconds({type: "SET_MS", value: playbackTimePosition});
+                interval = setInterval(() => setSeconds({type: "INCREMENT"}), 1000);
             break;
-
+    
             case "paused":
-                setFirstCell(<AnimatedEq fontSize="inherit"/>);//TODO: Make icon for stopped playback
-                setSeconds(Math.floor(PlaybackStore.timePosition/1000));
+                setFirstCell("PAUSE");
+                setSeconds({type: "SET_MS", value: playbackTimePosition});
             break;
-
+    
             case "stopped":
-                setFirstCell(props.track.track_no);
-                setSeconds(Math.floor(props.track.length/1000));
+                setFirstCell("TRACK_NO");
+                setSeconds({type: "SET_MS", value: track.length});
             break;
-
+    
             default:
-                console.warn(`Unknwon playback playbackState: ${props.playbackState}`);
+                console.warn(`Unknwon playback playbackState: ${playbackState}`);
         }
 
-        // return clean up function
-        return () => {
-            if(interval) clearInterval(interval);
-        };
+        //cleanup
+        return () => clearInterval(interval);
 
-    }, [props.playbackState, props.track.length, props.track.track_no]);
-
-    function showTrackNo() {
-        setFirstCell(props.playbackState !== "stopped" ? <AnimatedEq fontSize="inherit"/> : props.track.track_no);
-    }
-    
-    function showCtrlIcons() {
-        setFirstCell(props.playbackState === "playing" ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>);
-    }
+    }, [playbackState, playbackTimePosition, track.length]);
 
     return (
         <Grid
             container
             {...gridProps}
             direction="row"
-            onMouseEnter={showCtrlIcons}
-            onMouseLeave={showTrackNo}
+            onMouseEnter={() => setFirstCell("CTRL")}
+            onMouseLeave={() => setFirstCell("INFO")}
             spacing={2}
         >
             <Grid item xs={1}>
                 <Typography variant="body2" align="right">{firstCell}</Typography>
             </Grid>
             <Grid item xs={9}>
-                <Typography variant="body2" align="left">{props.track.name}</Typography>
+                <Typography variant="body2" align="left">{track.name}</Typography>
             </Grid>
             <Grid item xs={2}>
                 <Typography variant="body2" align="right">{Math.floor(seconds/60)}:{`00${seconds%60}`.slice(-2)}</Typography>
@@ -100,16 +102,3 @@ function TracklistItem(props) {
         </Grid>
     );
 }
-
-/**
- * 
- * @param {Object} prevProps 
- * @param {Object} nextProps 
- * @returns {boolean} True if component should NOT rerender, false otherwise
- */
-function propsAreEqual(prevProps, nextProps) {
-    console.log("propsAreEqual:", prevProps.playbackState === nextProps.playbackState && prevProps.track._uri === nextProps.track._uri);
-    return prevProps.playbackState === nextProps.playbackState && prevProps.track._uri === nextProps.track._uri;
-};
-
-export default React.memo(TracklistItem, propsAreEqual);
