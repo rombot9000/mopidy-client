@@ -1,11 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { Typography, Grid, Fab, Fade, makeStyles } from "@material-ui/core";
+import { Typography, Fab, Fade, makeStyles } from "@material-ui/core";
 import { PlayArrow } from "@material-ui/icons";
 
 import SquareImage from "Components/SquareImage";
-
 import { PlaybackActions, ViewActions } from "Actions";
 
 /** 
@@ -32,15 +31,13 @@ const useStyles = makeStyles(theme => ({
 /**
  * @param {AlbumGridTileProps} props
  */
-function AlbumGridTile({album, onClick, onPlayIconClick, ...gridProps}) {
+const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
 
     const classes = useStyles();
 
     const [highlight, setHighlight] = React.useState(false);
-    
-    console.log("Render album tile");
     return (
-        <Grid {...gridProps} >
+        <React.Fragment>
             <SquareImage
                 className={classes.cover}
                 src={album.cover}
@@ -61,7 +58,7 @@ function AlbumGridTile({album, onClick, onPlayIconClick, ...gridProps}) {
             <Typography variant="button">{album.name}</Typography>
             <br/>
             <Typography variant="caption">{album.artist}</Typography>
-        </Grid>
+        </React.Fragment>
     );
 
 };

@@ -1,8 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import { makeStyles } from "@material-ui/core"
+import { Skeleton } from "@material-ui/lab";
+
 import { ResponsiveGrid } from "Components";
 import AlbumGridTile from "./AlbumGridTile";
+
+
+const useStyles = makeStyles(theme => ({
+    square: {
+        paddingTop: "100%"
+    }
+}));
 
 /**
  * @param {import("ViewModel/Album").Album[]} albums
@@ -62,8 +72,21 @@ const mapStateToProps = (state) => ({
  * @param {Object} props
  * @param {import("ViewModel/Album").Album[]} props.albums
  */
-const AlbumGrid = ({albums}) => (
-    <ResponsiveGrid GridItem={AlbumGridTile} gridItemProps={albums.map(a => {return {"album": a}})}/>
-);
+const AlbumGrid = ({albums}) => {
+    const classes = useStyles();
+    const skeleton = (
+        <React.Fragment>
+            <Skeleton variant="rect" className={classes.square}/>
+            <Skeleton variant="text" />
+            <Skeleton variant="text" />
+        </React.Fragment>
+    )
+
+    return (
+        <ResponsiveGrid placeholder={skeleton}>
+            {albums.map((album, key) => <AlbumGridTile key={key} album={album}/>)}
+        </ResponsiveGrid>
+    )
+};
 
 export default connect(mapStateToProps, null)(AlbumGrid);

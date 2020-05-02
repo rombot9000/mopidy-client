@@ -67,6 +67,7 @@ export default function MainView() {
     return (
         <Router>
             <Box
+                id="scroll-box"
                 className={classes.viewBox}
                 bottom={`${view.height}px`}
                 paddingTop={`${view.paddingTop}px`}
