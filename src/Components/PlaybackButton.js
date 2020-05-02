@@ -9,7 +9,7 @@ import { IconButton } from "@material-ui/core";
 export default (props) => {
 
     // remove warning msg
-    const { fullWidth, children, ...filteredProps } = props;
+    const { fullWidth, disableElevation, children, ...filteredProps } = props;
     filteredProps.fullwidth = props.fullWidth.toString();
     
     return (

@@ -15,7 +15,6 @@ Store.dispatch(NotifyActions.init());
 Store.dispatch(NetworkActions.connectToServer());
 // reconnect on focus
 window.addEventListener('focus', () => {
-    console.log("On focus");
     Store.dispatch(NetworkActions.connectToServer());
     Store.dispatch(PlaybackActions.fetch());
     Store.dispatch(TracklistActions.fetch());

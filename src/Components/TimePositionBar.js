@@ -32,11 +32,9 @@ export default ({state, position, length,  onPositionClick}) => {
             setTimeout(updateAnimation, 200);
         }
         else if(state === "playing") {
-            console.log("state playing");
             animationRef.current.beginElement();
         }
         else {
-            console.log("state paused");
             animationRef.current.endElement();
         }
     };
@@ -59,8 +57,6 @@ export default ({state, position, length,  onPositionClick}) => {
     const start =  length ? 100*position/length : 0;
     const duration = length - position;
     const end = 100;
-
-    console.log(start, duration, state);
 
     return (
         <div onClick={handleClick} className={classes.root}>
