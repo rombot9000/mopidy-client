@@ -47,6 +47,7 @@ export default ({track, playbackState, playbackTimePosition, ...gridProps}) => {
         switch(action.type){
             case "SET_MS": return Math.floor(action.value/1000);
             case "INCREMENT": return seconds + 1; 
+            default: return seconds;
         }
     };
     const [seconds, setSeconds] = React.useReducer(secondsReducer, {type: "SET_MS", value: track.length});
