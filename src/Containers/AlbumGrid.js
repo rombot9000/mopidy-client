@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { createSelector } from "reselect";
 
 import { makeStyles } from "@material-ui/core"
 import { Skeleton } from "@material-ui/lab";
@@ -47,6 +48,7 @@ function filterAlbumsByToken(albums, token) {
  * @param {string} albumSortKey
  */
 function sortAlbums(albums, albumSortKey) {
+    console.log("sorting albums:", albumSortKey)
     if(!albumSortKey) return albums;
 
     return albums.sort((a,b) => {
@@ -55,16 +57,23 @@ function sortAlbums(albums, albumSortKey) {
 }
 
 
-function sortedAndFilteredAlbums(library) {
-    let filteredAlbums = filterAlbumsByToken(library.albums, library.filterToken);
-    return sortAlbums(filteredAlbums, library.albumSortKey);
-}
+const getFilterToken = state => state.library.filterToken;
+const getSortKey = state => state.library.albumSortKey;
+const getAlbums = state => state.library.albums;
+
+const selectSortedAndFilteredAlbums = createSelector(
+    [getFilterToken, getSortKey, getAlbums],
+    (filterToken, sortKey, albums) => {
+        let filteredAlbums = filterAlbumsByToken(albums, filterToken);
+        return sortAlbums(filteredAlbums, sortKey);
+    }
+)
 
 /**
  * @param {import("Reducers").State} state 
  */
 const mapStateToProps = (state) => ({
-    albums: sortedAndFilteredAlbums(state.library)
+    albums: selectSortedAndFilteredAlbums(state)
 });
 
 /**
