@@ -20,7 +20,7 @@ export default class PlaybackAPI extends BaseAPI {
         this._state = null;
 
         // Keep track of this._api state
-        this._mopidy.on("event:this._apiStateChanged", args =>{
+        this._mopidy.on("event:playbackStateChanged", args =>{
             this._state = args.new_state;
         });
     }
