@@ -43,7 +43,7 @@ const Tracklist = ({tracks, onTrackClick, playbackState, playbackTrack, playback
  */
 function extrapolateTimePosition(playbackState) {
 
-    if(playbackState !== "playing" ) return playbackState.timePosition;
+    if(playbackState.state !== "playing" ) return playbackState.timePosition;
 
     return playbackState.timePosition + Date.now() - playbackState.timePositionUpdated;
     
