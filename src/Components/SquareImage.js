@@ -28,7 +28,7 @@ function SquareImage(props) {
     return (
         <Paper className={`${className} ${classes.paper}`} {...paperProps}
             style={{
-                backgroundImage: `url(${src})`,
+                backgroundImage: src ? `url(${src})` : undefined,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "100% 100%",
             }}>
