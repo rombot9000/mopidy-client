@@ -37,7 +37,7 @@ export default ({track, playbackState, playbackTimePosition, ...gridProps}) => {
             case "PLAY": return <PlayArrow fontSize="inherit"/>;
             case "PAUSE": return <Pause fontSize="inherit"/>;
             case "CTRL": return playbackState === "playing" ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>;
-            case "INFO": return playbackState === "playing" ? <AnimatedEq fontSize="inherit"/> : track.track_no;
+            case "INFO": return playbackState === "stopped" ?  track.track_no : <AnimatedEq fontSize="inherit"/>;
             default: return firstCell;
         }
     };
@@ -55,14 +55,22 @@ export default ({track, playbackState, playbackTimePosition, ...gridProps}) => {
     // set last cell content (duration or time position)
     React.useEffect(() => {
         
-        if(playbackState === "playing") {
+        if(playbackState === "paused") {
+
             setFirstCell("EQ");
             setSeconds({type: "SET_MS", value: playbackTimePosition});
+
+        } else if(playbackState === "playing") {
+
+            setFirstCell("EQ");
+            setSeconds({type: "SET_MS", value: playbackTimePosition});
+
             let interval = setInterval(() => setSeconds({type: "INCREMENT"}), 1000);
             return () => clearInterval(interval);
+            
         }
 
-    }, [playbackState, setSeconds]);
+    }, [playbackState, playbackTimePosition, setSeconds]);
 
     return (
         <Grid
