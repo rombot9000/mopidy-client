@@ -1,6 +1,6 @@
 import React from "react";
 
-import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
+import {HashRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
@@ -62,7 +62,7 @@ export default function MainView() {
     }, [ctrlBarRef, srchBarRef]); // listen for ctrl bar changes
 
     return (
-        <Router basename="/material-client">
+        <Router>
             <Box
                 id="scroll-box"
                 className={classes.viewBox}
