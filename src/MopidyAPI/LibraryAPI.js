@@ -1,3 +1,5 @@
+import BaseAPI from "./BaseAPI";
+
 /** 
  * Mopidy reference object
  * @typedef mpd_ref
@@ -56,9 +58,9 @@
 import { Album } from "ViewModel";
 
 /** Handler for mopidy library API */
-class LibraryHandler {
+class LibraryAPI extends BaseAPI {
     constructor(mopidy) {
-        this._mopidy = mopidy;
+        super(mopidy, "library");
 
         /** promise */
         this._fetchPromise = null;
@@ -106,7 +108,8 @@ class LibraryHandler {
      * @returns {Promise.<mpd_ref[]>}
      */
     async _browse(uri) {
-        return this._mopidy.library.browse({"uri": uri});
+        await this._initApi();
+        return this._api.browse({"uri": uri});
     }
 
     /**
@@ -115,7 +118,8 @@ class LibraryHandler {
      * @returns {Promise.<Object.<string,mpd_track[]>>}
      */
     async _lookup(uris) {
-        return this._mopidy.library.lookup({"uris": uris});
+        await this._initApi();
+        return this._api.lookup({"uris": uris});
     }
 
     /**
@@ -124,8 +128,9 @@ class LibraryHandler {
      * @returns {Promise.<Object.<string,mpd_image[]>>}
      */
     async _getImages(uris) {
-        return this._mopidy.library.getImages({"uris": uris});
+        await this._initApi();
+        return this._api.getImages({"uris": uris});
     }
 }
 
-export default LibraryHandler;
+export default LibraryAPI;

@@ -1,3 +1,5 @@
+import BaseAPI from "./BaseAPI";
+
 import { UnknownPlaybackStateError } from "./Errors";
 
 import { Track } from "ViewModel";
@@ -6,30 +8,32 @@ import { Track } from "ViewModel";
 /** @typedef {"play"|"pause"|"resume"|"stop"|"next"|"previous"} PlaybackCmd */
 /** @typedef {"playing"|"paused"|"stopped"} PlaybackState */
 
-export default class PlaybackAPI {
+export default class PlaybackAPI extends BaseAPI {
     /**
      * @param {import('mopidy')} mopidy 
      */
     constructor(mopidy) {
         // set mopidy connector
-        this._mopidy = mopidy;
+        super(mopidy, "playback");
 
         /** @type {PlaybackState} */
         this._state = null;
 
-        // Keep track of playback state
-        this._mopidy.on("event:playbackStateChanged", args =>{
+        // Keep track of this._api state
+        this._mopidy.on("event:this._apiStateChanged", args =>{
             this._state = args.new_state;
         });
     }
 
     /**
-     * Fetch playback info from server
+     * Fetch this._api info from server
      * @returns {{state: string, track: Track, timePosition: number}}
      */
     async fetchInfo() {
+
+        await this._initApi();
         
-        this._state = await this._mopidy.playback.getState({});
+        this._state = await this._api.getState({});
 
         if(this._state === "stopped") {
             return {
@@ -41,10 +45,10 @@ export default class PlaybackAPI {
         }
 
         /** @type {import('./TracklistAPI').mpd_tracklist_item} */
-        const tltrack = await this._mopidy.playback.getCurrentTlTrack({});
+        const tltrack = await this._api.getCurrentTlTrack({});
 
         /** @type {number} */
-        const timePosition = await this._mopidy.playback.getTimePosition({});
+        const timePosition = await this._api.getTimePosition({});
 
         return {
             state: this._state,
@@ -59,15 +63,18 @@ export default class PlaybackAPI {
      * Toggles Playback: STOPPED -> PLAYING <-> PAUSED
      */
     togglePlayback() {
+
+        if(!this._api) return;
+
         switch(this._state) {
             case "stopped":
-                return this._mopidy.playback.play({});
+                return this._api.play({});
 
             case "paused":
-                return this._mopidy.playback.resume({});
+                return this._api.resume({});
             
             case "playing":
-                return this._mopidy.playback.pause({});
+                return this._api.pause({});
             
             default:
                 throw new UnknownPlaybackStateError(this._state);
@@ -78,22 +85,31 @@ export default class PlaybackAPI {
      * @param {number} tlid 
      */
     playTrack(tlid) {
-        return this._mopidy.playback.play({tlid: tlid});
+
+        if(!this._api) return;
+
+        this._api.play({tlid: tlid});
     }
 
     /**
-     * Since most playback api calls do not require arguments, we use a single api wrapper frunction
+     * Since most this._api api calls do not require arguments, we use a single api wrapper frunction
      * @param {PlaybackCmd} cmd 
      * @param {Object.<string,any>} args Optional arguments for cmd
      */
-    async sendCmd(cmd, args={}) {            
-        return this._mopidy.playback[cmd](args);
+    sendCmd(cmd, args={}) {
+
+        if(!this._api) return;
+
+        this._api[cmd](args);
     }
 
     /**
      * @param {number} timePosition 
      */
     seek(timePosition) {
-        return this._mopidy.playback.seek({"time_position": timePosition});
+
+        if(!this._api) return;
+
+        this._api.seek({"time_position": timePosition});
     }
 };

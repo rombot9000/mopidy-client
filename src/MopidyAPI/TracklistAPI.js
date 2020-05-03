@@ -1,3 +1,5 @@
+import BaseAPI from "./BaseAPI";
+
 import { Track } from 'ViewModel';
 
 /**
@@ -16,12 +18,12 @@ import { Track } from 'ViewModel';
 /**
  * Handler for mopidy tracklist API
  */
-export default class TracklistAPI {
+export default class TracklistAPI extends BaseAPI {
     /**
      * @param {import('mopidy')} mopidy 
      */
     constructor(mopidy) {
-        this._mopidy = mopidy;
+        super(mopidy, "tracklist");
 
         /** @type {mpd_tracklist} */
         this._tracklist = [];
@@ -31,7 +33,9 @@ export default class TracklistAPI {
      * Ifetch tracklist info from server
      */
     async fetch() {
-        this._tracklist = await this._mopidy.tracklist.getTlTracks({});
+        await this._initApi();
+
+        this._tracklist = await this._api.getTlTracks({});
 
         return this._tracklist.map(tl_item => Track(tl_item.track));
     }
@@ -43,10 +47,12 @@ export default class TracklistAPI {
      * @param {import("ViewModel/Track").Track[]} tracks
      */
     async set(tracks) {
+
+        await this._initApi();
         
-        await this._mopidy.tracklist.clear({})
+        await this._api.clear({})
         
-        this._tracklist = await this._mopidy.tracklist.add({
+        this._tracklist = await this._api.add({
             "tracks": null,
             "at_position": null,
             "uris": tracks.map(t => t._uri)
@@ -59,11 +65,13 @@ export default class TracklistAPI {
      * @returns {number} id of tracklist item
      */
     getTrackId(track) {
+
         const track_tl_item = this._tracklist.find(tl_item => tl_item.track.uri === track._uri);
 
         if(track_tl_item == null) throw new Error(`Track ${track.name} not in tracklist!`);
 
         return track_tl_item.tlid;
+
     }
 
     /**
