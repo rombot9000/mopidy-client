@@ -1,5 +1,10 @@
 import { Tracklist, Playback } from "."
 import { NotifyActions } from "Actions";
+import Store from "Store";
+
+function notifyUserOnError(error) {
+    Store.dispatch(NotifyActions.notifyUser("error", error));
+}
 
 /**
  * Play tracklist. If track is omitted, playback starts with first track
@@ -12,7 +17,7 @@ export async function playTracklist(tracks, track) {
         const tlid = track ? Tracklist.getTrackId(track): null;
         await Playback.playTrack(tlid);
     } catch (error) {
-        NotifyActions.notifyUser("error", error);
+        notifyUserOnError(error)
     }
 };
 
@@ -24,7 +29,7 @@ export async function sendPlaybackCmd(cmd) {
     try {
         await Playback.sendCmd(cmd);
     } catch(error) {
-        NotifyActions.notifyUser("error", error);
+        notifyUserOnError(error)
     }
 }
 
@@ -32,7 +37,7 @@ export async function togglePlayback() {
     try {
         await Playback.togglePlayback();
     } catch(error) {
-        NotifyActions.notifyUser("error", error);
+        notifyUserOnError(error)
     }
 };
 
@@ -44,7 +49,7 @@ export async function seekTimePosition(timePosition) {
     try {
         await Playback.seek(timePosition);
     } catch(error) {
-        NotifyActions.notifyUser("error", error);
+        notifyUserOnError(error)
     }
 };
 
