@@ -32,7 +32,7 @@ const GridItem = ({children, placeholder}) => {
     const ref=React.useRef(null)
     return (
         <Grid ref={ref} item xl={1} lg={2} md={3} sm={4} xs={6}>
-            <Placeholder observant={ref.current} placeholder={placeholder}>{children}</Placeholder>
+            <Placeholder observeRef={ref} placeholder={placeholder}>{children}</Placeholder>
         </Grid>
     )
 }
