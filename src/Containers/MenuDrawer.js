@@ -34,7 +34,8 @@ const mapStateToProps = (state) => ({
 });
   
 const mapDispatchToProps = (dispatch) => ({
-    onClose: () => dispatch(ViewActions.toggleMenuDrawer())
+    onClose: () => dispatch(ViewActions.toggleMenuDrawer()),
+    onSettingsItemClick: () => dispatch(ViewActions.toggleSettingModal())
 });
 
 /**
@@ -42,8 +43,10 @@ const mapDispatchToProps = (dispatch) => ({
  * @param {Object} props
  * @param {boolean} props.open
  * @param {Function} props.onClose
+ * @param {Function} props.onSettingsItemClick
+ * @param {import("ViewModel/Track").Track[]} props.tracks
  */
-function MenuDrawer({open, onClose, tracks}) {
+function MenuDrawer({open, onClose, onSettingsItemClick, tracks}) {
 
     const classes = useStyles();
 
@@ -67,7 +70,7 @@ function MenuDrawer({open, onClose, tracks}) {
                 <ListLinkItem to="/tracks" icon={<MusicNote/>} text="Tracks"/>
                 <ListLinkItem to="/playlists" icon={<QueueMusic/>} text="Playlists"/>
                 <Divider/>
-                <ListItem button onClick={ViewActions.toggleSettingModal}>
+                <ListItem button onClick={onSettingsItemClick}>
                     <ListItemIcon><Tune/></ListItemIcon>
                     <ListItemText>Settings</ListItemText>
                 </ListItem>

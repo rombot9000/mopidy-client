@@ -13,10 +13,7 @@ import NotifyBar from "./NotifyBar";
 import MenuDrawer from "./MenuDrawer";
 import AlbumDetailsModal from "./AlbumDetailsModal";
 import PlaybackCtrlBar from "./PlaybackCtrlBar";
-
-/** 
- * @typedef {Object.<string, JSX.Element>} ViewComponents
- */
+import SettingsModal from "./SettingsModal";
 
 const useStyles = makeStyles(theme => ({
     viewBox: {
@@ -80,6 +77,7 @@ export default function MainView() {
             </Box>
             <AlbumSearchBar className={classes.searchBar} ref={srchBarRef} />
             <MenuDrawer/>
+            <SettingsModal/>
             <AlbumDetailsModal/>
             <PlaybackCtrlBar ref={ctrlBarRef} />
         </Router>
