@@ -50,37 +50,19 @@ export default ({track, playbackState, playbackTimePosition, ...gridProps}) => {
             default: return seconds;
         }
     };
-    const [seconds, setSeconds] = React.useReducer(secondsReducer, {type: "SET_MS", value: track.length});
+    const [seconds, setSeconds] = React.useReducer(secondsReducer, Math.floor(track.length/1000));
 
     // set last cell content (duration or time position)
     React.useEffect(() => {
         
-        let interval = null;
-        switch(playbackState) {
-            case "playing":
-                setFirstCell("EQ");
-                setSeconds({type: "SET_MS", value: playbackTimePosition});
-                interval = setInterval(() => setSeconds({type: "INCREMENT"}), 1000);
-            break;
-    
-            case "paused":
-                setFirstCell("PAUSE");
-                setSeconds({type: "SET_MS", value: playbackTimePosition});
-            break;
-    
-            case "stopped":
-                setFirstCell("TRACK_NO");
-                setSeconds({type: "SET_MS", value: track.length});
-            break;
-    
-            default:
-                console.warn(`Unknwon playback playbackState: ${playbackState}`);
+        if(playbackState === "playing") {
+            setFirstCell("EQ");
+            setSeconds({type: "SET_MS", value: playbackTimePosition});
+            let interval = setInterval(() => setSeconds({type: "INCREMENT"}), 1000);
+            return () => clearInterval(interval);
         }
 
-        //cleanup
-        return () => clearInterval(interval);
-
-    }, [playbackState, playbackTimePosition, track.length]);
+    }, [playbackState, setSeconds]);
 
     return (
         <Grid
