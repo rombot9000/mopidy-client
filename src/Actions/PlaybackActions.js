@@ -1,4 +1,3 @@
-import { Playback } from "MopidyAPI";
 import * as Mopidy from "MopidyAPI/Utils";
 
 import { ACTION_TYPES } from ".";
@@ -21,11 +20,14 @@ export const PLAYBACK_ACTIONS = {
     SEEK:                   15
 };
 
+/**
+ * 
+ */
 export function fetch() {
     return async dispatch => dispatch({
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.FETCH,
-        ...await Playback.fetchInfo()
+        ...await Mopidy.fetchPlaybackInfo()
     });
 };
 
@@ -72,7 +74,7 @@ export function updateTimePosition(timePosition) {
 }
 
 /**
-\ * @param {import("ViewModel/Track").Track} track 
+ * @param {import("ViewModel/Track").Track} track 
  */
 export function updateTrack(track) {
     return {
@@ -108,6 +110,9 @@ export async function playAlbum(album) {
     }
 };
 
+/**
+ * 
+ */
 export function pause() {
     Mopidy.sendPlaybackCmd("pause");
     return {
@@ -116,6 +121,9 @@ export function pause() {
     };
 };
 
+/**
+ * 
+ */
 export function resume() {
     Mopidy.sendPlaybackCmd("resume");
     return {
@@ -123,6 +131,9 @@ export function resume() {
     }; 
 };
 
+/**
+ * 
+ */
 export function stop() {
     Mopidy.sendPlaybackCmd("stop");
     return {
@@ -131,6 +142,9 @@ export function stop() {
     }; 
 };
 
+/**
+ * 
+ */
 export function toggle() {
     Mopidy.togglePlayback();
     return {
@@ -139,6 +153,9 @@ export function toggle() {
     }; 
 };
 
+/**
+ * 
+ */
 export function next() {
     Mopidy.sendPlaybackCmd("next");
     return {
@@ -147,6 +164,9 @@ export function next() {
     }; 
 };
 
+/**
+ * 
+ */
 export function previous() {
     Mopidy.sendPlaybackCmd("previous");
     return {

@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
         case TRACKLIST_ACTIONS.FETCH:
             return {
                 ...state,
-                tracks: action.tracks
+                tracks: action.tracks || []
             };
 
         case TRACKLIST_ACTIONS.INIT:

@@ -62,7 +62,7 @@ export default class PlaybackAPI extends BaseAPI {
     /**
      * Toggles Playback: STOPPED -> PLAYING <-> PAUSED
      */
-    togglePlayback() {
+    async togglePlayback() {
 
         if(!this._api) return;
 
@@ -84,11 +84,11 @@ export default class PlaybackAPI extends BaseAPI {
     /**
      * @param {number} tlid 
      */
-    playTrack(tlid) {
+    async playTrack(tlid) {
 
         if(!this._api) return;
 
-        this._api.play({tlid: tlid});
+        return this._api.play({tlid: tlid});
     }
 
     /**
@@ -96,20 +96,20 @@ export default class PlaybackAPI extends BaseAPI {
      * @param {PlaybackCmd} cmd 
      * @param {Object.<string,any>} args Optional arguments for cmd
      */
-    sendCmd(cmd, args={}) {
+    async sendCmd(cmd, args={}) {
 
         if(!this._api) return;
 
-        this._api[cmd](args);
+        return this._api[cmd](args);
     }
 
     /**
      * @param {number} timePosition 
      */
-    seek(timePosition) {
+    async seek(timePosition) {
 
         if(!this._api) return;
 
-        this._api.seek({"time_position": timePosition});
+        return this._api.seek({"time_position": timePosition});
     }
 };

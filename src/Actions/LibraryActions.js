@@ -1,5 +1,6 @@
 // Server API
-import { Library } from "MopidyAPI";
+import * as Mopidy from "MopidyAPI/Utils";
+
 
 // Storage
 import { writeSetting, readSetting, getAlbumsFromDB, writeAlbumsToDB } from "StorageAPI/Utils";
@@ -64,15 +65,14 @@ export function init() {
 export function fetch() {
     return async dispatch => {
         
-        const albums = await Library.fetchAll();
+        const albums = await Mopidy.fetchLibray();
 
-        
         dispatch({
             type: ACTION_TYPES.LIBRARY_ACTION,
             case: LIBRARY_ACTIONS.SET_ALBUMS,
-            albums: albums
+            albums: albums || []
         });
         
-        writeAlbumsToDB(albums);
+        if(albums) writeAlbumsToDB(albums);
     };
 };

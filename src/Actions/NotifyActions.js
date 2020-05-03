@@ -28,6 +28,10 @@ export function init() {
  * @param {{text: string, creator: Function}} action
  */
 export function notifyUser(level, msg, action) {
+    
+    if(typeof msg !== "string" && msg) msg = msg.toString ? msg.toString() : null;
+    
+    
     return {
         type: ACTION_TYPES.NOTIFY_ACTION,
         case: NOTIFY_ACTIONS.NOTIFY_USER,

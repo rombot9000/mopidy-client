@@ -48,7 +48,7 @@ export default class TracklistAPI extends BaseAPI {
      */
     async set(tracks) {
 
-        await this._initApi();
+        if(!this._api) return;
         
         await this._api.clear({})
         
@@ -68,10 +68,9 @@ export default class TracklistAPI extends BaseAPI {
 
         const track_tl_item = this._tracklist.find(tl_item => tl_item.track.uri === track._uri);
 
-        if(track_tl_item == null) throw new Error(`Track ${track.name} not in tracklist!`);
-
-        return track_tl_item.tlid;
-
+        if(track_tl_item) return track_tl_item.tlid;
+        
+        return null;
     }
 
     /**

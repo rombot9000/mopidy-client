@@ -1,9 +1,25 @@
-import { Tracklist, Playback } from "."
+import { Tracklist, Playback, Library } from "."
 import { NotifyActions } from "Actions";
 import Store from "Store";
 
-function notifyUserOnError(error) {
-    Store.dispatch(NotifyActions.notifyUser("error", error));
+
+/**
+ * Wait for promise to resolve and notifies user on error  
+ * Returns resolved promise
+ * 
+ * @param {Promise} promise 
+ * @returns {Promise}
+ */
+async function notifyUserOnError(promise) {
+    try {
+
+        return await promise;
+
+    } catch(error) {
+        
+        console.log(error);
+        Store.dispatch(NotifyActions.notifyUser("error", error));
+    }
 }
 
 /**
@@ -12,13 +28,13 @@ function notifyUserOnError(error) {
  * @param {import("ViewModel/Track").Track} track 
  */
 export async function playTracklist(tracks, track) {
-    try {
-        await Tracklist.set(tracks);
-        const tlid = track ? Tracklist.getTrackId(track): null;
-        await Playback.playTrack(tlid);
-    } catch (error) {
-        notifyUserOnError(error)
-    }
+
+    await notifyUserOnError(Tracklist.set(tracks));
+    
+    const tlid = track ? Tracklist.getTrackId(track): null;
+    
+    await notifyUserOnError(Playback.playTrack(tlid));
+
 };
 
 /**
@@ -26,19 +42,15 @@ export async function playTracklist(tracks, track) {
  * @param {import("./PlaybackAPI").PlaybackCmd} cmd 
  */
 export async function sendPlaybackCmd(cmd) {
-    try {
-        await Playback.sendCmd(cmd);
-    } catch(error) {
-        notifyUserOnError(error)
-    }
+   
+    await notifyUserOnError(Playback.sendCmd(cmd));
+
 }
 
 export async function togglePlayback() {
-    try {
-        await Playback.togglePlayback();
-    } catch(error) {
-        notifyUserOnError(error)
-    }
+    
+    await notifyUserOnError(Playback.togglePlayback());
+
 };
 
 /**
@@ -46,12 +58,35 @@ export async function togglePlayback() {
  * @param {number} timePosition 
  */
 export async function seekTimePosition(timePosition) {
-    try {
-        await Playback.seek(timePosition);
-    } catch(error) {
-        notifyUserOnError(error)
-    }
+
+    await notifyUserOnError(Playback.seek(timePosition));
+
 };
 
+/**
+ * @returns 
+ */
+export async function fetchPlaybackInfo() {
+    
+    return await notifyUserOnError(Playback.fetchInfo());
 
+}
+
+export async function fetchTracklist() {
+
+    return await notifyUserOnError(Tracklist.fetch());
+
+}
+
+export async function setTracklist(tracks) {
+
+    return await notifyUserOnError(Tracklist.set(tracks));
+
+}
+
+export async function fetchLibray() {
+
+    return await notifyUserOnError(Library.fetchAll());
+
+}
 

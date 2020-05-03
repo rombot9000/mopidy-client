@@ -14,7 +14,7 @@ import { Track } from "ViewModel";
 
  /** @type {PlaybackState} */
 const initialState = {
-    state: null,
+    state: "stopped",
     track: Track(null),
     timePosition: 0,
     timePositionUpdated: 0,
@@ -28,15 +28,15 @@ const initialState = {
 export default (state = initialState, action) => {
     
     if(action.type !== ACTION_TYPES.PLAYBACK_ACTION) return state;
-
+    
     switch(action.case) {
         case PLAYBACK_ACTIONS.FETCH:
             return {
-                ...state,
-                state: action.state,
-                timePosition: action.timePosition,
-                timePositionUpdated: action.timePositionUpdated,
-                track: action.track
+                ...initialState,
+                state: action.state || "stopped",
+                timePosition: action.timePosition || 0,
+                timePositionUpdated: action.timePositionUpdated || 0,
+                track: action.track || Track(null)
             };
 
         case PLAYBACK_ACTIONS.UPDATE:
@@ -51,20 +51,20 @@ export default (state = initialState, action) => {
         case PLAYBACK_ACTIONS.UPDATE_STATE:
             return {
                 ...state,
-                state: action.state
+                state: action.state || "stopped"
             };
 
         case PLAYBACK_ACTIONS.UPDATE_TIME_POSITION:
             return {
                 ...state,
-                timePosition: action.timePosition,
-                timePositionUpdated: action.timePositionUpdated
+                timePosition: action.timePosition || 0,
+                timePositionUpdated: action.timePositionUpdated || 0
             };
 
         case PLAYBACK_ACTIONS.UPDATE_TRACK:
             return {
                 ...state,
-                track: action.track
+                track: action.track || Track(null)
             };
 
         default:
