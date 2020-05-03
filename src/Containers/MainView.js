@@ -1,6 +1,6 @@
 import React from "react";
 
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
@@ -62,7 +62,7 @@ export default function MainView() {
     }, [ctrlBarRef, srchBarRef]); // listen for ctrl bar changes
 
     return (
-        <Router>
+        <Router basename="/material-client">
             <Box
                 id="scroll-box"
                 className={classes.viewBox}
@@ -71,7 +71,8 @@ export default function MainView() {
             >
                 <Switch>
                     <Route path="/albums"><AlbumGrid/></Route>
-                    <Route patch="/tracks"><TracksView/></Route>
+                    <Route path="/tracks"><TracksView/></Route>
+                    <Route><Redirect to="/albums"/></Route>
                 </Switch>
                 <NotifyBar className={classes.snackBar}/>
             </Box>
