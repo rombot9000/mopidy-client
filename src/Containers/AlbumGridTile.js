@@ -57,7 +57,7 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
             </SquareImage>
             <Typography variant="button">{album.name}</Typography>
             <br/>
-            <Typography variant="caption">{album.artist}</Typography>
+            <Typography variant="caption">{album.artist.name}</Typography>
         </React.Fragment>
     );
 

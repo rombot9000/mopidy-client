@@ -1,10 +1,12 @@
+import Artist from "./Artist";
+
 /**
  * @typedef Track
  * @property {string} _uri
  * @property {string} name
  * @property {number} disc_no
  * @property {number} track_no
- * @property {string} artist
+ * @property {import("./Artist").Artist} artist
  * @property {string} year
  * @property {number} length
  */
@@ -16,19 +18,19 @@ const emptyTrack = {
     track_no: null,
     length: null,
     year: null,
-    artist: null,
+    artist: Artist(null),
 }
 
 /**
  * 
  * @param {import('MopidyHandler/LibraryHandler').mpd_track} mpd_track
+ * @param {import("./Artist").Artist} artist
  * @returns {Track}
  */
-function Track(mpd_track) {
+function Track(mpd_track, artist) {
 
     if(!mpd_track) return emptyTrack;
 
-    const artist = mpd_track.artists[0].name;
     const year = mpd_track.date.slice(0,4);
 
     return {
@@ -38,7 +40,7 @@ function Track(mpd_track) {
         track_no: mpd_track.track_no,
         length: mpd_track.length,
         year: year,
-        artist: artist,
+        artist: artist || Artist(null),
     }
 }
 

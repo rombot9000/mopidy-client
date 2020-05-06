@@ -62,7 +62,7 @@ export default ({album, ...paperProps}) => {
                 </Grid>
                 <Grid item sm={12} md={6} className={classes.content}>
                         <Typography variant="h5">{album.name}</Typography>
-                        <Typography variant="h6">{album.artist}</Typography>
+                        <Typography variant="h6">{album.artist.name}</Typography>
                         <Typography variant="body1">{album.year}</Typography>
                         <div className={classes.flexGrow}>
                             <Tracklist tracks={album.tracks} height={useFullHeight ? "full" : "auto"}/>

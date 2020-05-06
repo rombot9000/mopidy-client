@@ -2,14 +2,28 @@
 import IndexedDB from "./IndexedDB";
 
 // View Model
-import { Album } from "ViewModel";
+import { Album, Artist, Track } from "ViewModel";
 
 // Library
-const LibraryDB = new IndexedDB("Library", 4);
+const LibraryDB = new IndexedDB("Library", 5);
 LibraryDB.addStore({
     name: "Albums",
     params: {keyPath: "_uri"},
     indexSchemes: Object.keys(Album(null)).map(key => {
+        return {index: key, params: null};
+    })
+});
+LibraryDB.addStore({
+    name: "Artists",
+    params: {keyPath: "_uri"},
+    indexSchemes: Object.keys(Artist(null)).map(key => {
+        return {index: key, params: null};
+    })
+});
+LibraryDB.addStore({
+    name: "Tracks",
+    params: {keyPath: "_uri"},
+    indexSchemes: Object.keys(Track(null)).map(key => {
         return {index: key, params: null};
     })
 });

@@ -1,5 +1,6 @@
 import { SettingsDB, LibraryDB } from ".";
 
+import Store from "Store";
 import { NotifyActions } from "Actions";
 
 /**
@@ -16,7 +17,7 @@ export async function writeSetting(name, value) {
     } catch(error) {
 
         console.error(error);
-        NotifyActions.notifyUser("error", error);
+        Store.dispatch(NotifyActions.notifyUser("error", error));
 
     }
 }
@@ -37,27 +38,26 @@ export async function readSetting(name, defaultValue) {
     } catch(error) {
 
         console.error(error);
-        NotifyActions.notifyUser("error", error);
+        Store.dispatch(NotifyActions.notifyUser("error", error));
 
     }
 }
 
 export async function getAlbumsFromDB() {
-    let albums = [];
 
     try {
 
         const albumObjectStoreReader = await LibraryDB.getObjectStoreReader("Albums"); 
-        albums = await albumObjectStoreReader.getAll();
+        return await albumObjectStoreReader.getAll();
     
     } catch(error) {
 
         console.error(error);
-        NotifyActions.notifyUser("error", error);
+        Store.dispatch(NotifyActions.notifyUser("error", error));
         
     }
 
-    return albums;
+    return [];
 }
 
 /**
@@ -74,7 +74,115 @@ export async function writeAlbumsToDB(albums) {
     } catch(error) {
 
         console.error(error);
-        NotifyActions.notifyUser("error", error);
+        Store.dispatch(NotifyActions.notifyUser("error", error));
 
     }
+}
+
+/**
+ * 
+ * @param {Object} obj 
+ */
+function createShallowCopy(obj) {
+
+    const objOut = {};
+    
+    Object.keys(obj).forEach(key => {
+        if(typeof obj[key] === "object" && obj[key]._uri != null) {
+            objOut[key] = { _uri: obj[key]._uri };
+        } else {
+            objOut[key] = obj[key];
+        }
+    })
+
+    return objOut;
+}
+
+/**
+ * 
+ * @param {Object} obj 
+ * @param {Object.<string, Object>} references 
+ */
+function insertReferences(obj, references) {
+    Object.keys(obj).forEach(key => {
+        if(typeof obj[key] === "object" && obj[key]._uri != null) {
+            obj[key] = references[obj[key]._uri];
+        }
+    });
+}
+
+/**
+ * 
+ * @param {import("Reducers/LibraryReducer").LibraryState} library 
+ */
+export async function writeLibraryToDB(library) {
+    
+    try {
+        
+        const albumObjectStoreWriter = await LibraryDB.getObjectStoreWriter("Albums");
+        await albumObjectStoreWriter.clear();
+        await albumObjectStoreWriter.add(library.albums.map(createShallowCopy));
+
+
+        const artistObjectStoreWriter = await LibraryDB.getObjectStoreWriter("Artists");
+        await artistObjectStoreWriter.clear();
+        await artistObjectStoreWriter.add(library.artists.map(createShallowCopy));
+
+        const trackObjectStoreWriter = await LibraryDB.getObjectStoreWriter("Tracks");
+        await trackObjectStoreWriter.clear();
+        await trackObjectStoreWriter.add(library.tracks.map(createShallowCopy));
+
+        
+    } catch(error) {
+
+        console.error(error);
+        Store.dispatch(NotifyActions.notifyUser("error", error));
+
+    }
+
+}
+
+export async function readLibraryFromDB() {
+
+    try {
+
+        
+        const albumObjectStoreReader = await LibraryDB.getObjectStoreReader("Albums"); 
+        const albums = await albumObjectStoreReader.getAll();
+        
+        const artistObjectStoreReader = await LibraryDB.getObjectStoreReader("Artists"); 
+        const artists = await artistObjectStoreReader.getAll();
+        
+        const trackObjectStoreReader = await LibraryDB.getObjectStoreReader("Tracks"); 
+        const tracks = await trackObjectStoreReader.getAll();
+        
+        const mapUriToObject = {};
+        [albums, tracks, artists].forEach(arr => arr.forEach(obj => {
+            mapUriToObject[obj._uri] = obj;
+        }));
+
+        [albums, tracks, artists].forEach(arr => arr.forEach(obj => {
+            insertReferences(obj, mapUriToObject);
+        }));
+
+        return {
+            albums: albums,
+            tracks: tracks,
+            artists: artists
+        };
+
+    
+    } catch(error) {
+
+        console.error(error);
+        Store.dispatch(NotifyActions.notifyUser("error", error));
+        
+    }
+
+    return {
+        albums: [],
+        tracks: [],
+        artists: []
+    };
+
 }

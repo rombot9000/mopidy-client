@@ -3,7 +3,7 @@ import * as Mopidy from "MopidyAPI/Utils";
 
 
 // Storage
-import { writeSetting, readSetting, getAlbumsFromDB, writeAlbumsToDB } from "StorageAPI/Utils";
+import { writeSetting, readSetting, readLibraryFromDB, writeLibraryToDB } from "StorageAPI/Utils";
 
 import { ACTION_TYPES } from ".";
 
@@ -12,7 +12,7 @@ import { ACTION_TYPES } from ".";
  */
 export const LIBRARY_ACTIONS = {
     INIT:           0,
-    SET_ALBUMS:     1,
+    FETCH:          1,
     SET_FILTER:     2,
     SET_SORT_KEY:   3
 };
@@ -49,10 +49,14 @@ export function sortAlbums(albumSortKey) {
 export function init() {
     return async dispatch => {
 
+        const library = await readLibraryFromDB(); 
+
         dispatch({
             type: ACTION_TYPES.LIBRARY_ACTION,
             case: LIBRARY_ACTIONS.INIT,
-            albums: await getAlbumsFromDB(),
+            artists: library.artists,
+            albums: library.albums,
+            tracks: library.tracks,
             albumSortKey: await readSetting("albumSortKey")
         });
 
@@ -65,14 +69,20 @@ export function init() {
 export function fetch() {
     return async dispatch => {
         
-        const albums = await Mopidy.fetchLibray();
+        const [artists, albums, tracks] = await Mopidy.fetchLibray();
 
         dispatch({
             type: ACTION_TYPES.LIBRARY_ACTION,
-            case: LIBRARY_ACTIONS.SET_ALBUMS,
-            albums: albums || []
+            case: LIBRARY_ACTIONS.FETCH,
+            artists: artists || [],
+            albums: albums || [],
+            tracks: tracks || []
         });
         
-        if(albums) writeAlbumsToDB(albums);
+        if(albums && artists && tracks) writeLibraryToDB({
+            artists: artists || [],
+            albums: albums || [],
+            tracks: tracks || []
+        });
     };
 };

@@ -14,11 +14,11 @@ function filterAlbumsByToken(albums, token) {
         if(album.name.toLowerCase().search(token) !== -1) return true;
 
         // check album artists
-        if(album.artist.toLowerCase().search(token) !== -1) return true;
+        if(album.artist.name.toLowerCase().search(token) !== -1) return true;
 
         // check track artists
         for(let track of album.tracks) {
-            if(track.artist.toLowerCase().search(token) !== -1) return true;
+            if(track.artist.name.toLowerCase().search(token) !== -1) return true;
         };
 
         // No match found

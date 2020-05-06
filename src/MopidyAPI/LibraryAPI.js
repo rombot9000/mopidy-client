@@ -55,7 +55,7 @@ import BaseAPI from "./BaseAPI";
  * @property {number} width
  */
 
-import { Album } from "ViewModel";
+import { Album, Artist, Track } from "ViewModel";
 
 /** Handler for mopidy library API */
 class LibraryAPI extends BaseAPI {
@@ -66,34 +66,67 @@ class LibraryAPI extends BaseAPI {
         this._fetchPromise = null;
     }
 
+    /**
+     * @returns {Promise<[import("ViewModel/Artist").Artist[], import("ViewModel/Track").Track[], import("ViewModel/Album").Album[]]>}
+     */
     async fetchAll() {
         if( !this._fetchPromise ) {
             this._fetchPromise = this._fetchAll();
-            this._fetchPromise.finally(() => {
-                this._fetchPromise = null;
-            })
+            this._fetchPromise.finally(this._resetFetchPromise);
         }
         return await this._fetchPromise;
     }
 
+    _resetFetchPromise() {
+        this._fetchPromise = null;
+    }
+    /**
+     * @returns {Promise<[import("ViewModel/Artist").Artist[], import("ViewModel/Track").Track[], import("ViewModel/Album").Album[]]>}
+     */
     async _fetchAll() {
         try {
 
             // Get data from server
             const mpd_albums = await this._browse("local:directory?type=album");             
-            const album_uri_to_tracks = await this._lookup(mpd_albums.map(ref => ref.uri));
-            const album_uri_to_artwork_list = await this._getImages(mpd_albums.map(ref => ref.uri));
+            const albumUriToTracks = await this._lookup(mpd_albums.map(ref => ref.uri));
+            const albumUriToArtworkList = await this._getImages(mpd_albums.map(ref => ref.uri));
 
-            // Map data onto view model
-            const albums = mpd_albums.map(mpd_album =>
-                Album(
+            // Map artists onto view model
+            /** @type {Object.<string, import("ViewModel/Artist").Artist>} */
+            const uriToArtist = {};
+            /** @type {import("ViewModel/Track").Track[]} */
+            const tracks = [];
+
+            // artist undefined
+            const unknownArtist =  Artist(null);
+            unknownArtist.name = "Unknown Artist";
+
+
+            const albums = mpd_albums.map(mpd_album => {
+                
+
+                // handle tracks and get all distinct artists
+                const albumTracks = albumUriToTracks[mpd_album.uri].map(mpd_track => {
+                    // handle tracks without artists
+                    if(!mpd_track.artists.length) return Track(mpd_track, unknownArtist);
+
+                    if(!uriToArtist[mpd_track.artists[0].uri])  {
+                        uriToArtist[mpd_track.artists[0].uri] = Artist(mpd_track.artists[0]);
+                    }
+                    
+                    return Track(mpd_track, uriToArtist[mpd_track.artists[0].uri]);
+                });
+                tracks.push(albumTracks);
+
+                // album
+                return Album(
                     mpd_album,
-                    album_uri_to_tracks[mpd_album.uri],
-                    album_uri_to_artwork_list[mpd_album.uri]
-                )
-            );
+                    albumTracks,
+                    albumUriToArtworkList[mpd_album.uri]
+                );
+            });
 
-            return albums;
+            return [Object.values(uriToArtist), albums, tracks];
 
         } catch(err) {
 

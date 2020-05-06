@@ -1,5 +1,3 @@
-import Track from "./Track"
-
 var SERVER_IP = ""
 if(process.env.NODE_ENV !== "production") {
     SERVER_IP = "http://raspberrypi.fritz.box:8080";
@@ -11,19 +9,19 @@ if(process.env.NODE_ENV !== "production") {
  * @property {string} _uri
  * @property {string} name
  * @property {string} year
- * @property {string} artist
- * @property {import('./Track').Track[]} tracks
+ * @property {import("./Artist").Artist} artist
+ * @property {import("./Track").Track[]} tracks
  * @property {string} cover
  */
 
 /**
  * 
  * @param {import("MopidyAPI/LibraryAPI").mpd_album} mpd_album
- * @param {import("MopidyAPI/LibraryAPI").mpd_track[]} mpd_tracks
+ * @param {import("./Track").Track[]} tracks
  * @param {import("MopidyAPI/LibraryAPI").mpd_image[]} mpd_images
  * @returns {Album}
  */
-function Album(mpd_album, mpd_tracks = [], mpd_images = []) {
+function Album(mpd_album, tracks = [], mpd_images = []) {
 
     if(!mpd_album) {
         return {
@@ -36,16 +34,18 @@ function Album(mpd_album, mpd_tracks = [], mpd_images = []) {
         }
     }
 
-    let tracks = mpd_tracks.map(
-        mpd_track => Track(mpd_track)
-    ).sort((a,b) => {
+    // sort tracks
+    tracks.sort((a,b) => {
         if(a.disc_no === b.disc_no) return a.track_no > b.track_no ? 1 : -1;
         return a.disc_no > b.disc_no ? 1 : -1;
     })
     
-    let artist = tracks[0].artist;
-    let cover = mpd_images[0] ? `${SERVER_IP}${mpd_images[0].uri}` : null;
-    let year = tracks[0].year;
+    // get album artist
+    // TODO: write mechanism to get base artist or set to various artist if not possible
+    const artist = tracks[0].artist;
+
+    const cover = mpd_images[0] ? `${SERVER_IP}${mpd_images[0].uri}` : null;
+    const year = tracks[0].year;
 
     return {
         _uri: mpd_album.uri,
