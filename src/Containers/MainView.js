@@ -5,8 +5,8 @@ import {HashRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
-import { TracksView} from "Components"; 
 
+import TracksView from "./TracksView"; 
 import AlbumGrid from "./AlbumGrid";
 import AlbumSearchBar from "./AlbumSearchBar";
 import NotifyBar from "./NotifyBar";
