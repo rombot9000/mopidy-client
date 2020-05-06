@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import selectPlaybackTimePosition from "Selectors/selectPlaybackTimePosition";
+
 import { PlaybackActions } from "Actions";
 
 import { VirtualizedList } from "Components";
@@ -39,25 +41,12 @@ const Tracklist = ({tracks, onTrackClick, playbackState, playbackTrack, playback
 };
 
 /**
- * @param {import("Reducers/PlaybackReducer").PlaybackState} playbackState
- */
-function extrapolateTimePosition(playbackState) {
-
-    if(playbackState.state === "stopped" ) return playbackState.timePosition;
-
-    console.log(playbackState);
-
-    return playbackState.timePosition + Date.now() - playbackState.timePositionUpdated;
-    
-}
-
-/**
  * @param {import("Reducers").State} state 
  */
 const mapStateToProps = (state) => ({
     playbackState: state.playback.state,
     playbackTrack: state.playback.track,
-    playbackTimePosition: extrapolateTimePosition(state.playback)
+    playbackTimePosition: selectPlaybackTimePosition(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
