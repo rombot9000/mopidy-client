@@ -5,25 +5,31 @@ import IndexedDB from "./IndexedDB";
 import { Album, Artist, Track } from "ViewModel";
 
 // Library
-const LibraryDB = new IndexedDB("Library", 5);
+const LibraryDB = new IndexedDB("Library", 8);
 LibraryDB.addStore({
     name: "Albums",
     params: {keyPath: "_uri"},
-    indexSchemes: Object.keys(Album(null)).map(key => {
+    indexSchemes: Object.keys(Album(null)).filter(([key,value]) => {
+        return typeof value !== "object" || value === null
+    }).map(([key,value]) => {
         return {index: key, params: null};
     })
 });
 LibraryDB.addStore({
     name: "Artists",
     params: {keyPath: "_uri"},
-    indexSchemes: Object.keys(Artist(null)).map(key => {
+    indexSchemes: Object.entries(Artist(null)).filter(([key,value]) => {
+        return typeof value !== "object" || value === null
+    }).map(([key,value]) => {
         return {index: key, params: null};
     })
 });
 LibraryDB.addStore({
     name: "Tracks",
     params: {keyPath: "_uri"},
-    indexSchemes: Object.keys(Track(null)).map(key => {
+    indexSchemes: Object.keys(Track(null)).filter(([key,value]) => {
+        return typeof value !== "object" || value === null
+    }).map(([key,value]) => {
         return {index: key, params: null};
     })
 });

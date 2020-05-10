@@ -55,8 +55,8 @@ export default class IndexedDB {
             const openDbRequest = window.indexedDB.open(this._name, this._version);
             
             // check version
-            openDbRequest.onupgradeneeded = async (event) =>  {
-                await this._upgradeObjectStores(event.target.result, this._schemaList);
+            openDbRequest.onupgradeneeded = (event) =>  {
+                this._upgradeObjectStores(event.target.result, this._schemaList);
             };
 
             openDbRequest.onerror = (event) => {
@@ -89,18 +89,21 @@ export default class IndexedDB {
         console.log(schemaList);
         for(let objectStoreSchema of schemaList) {
 
+            console.log("Creating store", objectStoreSchema.name);
+            
             // clear old entries
             if(indexedDB.objectStoreNames.contains(objectStoreSchema.name)) indexedDB.deleteObjectStore(objectStoreSchema.name);
             
             // create new store in database
             const store = indexedDB.createObjectStore(objectStoreSchema.name, objectStoreSchema.params);
-
+            
             // create instance of store handler class
             const objectStore = new ObjectStore(store);
             
             // create indices and wait for transaction complete
-            await objectStore.createIndices(objectStoreSchema.indexSchemes);
-
+            objectStore.createIndices(objectStoreSchema.indexSchemes);
+            
+            console.log("Created store", objectStoreSchema.name);
         };
     }
 

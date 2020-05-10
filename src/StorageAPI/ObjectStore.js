@@ -13,18 +13,22 @@ export default class ObjectStore {
      * @param {IndexSchema[]} scheme 
      */
     createIndices(scheme) {
-        return new Promise( (resolve, reject) => {
-            // create indices from schema
-            scheme.forEach(index => {
-                this._store.createIndex(index.index, index.index, index.params);
-            })
-            // resolve on sucess
-            this._store.transaction.oncomplete = (event) => { resolve() };
-            // reject on error 
-            this._store.transaction.onerror = (event) => {
-                reject("Error creating indices:", event.target.errorCode);
-            };
+        
+        // create indices from schema
+        scheme.forEach(index => {
+            this._store.createIndex(index.index, index.index, index.params);
         });
+
+        // resolve on sucess
+        this._store.transaction.oncomplete = event => {
+            console.log("Created indices for store.");
+        };
+        
+        // reject on error 
+        this._store.transaction.onerror = event => {
+            console.log("Error creating indices:", event.target.errorCode);
+        };
+
     };
 
     clear() {
