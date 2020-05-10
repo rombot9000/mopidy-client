@@ -1,5 +1,7 @@
 import { createSelector } from "reselect";
 
+import { Album} from "ViewModel";
+
 /**
  * @param {import("ViewModel/Album").Album[]} albums
  * @param {string} token
@@ -29,15 +31,36 @@ function filterAlbumsByToken(albums, token) {
 
 /**
  * 
+ * @param {string|number} a 
+ * @param {string|number} b 
+ */
+function customCompare(a,b) {
+    const strA = String(a).replace(/^(The|the|Die|die|A|a)\s/,"");
+    const strB = String(b).replace(/^(The|the|Die|die|A|a)\s/,"");
+    return strA.localeCompare(strB);
+} 
+
+/**
+ * 
  * @param {import("ViewModel/Album").Album[]} albums 
  * @param {string} albumSortKey
  */
-function sortAlbums(albums, albumSortKey) {
-    if(!albumSortKey) return albums;
+function sortAlbums(albums, sortKey) {
+    if(!sortKey) return albums;
 
-    return albums.sort((a,b) => {
-        return ('' +  a[albumSortKey]).localeCompare(b[albumSortKey]);
-    });
+    const nullAlbum = Album(null);
+
+    if(typeof nullAlbum[sortKey] === "object") {
+
+        if(!nullAlbum[sortKey].hasOwnProperty("name")) return albums;
+        
+        return albums.sort((a,b) => {
+            if(a[sortKey] === null || b[sortKey] === null) return 0;
+            return customCompare(a[sortKey].name, b[sortKey].name);
+        });
+    }
+
+    return albums.sort((a,b) => customCompare(a[sortKey], b[sortKey]));
 }
 
 export default createSelector(
