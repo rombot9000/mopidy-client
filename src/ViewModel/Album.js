@@ -1,7 +1,6 @@
-var SERVER_IP = ""
-if(process.env.NODE_ENV !== "production") {
-    SERVER_IP = "http://raspberrypi.fritz.box:8080";
-}
+import Artist from "./Artist";
+
+var SERVER_IP = process.env.NODE_ENV === "production" ? "" : "http://raspberrypi.fritz.box:8080";
 
 
 /**
@@ -28,7 +27,7 @@ function Album(mpd_album, tracks = [], mpd_images = []) {
             _uri: "",
             name: "",
             year: "",
-            artist: "",
+            artist: Artist(null),
             tracks: [],
             cover: ""
         }

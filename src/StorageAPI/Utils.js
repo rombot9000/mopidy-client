@@ -85,13 +85,22 @@ export async function writeAlbumsToDB(albums) {
  */
 function createShallowCopy(obj) {
 
-    const objOut = {};
+    const objOut = Array.isArray(obj) ? [] : {};
     
-    Object.keys(obj).forEach(key => {
-        if(typeof obj[key] === "object" && obj[key]._uri != null) {
-            objOut[key] = { _uri: obj[key]._uri };
+    Object.entries(obj).forEach(([key,value]) => {
+
+        if(typeof value !== "object" || value === null) {
+            
+            objOut[key] = value;
+
+        } else if(value._uri != null) {
+            
+            objOut[key] = { _uri: value._uri };
+
         } else {
-            objOut[key] = obj[key];
+            
+            objOut[key] = createShallowCopy(value);
+
         }
     })
 
@@ -105,10 +114,23 @@ function createShallowCopy(obj) {
  */
 function insertReferences(obj, references) {
     Object.keys(obj).forEach(key => {
-        if(typeof obj[key] === "object" && obj[key]._uri != null) {
+        
+        if(typeof obj[key] !== "object" || obj[key] === null) {
+            
+            return;
+
+        } else if(obj[key]._uri != null) {
+            
             obj[key] = references[obj[key]._uri];
+
+        } else {
+            
+            insertReferences(obj[key], references);
+
         }
+
     });
+
 }
 
 /**
