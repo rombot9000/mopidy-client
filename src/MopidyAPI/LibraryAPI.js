@@ -72,7 +72,7 @@ class LibraryAPI extends BaseAPI {
     async fetchAll() {
         if( !this._fetchPromise ) {
             this._fetchPromise = this._fetchAll();
-            this._fetchPromise.finally(this._resetFetchPromise);
+            this._fetchPromise.finally(this._resetFetchPromise.bind(this));
         }
         return await this._fetchPromise;
     }
@@ -116,7 +116,7 @@ class LibraryAPI extends BaseAPI {
                     
                     return Track(mpd_track, uriToArtist[mpd_track.artists[0].uri]);
                 });
-                tracks.push(albumTracks);
+                tracks.push(...albumTracks);
 
                 // album
                 return Album(
