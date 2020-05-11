@@ -23,7 +23,7 @@ const emptyTrack = {
 
 /**
  * 
- * @param {import('MopidyHandler/LibraryHandler').mpd_track} mpd_track
+ * @param {import("MopidyAPI/LibraryAPI").mpd_track} mpd_track
  * @param {import("./Artist").Artist} artist
  * @returns {Track}
  */
@@ -40,7 +40,7 @@ function Track(mpd_track, artist) {
         track_no: mpd_track.track_no,
         length: mpd_track.length,
         year: year,
-        artist: artist || Artist(null),
+        artist: artist || Artist(mpd_track.artists[0]),
     }
 }
 

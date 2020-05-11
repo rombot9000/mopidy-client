@@ -6,7 +6,7 @@
  */
 
 /**
- * @param {import('MopidyHandler/LibraryHandler').mpd_artist} mpd_artist 
+ * @param {import("MopidyAPI/LibraryAPI").mpd_artist} mpd_artist 
  * @param {import('./Album').Album[]} [albums]
  * @returns {Artist}
  */

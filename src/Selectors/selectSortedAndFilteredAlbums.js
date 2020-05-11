@@ -35,8 +35,8 @@ function filterAlbumsByToken(albums, token) {
  * @param {string|number} b 
  */
 function customCompare(a,b) {
-    const strA = String(a).replace(/^(The|the|Die|die|A|a)\s/,"");
-    const strB = String(b).replace(/^(The|the|Die|die|A|a)\s/,"");
+    const strA = String(a).replace(/^(The|the|Die|die)\s/,"");
+    const strB = String(b).replace(/^(The|the|Die|die)\s/,"");
     return strA.localeCompare(strB);
 } 
 
