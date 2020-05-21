@@ -36,11 +36,12 @@ const useStyles = makeStyles(theme => ({
         flexDirection: "column",
         padding: theme.spacing(2),
     },
-    flexGrow : {
+    tracklist : {
         flexGrow: 1,
         [theme.breakpoints.down('sm')]: {
             flexShrink: 0,
-        }
+        },
+        marginTop: theme.spacing(1)
     }
 }));
 
@@ -61,10 +62,13 @@ export default ({album, ...paperProps}) => {
                     <SquareImage src={album.cover} elevation={0} square={true}/>
                 </Grid>
                 <Grid item sm={12} md={6} className={classes.content}>
+                        <Typography variant="overline">{album.artist.name}</Typography>
                         <Typography variant="h5">{album.name}</Typography>
-                        <Typography variant="h6">{album.artist.name}</Typography>
-                        <Typography variant="body1">{album.year}</Typography>
-                        <div className={classes.flexGrow}>
+                        <Typography variant="subtitle1">{album.year}</Typography>
+                        <Typography variant="subtitle2" color="textSecondary">
+                            {album.tracks.length} Tracks, {album.length} Minutes
+                        </Typography>
+                        <div className={classes.tracklist}>
                             <Tracklist tracks={album.tracks} height={useFullHeight ? "full" : "auto"}/>
                         </div>
                 </Grid>

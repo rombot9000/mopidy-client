@@ -24,6 +24,12 @@ const useStyles = makeStyles(theme => ({
         position: "absolute",
         bottom: theme.spacing(0.5),
         left: theme.spacing(0.5)
+    },
+    artistName: {
+        fontWeight: "normal"
+    },
+    albumName: {
+        fontWeight: 500
     }
 }));
 
@@ -55,24 +61,18 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
                     </Fab>
                 </Fade>
             </SquareImage>
-            <Typography variant="button">{album.name}</Typography>
-            <br/>
-            <Typography variant="caption">{album.artist.name}</Typography>
+            <div>
+                <Typography variant="subtitle2" className={classes.artistName}>{album.artist.name}</Typography>
+                <Typography variant="subtitle2" className={classes.albumName}>{album.name}</Typography>
+            </div>
         </React.Fragment>
     );
 
 };
-
-/**
- * @param {import("Reducers").State} state
- */
-const mapStateToProps = (state, ownProps) => ({
-    ...ownProps
-});
   
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onClick: () => dispatch(ViewActions.toggleAlbumDetailsModal(ownProps.album)),
     onPlayIconClick: () => dispatch(PlaybackActions.playAlbum(ownProps.album))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlbumGridTile);
+export default connect(null, mapDispatchToProps)(AlbumGridTile);
