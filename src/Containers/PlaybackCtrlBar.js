@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 const PlaybackCtrlBar = React.forwardRef(({ onNext, onPrev, onPlay, playbackState, playbackTrack, ...appBarProps }, ref) => {
     const classes = useStyles();
+    console.log(playbackTrack);
     return (
         <AppBar {...appBarProps} ref={ref} position="fixed" color="primary" className={classes.appbar}>
             <div className={classes.slider}>
