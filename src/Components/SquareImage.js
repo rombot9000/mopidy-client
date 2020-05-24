@@ -19,9 +19,7 @@ const useStyles = makeStyles(theme => ({
 /**
  * @param {SquareImageProps} props 
  */
-function SquareImage(props) {
-
-    const {src, className, ...paperProps} = props;
+function SquareImage({src, className, ...paperProps}) {
 
     const classes = useStyles();
 
@@ -31,6 +29,7 @@ function SquareImage(props) {
                 backgroundImage: src ? `url(${src})` : undefined,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "100% 100%",
+                backgroundColor: "#cccccc"
             }}>
         </Paper>
     );
