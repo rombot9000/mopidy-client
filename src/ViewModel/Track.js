@@ -1,4 +1,5 @@
 import Artist from "./Artist";
+import Album from "./Album";
 
 /**
  * @typedef Track
@@ -7,6 +8,7 @@ import Artist from "./Artist";
  * @property {number} disc_no
  * @property {number} track_no
  * @property {import("./Artist").Artist} artist
+ * @property {import("./Album").Album} album
  * @property {string} year
  * @property {number} length
  */
@@ -19,15 +21,17 @@ const emptyTrack = {
     length: null,
     year: null,
     artist: Artist(null),
+    album: Album(null)
 }
 
 /**
  * 
  * @param {import("MopidyAPI/LibraryAPI").mpd_track} mpd_track
- * @param {import("./Artist").Artist} artist
+ * @param {import("./Artist").Artist} [artist]
+ * @param {import("./Album").Album} [album]
  * @returns {Track}
  */
-function Track(mpd_track, artist) {
+function Track(mpd_track, artist, album) {
 
     if(!mpd_track) return emptyTrack;
 
@@ -41,6 +45,7 @@ function Track(mpd_track, artist) {
         length: mpd_track.length,
         year: year,
         artist: artist || Artist(mpd_track.artists[0]),
+        album: album || Album(mpd_track.album)
     }
 }
 

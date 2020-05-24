@@ -44,12 +44,11 @@ function Album(mpd_album, tracks = [], mpd_images = []) {
     
     // get album artist
     // TODO: write mechanism to get base artist or set to various artist if not possible
-    const artist = tracks[0].artist;
-
+    const artist = tracks.length ? tracks[0].artist : "";
+    const year = tracks.length ? tracks[0].year : "";
     const cover = mpd_images[0] ? `${SERVER_IP}${mpd_images[0].uri}` : null;
-    const year = tracks[0].year;
-
-    return {
+    /** @type {Album} */
+    const album =  {
         _uri: mpd_album.uri,
         name: mpd_album.name,
         year: year,
@@ -58,6 +57,11 @@ function Album(mpd_album, tracks = [], mpd_images = []) {
         tracks: tracks,
         cover: cover
     }
+
+    // set album for tracks
+    tracks.forEach(t => t.album = album);
+
+    return album;
 }
 
 export default Album;
