@@ -3,15 +3,16 @@ import { connect } from "react-redux";
 
 import { makeStyles } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
-import { AppBar, Toolbar, Box } from "@material-ui/core";
+import { AppBar, Toolbar, Box, ButtonGroup } from "@material-ui/core";
 
-import { ButtonGroup } from "@material-ui/core";
 import { PlayArrow, Pause, SkipNext, SkipPrevious } from "@material-ui/icons";
 
 import { PlaybackButton } from "Components";
 import PlaybackPositionBar from "./PlaybackPositionBar";
 
 import { PlaybackActions } from "Actions";
+
+import selectPlaybackTrack from "Selectors/selectPlaybackTrack";
 
 const useStyles = makeStyles(theme => ({
     appbar: {
@@ -63,7 +64,7 @@ const PlaybackCtrlBar = React.forwardRef(({ onNext, onPrev, onPlay, playbackStat
  */
 const mapStateToProps = (state) => ({
     playbackState: state.playback.state,
-    playbackTrack: state.playback.track
+    playbackTrack: selectPlaybackTrack(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
