@@ -4,8 +4,9 @@ export default createSelector(
     [
         state => state.playback.state,
         state => state.playback.timePosition,
-        state => state.playback.timePositionUpdated
+        state => Date.now() - state.playback.timePositionUpdated
     ],
-    (playbackState, timePosition, timePositionUpdated) => 
-        playbackState === "stopped" ? timePosition : timePosition + Date.now() - timePositionUpdated
+    (playbackState, timePosition, timeDiff) => {
+        return playbackState === "stopped" ? timePosition : timePosition + timeDiff
+    }
 );
