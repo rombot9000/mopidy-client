@@ -5,6 +5,8 @@ import VirtualizedList from "./VirtualizedList";
 import ListLinkItem from "./ListLinkItem";
 import PlaybackButton from "./PlaybackButton";
 import TimePositionBar from "./TimePositionBar";
+import AlbumTrack from "./AlbumTrack";
+import TracklistTrack from "./TracklistTrack";
 
 export {
     SearchBar,
@@ -13,5 +15,7 @@ export {
     VirtualizedList,
     ListLinkItem,
     PlaybackButton,
-    TimePositionBar
+    TimePositionBar,
+    AlbumTrack,
+    TracklistTrack
 };

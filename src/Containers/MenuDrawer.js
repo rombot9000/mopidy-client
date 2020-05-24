@@ -7,7 +7,7 @@ import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Typography
 import { QueueMusic, MusicNote, LibraryMusic, AlbumRounded, Tune } from "@material-ui/icons";
 
 import { ListLinkItem } from "Components";
-import Tracklist from "./Tracklist";
+import Playlist from "./Tracklist";
 
 import { ViewActions } from "Actions";
 
@@ -79,7 +79,7 @@ function MenuDrawer({open, onClose, onSettingsItemClick, tracks}) {
                     <ListItemText>Now Playing</ListItemText>
                 </ListItem>
                 <Container>
-                    <Tracklist tracks={tracks} height="full"/>
+                    <Playlist/>
                 </Container>
             </List>
         </Drawer>

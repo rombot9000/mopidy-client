@@ -3,7 +3,7 @@ import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Typography, Paper, Grid, useMediaQuery } from "@material-ui/core";
 
-import Tracklist from "./Tracklist";
+import AlbumTracks from "./AlbumTracks";
 import SquareImage from "Components/SquareImage";
 
 const useStyles = makeStyles(theme => ({
@@ -64,12 +64,12 @@ export default ({album, ...paperProps}) => {
                 <Grid item sm={12} md={6} className={classes.content}>
                         <Typography variant="overline">{album.artist.name}</Typography>
                         <Typography variant="h5">{album.name}</Typography>
-                        <Typography variant="subtitle1">{album.year}</Typography>
-                        <Typography variant="subtitle2" color="textSecondary">
-                            {album.tracks.length} Tracks, {album.length} Minutes
+                        {/* <Typography variant="subtitle1">{album.year}</Typography> */}
+                        <Typography variant="subtitle1" color="textSecondary">
+                            Released {album.year} | {album.tracks.length} Tracks | {album.length} Minutes
                         </Typography>
                         <div className={classes.tracklist}>
-                            <Tracklist tracks={album.tracks} height={useFullHeight ? "full" : "auto"}/>
+                            <AlbumTracks album={album} height={useFullHeight ? "full" : "auto"}/>
                         </div>
                 </Grid>
             </Grid>
