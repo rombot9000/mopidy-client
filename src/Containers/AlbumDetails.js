@@ -1,7 +1,7 @@
 import React from "react";
 
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { Typography, Paper, Grid, useMediaQuery } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Typography, Paper, Grid } from "@material-ui/core";
 
 import AlbumTracks from "./AlbumTracks";
 import SquareImage from "Components/SquareImage";
@@ -36,12 +36,8 @@ const useStyles = makeStyles(theme => ({
         flexDirection: "column",
         padding: theme.spacing(2),
     },
-    tracklist : {
-        flexGrow: 1,
-        [theme.breakpoints.down('sm')]: {
-            flexShrink: 0,
-        },
-        marginTop: theme.spacing(1)
+    bottomMargin : {
+       marginBottom: theme.spacing(1)
     }
 }));
 
@@ -53,7 +49,6 @@ const useStyles = makeStyles(theme => ({
 export default ({album, ...paperProps}) => {
 
     const classes = useStyles();
-    const useFullHeight = useMediaQuery(useTheme().breakpoints.down('sm'));
 
     return (
         <Paper {...paperProps} className={classes.root}>
@@ -64,13 +59,10 @@ export default ({album, ...paperProps}) => {
                 <Grid item sm={12} md={6} className={classes.content}>
                         <Typography variant="overline">{album.artist.name}</Typography>
                         <Typography variant="h5">{album.name}</Typography>
-                        {/* <Typography variant="subtitle1">{album.year}</Typography> */}
-                        <Typography variant="subtitle1" color="textSecondary">
+                        <Typography variant="subtitle1" color="textSecondary" className={classes.bottomMargin}>
                             Released {album.year} | {album.tracks.length} Tracks | {album.length} Minutes
                         </Typography>
-                        <div className={classes.tracklist}>
-                            <AlbumTracks album={album} height={useFullHeight ? "full" : "auto"}/>
-                        </div>
+                        <AlbumTracks album={album}/>
                 </Grid>
             </Grid>
         </Paper>

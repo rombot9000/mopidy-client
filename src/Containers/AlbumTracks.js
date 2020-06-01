@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import { PlaybackActions } from "Actions";
 
-import { VirtualizedList } from "Components";
+import { GridList } from "Components";
 
 import AlbumTrack from "./AlbumTrack";
 
@@ -13,26 +13,20 @@ import AlbumTrack from "./AlbumTrack";
  * @param {Function} props.onTrackClick
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @param {import("ViewModel/Track").Track} props.playbackTrack
- * @param {"auto"|"full"} props.height
  */
-const AlbumTracks = ({album, onTrackClick, playbackTrack, height}) => {
-
-    const renderFunction = ({index, style, data}) => (
-        <AlbumTrack
-            key={index}
-            style={style}
-            track={data[index]}
-            onClick={() => {onTrackClick(data[index], data, data[index]._uri === playbackTrack._uri)}}
-        />
-    );
-
+const AlbumTracks = ({album, onTrackClick, playbackTrack}) => {
     return (
-        <VirtualizedList
-            disableHeight={height === "auto" ? false : true}
-            itemData={album.tracks}
-            itemHeight={35}
-            itemRenderFunction={renderFunction}
-        />
+        <GridList>
+            {album.tracks.map((track, index) => (
+                <AlbumTrack
+                    key={index}
+                    track={track}
+                    onClick={() => {
+                        onTrackClick(track, album.tracks, track._uri === playbackTrack._uri)
+                    }}
+                />
+            ))}
+        </GridList>
     );
 };
 
