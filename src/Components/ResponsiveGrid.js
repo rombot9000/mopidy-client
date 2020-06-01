@@ -9,14 +9,11 @@ import Placeholder from "./Placeholder";
 const GRID_SPACING = 1
 
 const useStyles = makeStyles(theme => ({
-    gridList: {
+    container: {
         paddingTop: theme.spacing(GRID_SPACING),
         paddingLeft: theme.spacing(GRID_SPACING),
         width: "100%",
         height: "100%",
-    },
-    square: {
-        paddingTop: "100%"
     }
 }));
 
@@ -51,7 +48,7 @@ export default ({children, placeholder=skeleton}) => {
         <Grid
             container
             spacing={GRID_SPACING}
-            className={classes.gridList}
+            className={classes.container}
         >
         {React.Children.map(children, child => 
             <GridItem placeholder={placeholder}>{child}</GridItem>
