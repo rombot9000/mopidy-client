@@ -5,7 +5,7 @@ import selectTracklistTracks from "Selectors/selectTracklistTracks";
 
 import { PlaybackActions } from "Actions";
 
-import { VirtualizedList } from "Components";
+import { GridList } from "Components";
 
 import TracklistTrack from "./TracklistTrack";
 
@@ -13,28 +13,21 @@ import TracklistTrack from "./TracklistTrack";
  * @param {Object} props
  * @param {import("ViewModel/Track").Track[]} props.tracks 
  * @param {Function} props.onTrackClick
- * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @param {import("ViewModel/Track").Track} props.playbackTrack
- * @param {"auto"|"full"} props.height
  */
-const Tracklist = ({tracks, onTrackClick, playbackTrack, height}) => {
-
-    const renderFunction = ({index, style, data}) => (
-        <TracklistTrack
-            key={index}
-            style={style}
-            track={data[index]}
-            onClick={() => {onTrackClick(data[index], data, data[index]._uri === playbackTrack._uri)}}
-        />
-    );
-
+const Tracklist = ({tracks, onTrackClick, playbackTrack, ...forwardProps}) => {
     return (
-        <VirtualizedList
-            disableHeight={height === "auto" ? false : true}
-            itemData={tracks}
-            itemHeight={60}
-            itemRenderFunction={renderFunction}
-        />
+        <GridList spacing={1} divider {...forwardProps}>
+            {tracks.map((track, index) => (
+                <TracklistTrack
+                    key={index}
+                    track={track}
+                    onClick={() => {
+                        onTrackClick(track, tracks, track._uri === playbackTrack._uri)
+                    }}
+                />
+            ))}
+        </GridList>
     );
 };
 
