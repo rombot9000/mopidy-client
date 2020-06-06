@@ -9,18 +9,11 @@ import AnimatedEq from "./AnimatedEq";
 import useFormatedTime from "Hooks/useFormatedTime";
 
 const useStyles = makeStyles({
-    item: {
-        backgroundColor: "white"
-    },
-    number: {
-        fontWeight: props => props.playbackState === "stopped" ? "lighter" : "bolder",
-    },
     name: {
         fontWeight: props => props.playbackState === "stopped" ? "normal" : "bolder"
     },
-    time: {
-        fontWeight: props => props.playbackState === "stopped" ? "normal" : "bolder",
-        color: "gray"
+    text: {
+        fontWeight: props => props.playbackState === "stopped" ? "lighter" : "normal"
     }
 });
 
@@ -58,14 +51,14 @@ export default ({track, playbackState, playbackTimePosition, dispatch, ...gridPr
             onMouseLeave={() => setFirstCell("INFO")}
             spacing={1}
         >
-            <Grid item xs={1} className={classes.item}>
-                <Typography className={classes.number} variant="body1" align="center">{firstCell}</Typography>
+            <Grid item xs={1}>
+                <Typography className={classes.text} variant="body1" align="center">{firstCell}</Typography>
             </Grid>
-            <Grid item xs className={classes.item}>
+            <Grid item xs>
                 <Typography className={classes.name} variant="body1" align="left">{track.name}</Typography>
             </Grid>
-            <Grid item xs={2} className={classes.item}>
-                <Typography className={classes.time} variant="body1" align="right">{timeString}</Typography>
+            <Grid item xs={2}>
+                <Typography className={classes.text} variant="body1" align="right">{timeString}</Typography>
             </Grid>
         </Grid>
     );

@@ -29,6 +29,12 @@ const useStyles = makeStyles(theme => ({
         maxHeight: "100%",
         flexShrink: 0
     },
+    text: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
+        fontWeight: "normal"
+    },
     tracklist : {
         width: "100%",
         flexShrink: 1,
@@ -81,12 +87,8 @@ function MenuDrawer({open, onClose, onSettingsItemClick}) {
                     <ListItemText>Settings</ListItemText>
                 </ListItem>
                 <Divider/>
-                <ListItem>
-                    <ListItemText disableTypography>
-                        <Typography variant="h6">Now Playing</Typography>
-                    </ListItemText>
-                </ListItem>
             </List>
+            <Typography className={classes.text} variant="h6">Now Playing</Typography>
             <Tracklist className={classes.tracklist}/>
         </Drawer>
     );

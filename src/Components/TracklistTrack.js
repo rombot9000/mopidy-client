@@ -9,17 +9,14 @@ import CoverButton from "./CoverButton";
 import useFormatedTime from "Hooks/useFormatedTime";
 
 const useStyles = makeStyles({
-    text: {
-        fontWeight: props => props.playbackState === "stopped" ? "normal" : "bolder"
-    },
     cover: {
         maxWidth: props => props.coverWidth
     },
-    artistName: {
-        fontWeight: "normal"
-    },
     trackName: {
-        fontWeight: "bolder"
+        fontWeight: props => props.playbackState === "stopped" ? "normal" : "bolder"
+    },
+    text: {
+        fontWeight: props => props.playbackState === "stopped" ? "lighter" : "normal"
     }
 });
 
