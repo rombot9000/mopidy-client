@@ -1,37 +1,26 @@
 import React from "react";
 
-import { Grid } from "@material-ui/core";
-
-import { makeStyles } from "@material-ui/core/styles";
-
-const GRID_SPACING = 1;
-
-const useStyles = makeStyles(theme => ({
-    container: {
-        overflowY: "scroll",
-        "&::-webkit-scrollbar": {
-            display: "none"
-        },
-        "-msOverflowStyle": "none",
-        maxHeight: "100%",
-        maxWidth: "100%"
-    }
-}));
+import { Grid, Divider} from "@material-ui/core";
 
 /**
  * @param {Object} props
+ * @param {JSX.Element[]} props.children
+ * @param {import("@material-ui/core").GridProps} props.gridProps
  */
-export default ({children}) => {
+export default ({children, divider, ...gridProps}) => {
 
-    const classes = useStyles();
+    console.log("divider = ", divider);
 
     return (
         <Grid container
-            className={classes.container}
-            spacing={GRID_SPACING}
+            {...gridProps}
         >
+            {divider ? (<Grid item xs={12}><Divider/></Grid>) : null}
             {React.Children.map(children, child => 
-                <Grid item xs={12}>{child}</Grid>
+                <React.Fragment>
+                    <Grid item xs={12}>{child}</Grid>
+                    {divider ? (<Grid item xs={12}><Divider/></Grid>) : null}
+                </React.Fragment>
             )}
         </Grid>
     );
