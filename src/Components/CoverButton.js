@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core";
 import SquareImage from "./SquareImage";
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
     cover: {
         position: "relative"
     },
@@ -26,8 +26,14 @@ const useStyles = makeStyles(theme => ({
         transform: "translate(-50%, -50%)",
         color: "white"
     }
-}));
+});
 
+/**
+ * @param {Object} props
+ * @param {string} props.src
+ * @param {boolean} props.showButton
+ * @param {JSX.Element} props.children
+ */
 export default ({src, showButton, children}) => {
     const classes = useStyles();
 
