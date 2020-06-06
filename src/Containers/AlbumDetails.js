@@ -39,10 +39,9 @@ const useStyles = makeStyles(theme => ({
         paddingRight: theme.spacing(1),
         paddingBottom: theme.spacing(2),
     },
-    whiteBack: {
-    },
-    bottomMargin : {
-        marginBottom: theme.spacing(1)
+    albumInfo : {
+        marginBottom: theme.spacing(1),
+        fontWeight: "lighter"
     },
     tracklist: {
         width: "100%",
@@ -75,9 +74,9 @@ export default ({album, ...paperProps}) => {
                     <SquareImage src={album.cover} elevation={0} square={true}/>
                 </Grid>
                 <Grid item sm={12} md={6} className={classes.content}>
-                        <Typography className={classes.whiteBack} variant="subtitle1">{album.artist.name}</Typography>
-                        <Typography className={classes.whiteBack} variant="h5">{album.name}</Typography>
-                        <Typography className={classes.bottomMargin} variant="subtitle1" color="textSecondary">
+                        <Typography variant="subtitle1">{album.artist.name}</Typography>
+                        <Typography variant="h5">{album.name}</Typography>
+                        <Typography className={classes.albumInfo} variant="subtitle1">
                             Released {album.year} | {album.tracks.length} Tracks | {album.length} Minutes
                         </Typography>
                         <AlbumTracks className={classes.tracklist} album={album}/>
