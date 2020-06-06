@@ -11,12 +11,12 @@ import AlbumTrack from "./AlbumTrack";
  * @param {Object} props
  * @param {import("ViewModel/Album").Album} props.album 
  * @param {Function} props.onTrackClick
- * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @param {import("ViewModel/Track").Track} props.playbackTrack
  */
-const AlbumTracks = ({album, onTrackClick, playbackTrack}) => {
+const AlbumTracks = ({album, onTrackClick, playbackTrack, ...forwardProps}) => {
+    console.log(forwardProps);
     return (
-        <GridList>
+        <GridList spacing={1} divider {...forwardProps}>
             {album.tracks.map((track, index) => (
                 <AlbumTrack
                     key={index}

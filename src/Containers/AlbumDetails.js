@@ -34,10 +34,28 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        padding: theme.spacing(2),
+        paddingTop: theme.spacing(1),
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(1),
+        paddingBottom: theme.spacing(2),
+    },
+    whiteBack: {
     },
     bottomMargin : {
-       marginBottom: theme.spacing(1)
+        marginBottom: theme.spacing(1)
+    },
+    tracklist: {
+        width: "100%",
+        [theme.breakpoints.up('md')]: {
+            flexShrink: 1,
+            overflowY: "scroll",
+            overflowX: "hidden",
+            "&::-webkit-scrollbar": {
+                display: "none"
+            },
+            "-msOverflowStyle": "none",
+            "-webkit-overflow-scrolling": "auto"
+        }
     }
 }));
 
@@ -57,12 +75,12 @@ export default ({album, ...paperProps}) => {
                     <SquareImage src={album.cover} elevation={0} square={true}/>
                 </Grid>
                 <Grid item sm={12} md={6} className={classes.content}>
-                        <Typography variant="overline">{album.artist.name}</Typography>
-                        <Typography variant="h5">{album.name}</Typography>
-                        <Typography variant="subtitle1" color="textSecondary" className={classes.bottomMargin}>
+                        <Typography className={classes.whiteBack} variant="subtitle1">{album.artist.name}</Typography>
+                        <Typography className={classes.whiteBack} variant="h5">{album.name}</Typography>
+                        <Typography className={classes.bottomMargin} variant="subtitle1" color="textSecondary">
                             Released {album.year} | {album.tracks.length} Tracks | {album.length} Minutes
                         </Typography>
-                        <AlbumTracks album={album}/>
+                        <AlbumTracks className={classes.tracklist} album={album}/>
                 </Grid>
             </Grid>
         </Paper>
