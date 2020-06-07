@@ -9,6 +9,7 @@ import PlaybackButton from "./PlaybackButton";
 import TimePositionBar from "./TimePositionBar";
 import AlbumTrack from "./AlbumTrack";
 import TracklistTrack from "./TracklistTrack";
+import TrackViewItem from "./TrackViewItem";
 
 export {
     SearchBar,
@@ -21,5 +22,6 @@ export {
     PlaybackButton,
     TimePositionBar,
     AlbumTrack,
-    TracklistTrack
+    TracklistTrack,
+    TrackViewItem
 };

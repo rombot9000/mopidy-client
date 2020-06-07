@@ -6,7 +6,7 @@ import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
 
-import TracksView from "./TracksView"; 
+import TrackView from "./TrackView"; 
 import AlbumGrid from "./AlbumGrid";
 import AlbumSearchBar from "./AlbumSearchBar";
 import NotifyBar from "./NotifyBar";
@@ -71,7 +71,7 @@ export default function MainView() {
             >
                 <Switch>
                     <Route path="/albums"><AlbumGrid/></Route>
-                    <Route path="/tracks"><TracksView/></Route>
+                    <Route path="/tracks"><TrackView/></Route>
                     <Route><Redirect to="/albums"/></Route>
                 </Switch>
                 <NotifyBar className={classes.snackBar}/>
