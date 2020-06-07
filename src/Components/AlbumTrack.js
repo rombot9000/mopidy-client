@@ -1,12 +1,10 @@
 import React from "react";
 
 import { Grid, Typography } from "@material-ui/core";
-import { PlayArrow, Pause } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core";
 
-import AnimatedEq from "./AnimatedEq";
-
 import useFormatedTime from "Hooks/useFormatedTime";
+import useTrackIcon from "Hooks/useTrackIcon";
 
 const useStyles = makeStyles({
     name: {
@@ -28,18 +26,7 @@ export default ({track, playbackState, playbackTimePosition, dispatch, ...gridPr
 
     const classes = useStyles({playbackState});
 
-    const firstCellReducer = (firstCell, action) => {
-        switch(action) {
-            case "CTRL": return playbackState === "playing" ? <Pause fontSize="inherit"/> : <PlayArrow fontSize="inherit"/>;
-            case "INFO": return playbackState === "stopped" ?  track.track_no : <AnimatedEq fontSize="inherit"/>;
-            default: return firstCell;
-        }
-    };
-    const [firstCell, setFirstCell] = React.useReducer(
-        firstCellReducer,
-        playbackState === "stopped" ?  track.track_no : <AnimatedEq fontSize="inherit"/>
-    );
-
+    const [trackIcon, setHover] = useTrackIcon(track.track_no, playbackState);
     const timeString = useFormatedTime(track.length, playbackState, playbackTimePosition);
 
     return (
@@ -47,12 +34,12 @@ export default ({track, playbackState, playbackTimePosition, dispatch, ...gridPr
             container
             {...gridProps}
             direction="row"
-            onMouseEnter={() => setFirstCell("CTRL")}
-            onMouseLeave={() => setFirstCell("INFO")}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
             spacing={1}
         >
             <Grid item xs={1}>
-                <Typography className={classes.text} variant="body1" align="center">{firstCell}</Typography>
+                <Typography className={classes.text} variant="body1" align="center">{trackIcon}</Typography>
             </Grid>
             <Grid item xs>
                 <Typography className={classes.name} variant="body1" align="left">{track.name}</Typography>
