@@ -8,9 +8,6 @@ import { Grid, Divider} from "@material-ui/core";
  * @param {import("@material-ui/core").GridProps} props.gridProps
  */
 export default ({children, divider, ...gridProps}) => {
-
-    console.log("divider = ", divider);
-
     return (
         <Grid container
             {...gridProps}

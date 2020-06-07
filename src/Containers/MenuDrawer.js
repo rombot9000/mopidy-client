@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Typography, Container} from "@material-ui/core";
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Typography } from "@material-ui/core";
 import { QueueMusic, MusicNote, LibraryMusic, AlbumRounded, Tune } from "@material-ui/icons";
 
 import { ListLinkItem } from "Components";

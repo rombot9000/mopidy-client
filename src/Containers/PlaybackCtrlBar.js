@@ -19,6 +19,12 @@ const useStyles = makeStyles(theme => ({
         top: 'auto',
         bottom: 0,
     },
+    track: {
+        fontWeight: "normal"
+    },
+    artist: {
+        fontWeight: "normal"
+    },
     slider: {
         position: "absolute",
         top: 0,
@@ -32,7 +38,6 @@ const useStyles = makeStyles(theme => ({
 
 const PlaybackCtrlBar = React.forwardRef(({ onNext, onPrev, onPlay, playbackState, playbackTrack, ...appBarProps }, ref) => {
     const classes = useStyles();
-    console.log(playbackTrack);
     return (
         <AppBar {...appBarProps} ref={ref} position="fixed" color="primary" className={classes.appbar}>
             <div className={classes.slider}>
@@ -51,8 +56,8 @@ const PlaybackCtrlBar = React.forwardRef(({ onNext, onPrev, onPlay, playbackStat
                     </PlaybackButton>
                 </ButtonGroup>
                 <Box flexGrow={2}>
-                    <Typography variant="body1" color="inherit">{playbackTrack.name}</Typography>
-                    <Typography variant="body2" color="inherit">{playbackTrack.artist.name}</Typography>
+                    <Typography className={classes.track} variant="subtitle1" color="inherit">{playbackTrack.name}</Typography>
+                    <Typography className={classes.artist} variant="subtitle2" color="inherit">{playbackTrack.artist.name}</Typography>
                 </Box>
             </Toolbar>
         </AppBar>

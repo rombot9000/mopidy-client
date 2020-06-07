@@ -14,7 +14,6 @@ import AlbumTrack from "./AlbumTrack";
  * @param {import("ViewModel/Track").Track} props.playbackTrack
  */
 const AlbumTracks = ({album, onTrackClick, playbackTrack, ...forwardProps}) => {
-    console.log(forwardProps);
     return (
         <GridList spacing={1} divider {...forwardProps}>
             {album.tracks.map((track, index) => (
