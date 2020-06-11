@@ -14,10 +14,9 @@ import PlaybackCtrlBar from "./PlaybackCtrlBar";
 import SettingsModal from "./SettingsModal";
 
 const useStyles = makeStyles(theme => ({
-    viewBox: {
+    trackView: {
         position: "absolute",
-        top: 0,
-        paddingTop: props => props.top,
+        top: props => props.top,
         bottom: props => props.bottom,
         width: "100%",
         overflowY: "scroll",
@@ -56,15 +55,24 @@ export default function MainView() {
      */
     const [view, setView] = React.useState({
         bottom: 0,
-        top: 0
+        top: 0,
+        height: window.offsetHeight
     });
     // adjust offset of view depending on ctrl bar height
     const ctrlBarRef = React.useRef(null);
     const srchBarRef = React.useRef(null);
     React.useEffect(() => {
+        const ctrlBarHeight = ctrlBarRef.current ? ctrlBarRef.current.offsetHeight : 0;
+        const srchBarHeight = srchBarRef.current ? srchBarRef.current.offsetHeight : 0;
+        console.log({
+            bottom: ctrlBarHeight,
+            top: srchBarHeight,
+            height: window.innerHeight - ctrlBarHeight - srchBarHeight
+        })
         setView({
-            bottom: ctrlBarRef.current ? ctrlBarRef.current.offsetHeight : 0,
-            top: srchBarRef.current ? srchBarRef.current.offsetHeight : 0
+            bottom: ctrlBarHeight,
+            top: srchBarHeight,
+            height: window.innerHeight - ctrlBarHeight - srchBarHeight
         });
     }, [ctrlBarRef, srchBarRef]); // listen for ctrl bar changes
 
@@ -75,7 +83,7 @@ export default function MainView() {
             <AlbumSearchBar className={classes.searchBar} ref={srchBarRef} />
             <Switch>
                 <Route path="/albums"><AlbumGrid className={classes.albumGrid}/></Route>
-                <Route path="/tracks"><TrackView/></Route>
+                <Route path="/tracks"><TrackView className={classes.trackView} height={view.height}/></Route>
                 <Route><Redirect to="/albums"/></Route>
             </Switch>
             <NotifyBar className={classes.notifyBar}/>

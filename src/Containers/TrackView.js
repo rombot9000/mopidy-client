@@ -9,11 +9,10 @@ import TrackViewItem from "./TrackViewItem";
  * @param {Function} props.onTrackClick
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @param {import("ViewModel/Track").Track} props.playbackTrack
- * @param {"auto"|"full"} props.height
  */
      
 
- const TrackView = ({artists, albums, tracks}) => {
+ const TrackView = ({artists, albums, tracks, ...forwardProps}) => {
     
     const renderFunction = ({index, style, data}) => (
         <TrackViewItem
@@ -26,6 +25,7 @@ import TrackViewItem from "./TrackViewItem";
 
     return (
         <VirtualizedList
+            {...forwardProps}
             itemData={tracks}
             itemHeight={35}
             itemRenderFunction={renderFunction}
