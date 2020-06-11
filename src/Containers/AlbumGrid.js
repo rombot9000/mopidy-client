@@ -27,7 +27,7 @@ const mapStateToProps = (state) => ({
  * @param {Object} props
  * @param {import("ViewModel/Album").Album[]} props.albums
  */
-const AlbumGrid = ({albums}) => {
+const AlbumGrid = ({albums, dispatch, ...forwardProps}) => {
     const classes = useStyles();
     const skeleton = (
         <React.Fragment>
@@ -38,7 +38,11 @@ const AlbumGrid = ({albums}) => {
     )
 
     return (
-        <ResponsiveGrid placeholder={skeleton}>
+        <ResponsiveGrid
+            placeholder={skeleton}
+            spacing={1}
+            {...forwardProps}
+        >
             {albums.map((album, key) => <AlbumGridTile key={key} album={album}/>)}
         </ResponsiveGrid>
     )

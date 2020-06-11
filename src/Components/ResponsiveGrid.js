@@ -1,21 +1,12 @@
 import React from "react";
 
-import { makeStyles, Grid } from "@material-ui/core"
+import clsx from "clsx";
+import { v4 as uuidv4 } from 'uuid';
+
+import { makeStyles, Grid } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
 import Placeholder from "./Placeholder";
-
-
-const GRID_SPACING = 1
-
-const useStyles = makeStyles(theme => ({
-    container: {
-        paddingTop: theme.spacing(GRID_SPACING),
-        paddingLeft: theme.spacing(GRID_SPACING),
-        width: "100%",
-        height: "100%",
-    }
-}));
 
 const skeleton = ( 
     <React.Fragment>
@@ -25,11 +16,16 @@ const skeleton = (
     </React.Fragment>
 );
 
-const GridItem = ({children, placeholder}) => {
+/**
+ * Use separate function becaus of refs
+ */
+const GridItem = ({children, ...placeholderProps}) => {
     const ref=React.useRef(null)
     return (
         <Grid ref={ref} item xl={1} lg={2} md={3} sm={4} xs={6}>
-            <Placeholder observeRef={ref} placeholder={placeholder}>{children}</Placeholder>
+            <Placeholder observeRef={ref} {...placeholderProps}>
+                {children}
+            </Placeholder>
         </Grid>
     )
 }
@@ -40,19 +36,22 @@ const GridItem = ({children, placeholder}) => {
  * @param {Object} props
  * @param {Object} props.placeholder
  */
-export default ({children, placeholder=skeleton}) => {
+export default ({children, placeholder=skeleton, ...gridProps}) => {
     // calc classes
-    const classes = useStyles();
+    const rootId = uuidv4();
     
     return (
-        <Grid
-            container
-            spacing={GRID_SPACING}
-            className={classes.container}
-        >
-        {React.Children.map(children, child => 
-            <GridItem placeholder={placeholder}>{child}</GridItem>
-        )}
+        <Grid container id={rootId} {...gridProps}>
+            {React.Children.map(children, child =>
+                <GridItem 
+                    placeholder={placeholder} 
+                    rootId={rootId} 
+                    rootMargin="1000% 0%" 
+                    threshold={1}
+                >
+                    {child}
+                </GridItem>
+            )}
         </Grid>
     );
 };
