@@ -1,9 +1,8 @@
 import React from "react";
 
-import clsx from "clsx";
 import { v4 as uuidv4 } from 'uuid';
 
-import { makeStyles, Grid } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
 import Placeholder from "./Placeholder";
