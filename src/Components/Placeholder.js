@@ -1,9 +1,21 @@
 import React from "react";
 import useIntersection from "Hooks/useIntersection";
 
-export default ({observeRef, placeholder, children}) => {
+/**
+ * @param {Object} props
+ * @param {Element}[options.root]
+ * @param {string} [options.rootId]
+ * @param {string} [options.rootMargin]
+ * @param {number} [options.threshold]
+ */
+export default ({observeRef, placeholder, children, root, rootId, rootMargin, threshold}) => {
     
-    const [isIntersecting, setObservant] = useIntersection({rootId: "scroll-box", rootMargin: "1000% 0%", threshold: 1});
+    const [isIntersecting, setObservant] = useIntersection({
+        root: root,
+        rootId: rootId,
+        rootMargin: rootMargin,
+        threshold: threshold
+    });
 
     React.useEffect(() => {
         setObservant(observeRef.current);
