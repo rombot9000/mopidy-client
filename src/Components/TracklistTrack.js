@@ -56,12 +56,12 @@ export default ({track, playbackState, playbackTimePosition, dispatch, ...gridPr
                     {playbackState === "playing" ? <Pause/> : <PlayArrowRounded/>}
                 </CoverButton>
             </Grid>
-            <Grid xs item ref={ref}>
+            <Grid xs item ref={ref} zeroMinWidth>
                 <Typography className={classes.trackName} variant="body1" align="left" noWrap>{track.name}</Typography>
                 <Typography className={classes.text} variant="body1" align="left" noWrap>{track.artist.name}</Typography>
             </Grid>
-            <Grid item xs={2}>
-                <Typography className={classes.text} variant="body1" align="right">{timeString}</Typography>
+            <Grid item xs={2} zeroMinWidth>
+                <Typography className={classes.text} variant="body1" align="right" noWrap>{timeString}</Typography>
             </Grid>
         </Grid>
     );
