@@ -14,8 +14,10 @@ import TracklistTrack from "./TracklistTrack";
  * @param {import("ViewModel/Track").Track[]} props.tracks 
  * @param {Function} props.onTrackClick
  * @param {import("ViewModel/Track").Track} props.playbackTrack
+ * @param {boolean} props.scrollToActive
  */
-const Tracklist = ({tracks, onTrackClick, playbackTrack, ...forwardProps}) => {
+const Tracklist = ({tracks, onTrackClick, playbackTrack, scrollToActive, ...forwardProps}) => {
+
     return (
         <GridList spacing={1} divider {...forwardProps}>
             {tracks.map((track, index) => (
@@ -25,6 +27,7 @@ const Tracklist = ({tracks, onTrackClick, playbackTrack, ...forwardProps}) => {
                     onClick={() => {
                         onTrackClick(track, tracks, track._uri === playbackTrack._uri)
                     }}
+                    scrollToIfActive={scrollToActive}
                 />
             ))}
         </GridList>

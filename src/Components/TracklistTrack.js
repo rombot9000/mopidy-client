@@ -7,6 +7,8 @@ import { PlayArrowRounded, Pause } from "@material-ui/icons";
 import CoverButton from "./CoverButton";
 
 import useFormatedTime from "Hooks/useFormatedTime";
+import useHeight from "Hooks/useHeight";
+import useScrollToIfActive from "Hooks/useScrollToIfActive";
 
 const useStyles = makeStyles({
     cover: {
@@ -27,17 +29,15 @@ const useStyles = makeStyles({
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @param {number} props.playbackTimePosition
  */
-export default ({track, playbackState, playbackTimePosition, dispatch, ...gridProps}) => {
+export default ({track, playbackState, playbackTimePosition, scrollToIfActive, dispatch, ...gridProps}) => {
 
     const [hover, setHover] = React.useState(false);
 
     const timeString = useFormatedTime(track.length, playbackState, playbackTimePosition);
 
     const ref = React.useRef(null);
-    const [coverWidth, setCoverWidth] = React.useState(0);
-    React.useEffect(() => {
-        if(ref.current) setCoverWidth(ref.current.offsetHeight);
-    }, [ref]);
+    let coverWidth = useHeight(ref);
+    if(scrollToIfActive) useScrollToIfActive(ref, playbackState);
 
     const classes = useStyles({playbackState, coverWidth});
 

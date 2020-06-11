@@ -89,7 +89,7 @@ function MenuDrawer({open, onClose, onSettingsItemClick}) {
                 <Divider/>
             </List>
             <Typography className={classes.text} variant="h6">Now Playing</Typography>
-            <Tracklist className={classes.tracklist}/>
+            <Tracklist className={classes.tracklist} scrollToActive/>
         </Drawer>
     );
 }
