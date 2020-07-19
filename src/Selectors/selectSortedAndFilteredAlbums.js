@@ -50,14 +50,12 @@ function sortAlbums(albums, sortKeys) {
     if(!sortKeys || !Array.isArray(sortKeys) || !sortKeys.length) return albums;
     
     //remove unsortable attributes from sort list
-    {
-        const album = Album(null);
-        const filteredKeys = sortKeys.filter(key => 
-            album.hasOwnProperty(key) &&
-            // if key refers to an object, we sort using the name attribute of the object
-            (typeof album[key] != "object" || album[key].hasOwnProperty("name"))
-        );
-    }
+    const album = Album(null);
+    const filteredKeys = sortKeys.filter(key => 
+        album.hasOwnProperty(key) &&
+        // if key refers to an object, we sort using the name attribute of the object
+        (typeof album[key] != "object" || album[key].hasOwnProperty("name"))
+    );
     
     let compRes = 0;
     return albums.sort((a,b) => {
