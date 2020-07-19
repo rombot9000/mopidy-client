@@ -35,42 +35,48 @@ function filterAlbumsByToken(albums, token) {
  * @param {string|number} b 
  */
 function customCompare(a,b) {
-    const strA = String(a).replace(/^(The|the|Die|die)\s/,"");
-    const strB = String(b).replace(/^(The|the|Die|die)\s/,"");
+    const strA = String(typeof a === "object" ? a.name : a).replace(/^(The|the|Die|die)\s/,"");
+    const strB = String(typeof b === "object" ? b.name : b).replace(/^(The|the|Die|die)\s/,"");
     return strA.localeCompare(strB);
 } 
 
 /**
  * 
  * @param {import("ViewModel/Album").Album[]} albums 
- * @param {string} albumSortKey
+ * @param {string[]} sortKeys
  */
-function sortAlbums(albums, sortKey) {
-    if(!sortKey) return albums;
+function sortAlbums(albums, sortKeys) {
 
-    const nullAlbum = Album(null);
-
-    if(typeof nullAlbum[sortKey] === "object") {
-
-        if(!nullAlbum[sortKey].hasOwnProperty("name")) return albums;
-        
-        return albums.sort((a,b) => {
-            if(a[sortKey] === null || b[sortKey] === null) return 0;
-            return customCompare(a[sortKey].name, b[sortKey].name);
-        });
+    if(!sortKeys || !Array.isArray(sortKeys) || !sortKeys.length) return albums;
+    
+    //remove unsortable attributes from sort list
+    {
+        const album = Album(null);
+        const filteredKeys = sortKeys.filter(key => 
+            album.hasOwnProperty(key) &&
+            // if key refers to an object, we sort using the name attribute of the object
+            (typeof album[key] != "object" || album[key].hasOwnProperty("name"))
+        );
     }
-
-    return albums.sort((a,b) => customCompare(a[sortKey], b[sortKey]));
+    
+    let compRes = 0;
+    return albums.sort((a,b) => {
+        for(let key of filteredKeys) {
+            compRes = customCompare(a[key], b[key]);
+            if( compRes !== 0 ) return compRes;
+        }
+        return 0;
+    });
 }
 
 export default createSelector(
     [
         state => state.library.filterToken,
-        state => state.library.albumSortKey,
+        state => state.library.albumSortKeys,
         state => state.library.albums
     ],
-    (filterToken, sortKey, albums) => {
+    (filterToken, sortKeys, albums) => {
         let filteredAlbums = filterAlbumsByToken(albums, filterToken);
-        return sortAlbums(filteredAlbums, sortKey);
+        return sortAlbums(filteredAlbums, sortKeys);
     }
 )

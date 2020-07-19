@@ -31,14 +31,14 @@ export function setFilter(token) {
 
 /**
  * Sort albums by key
- * @param {string} albumSortKey 
+ * @param {string[]} albumSortKeys 
  */
-export function sortAlbums(albumSortKey) {
-    writeSetting("albumSortKey", albumSortKey);
+export function sortAlbums(albumSortKeys) {
+    writeSetting("albumSortKeys", albumSortKeys);
     return {
         type: ACTION_TYPES.LIBRARY_ACTION,
         case: LIBRARY_ACTIONS.SET_SORT_KEY,
-        albumSortKey: albumSortKey
+        albumSortKeys: albumSortKeys
     };
 };
 
@@ -57,7 +57,7 @@ export function init() {
             artists: library.artists,
             albums: library.albums,
             tracks: library.tracks,
-            albumSortKey: await readSetting("albumSortKey")
+            albumSortKeys: await readSetting("albumSortKeys")
         });
 
     };

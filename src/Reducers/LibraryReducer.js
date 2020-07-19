@@ -5,7 +5,7 @@ import { ACTION_TYPES, LIBRARY_ACTIONS } from "Actions";
  * @property {import("ViewModel/Album").Album[]} albums
  * @property {import("ViewModel/Artist").Artist[]} artists
  * @property {import("ViewModel/Track").Track[]} tracks
- * @property {string} albumSortKey
+ * @property {string[]} albumSortKeys
  * @property {string} filterToken
  */
 
@@ -14,7 +14,7 @@ const initialState = {
     artists: [],
     albums: [],
     tracks: [],
-    albumSortKey: undefined,
+    albumSortKeys: [],
     filterToken: undefined
 }
 
@@ -34,7 +34,7 @@ export default (state = initialState, action) => {
                 artists: action.artists,
                 albums: action.albums, 
                 tracks: action.tracks,
-                albumSortKey: action.albumSortKey,
+                albumSortKeys: action.albumSortKeys || [],
             };
 
         case LIBRARY_ACTIONS.FETCH:
@@ -54,7 +54,7 @@ export default (state = initialState, action) => {
         case LIBRARY_ACTIONS.SET_SORT_KEY:
             return {
                 ...state,
-                albumSortKey: action.albumSortKey
+                albumSortKeys: action.albumSortKeys || []
             };
 
         default:

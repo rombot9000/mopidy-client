@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { NativeSelect, Switch } from "@material-ui/core";
+import { Switch } from "@material-ui/core";
 
 import SettingsMenu from "Components/SettingsMenu";
 import ScrollableModal from "Components/ScrollableModal";
+import MultiSelect from "Components/MultiSelect";
 
 import { Album } from "ViewModel";
 import { LibraryActions, NotifyActions, ViewActions } from "Actions";
@@ -14,14 +15,14 @@ import { LibraryActions, NotifyActions, ViewActions } from "Actions";
  */
 const mapStateToProps = (state) => ({
     open: state.view.settingsMenuOpen,
-    albumSortKey: state.library.albumSortKey,
+    albumSortKeys: state.library.albumSortKeys,
     networkState: state.network,
     doNotify: state.notify.enabled,
 });
   
 const mapDispatchToProps = (dispatch) => ({
     onClose: () => dispatch(ViewActions.toggleSettingModal()),
-    onSetAlbumSortKey: event => dispatch(LibraryActions.sortAlbums(event.target.value)),
+    onSetAlbumSortKeys: event => dispatch(LibraryActions.sortAlbums(event.target.value)),
     onToggleDoNotify: event => dispatch(NotifyActions.enableNotifications(event.target.checked))
 });
 
@@ -35,27 +36,18 @@ const mapDispatchToProps = (dispatch) => ({
  * @param {Object} props
  * @param {boolean} props.open
  * @param {Function} props.onClose
- * @param {string} props.albumSortKey
+ * @param {string[]} props.albumSortKeys
  * @param {SettingsCallback} props.onSetAlbumSortKey
  * @param {{socketState: string, serverState: string}} props.networkState
  * @param {boolean} doNotify
  * @param {SettingsCallback} onToggleDoNotify
  */
-function SettingsModal({open, onClose, albumSortKey, onSetAlbumSortKey, networkState, doNotify, onToggleDoNotify}) {
+function SettingsModal({open, onClose, albumSortKeys, onSetAlbumSortKeys, networkState, doNotify, onToggleDoNotify}) {
 
     const options = [
         {
             text: "Sort albums by",
-            input:  (
-                <NativeSelect
-                    value={albumSortKey}
-                    onInput={onSetAlbumSortKey}
-                >
-                    {Object.keys(Album(null)).map(key => (
-                        <option key={key} value={key}>{key}</option>
-                    ))}
-                </NativeSelect>
-            )
+            input: (<MultiSelect options={Object.keys(Album(null))} selection={albumSortKeys} onSelect={onSetAlbumSortKeys}/>)
         },
         {
             text: "Show server messages",
