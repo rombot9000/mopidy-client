@@ -15,6 +15,4 @@ export default (ref, playbackState) => {
         
     }, [ref, playbackState]);
 
-}
-
-   
+};

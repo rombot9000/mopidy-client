@@ -12,4 +12,4 @@ export default (ref) => {
     }, [ref]);
 
     return height
-}
+};
