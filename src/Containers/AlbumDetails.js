@@ -23,15 +23,16 @@ const useStyles = makeStyles(theme => ({
     },
     container: {
         spacing: 0,
-        maxWidth: "100%",
-        maxHeight: "100%",
-    },
-    cover: {
         width: "100%",
         height: "100%",
     },
+    cover: {
+        width: "100%",
+        maxHeight: "100%",
+    },
     content: {
         width: "100%",
+        maxHeight: "100%",
         display: "flex",
         flexDirection: "column",
         paddingTop: theme.spacing(1),
