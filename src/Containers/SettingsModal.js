@@ -22,7 +22,7 @@ const mapStateToProps = (state) => ({
   
 const mapDispatchToProps = (dispatch) => ({
     onClose: () => dispatch(ViewActions.toggleSettingModal()),
-    onSetAlbumSortKeys: event => dispatch(LibraryActions.sortAlbums(event.target.value)),
+    onSetAlbumSortKeys: keys => dispatch(LibraryActions.sortAlbums(keys)),
     onToggleDoNotify: event => dispatch(NotifyActions.enableNotifications(event.target.checked))
 });
 
