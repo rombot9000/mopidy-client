@@ -31,9 +31,9 @@ const AlbumGrid = ({albums, dispatch, ...forwardProps}) => {
     const classes = useStyles();
     const skeleton = (
         <React.Fragment>
-            <Skeleton variant="rect" className={classes.square}/>
-            <Skeleton variant="text" />
-            <Skeleton variant="text" />
+            <Skeleton animation={false} variant="rect" className={classes.square}/>
+            <Skeleton animation={false} variant="text" />
+            <Skeleton animation={false} variant="text" />
         </React.Fragment>
     )
 

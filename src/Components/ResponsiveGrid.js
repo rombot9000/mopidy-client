@@ -9,9 +9,9 @@ import Placeholder from "./Placeholder";
 
 const skeleton = ( 
     <React.Fragment>
-        <Skeleton variant="rect"/>
-        <Skeleton variant="text" />
-        <Skeleton variant="text" />
+        <Skeleton animation={false} variant="rect"/>
+        <Skeleton animation={false} variant="text" />
+        <Skeleton animation={false} variant="text" />
     </React.Fragment>
 );
 
