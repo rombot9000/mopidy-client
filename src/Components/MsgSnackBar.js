@@ -12,25 +12,22 @@ import { Snackbar, Button } from '@material-ui/core';
  * @param {Function} props.actionCreator
  * @param {Function} props.onButtonClick
  */
-export default function({msg, autoHideDuration, onClose, actionText, actionCreator, onButtonClick, ...props}) {
-
-    return (
-        <Snackbar
-            {...props}
-            open={!!msg}
-            message={msg}
-            autoHideDuration={autoHideDuration}
-            onClose={onClose}
-            action={actionText ? (
-                <Button 
-                    color="secondary" 
-                    size="small" 
-                    onClick={() => onButtonClick(actionCreator)}
-                >
-                    {actionText}
-                </Button>
-            ) : null
-            }
-        />
-    );
-}
+export default ({msg, autoHideDuration, onClose, actionText, actionCreator, onButtonClick, ...props}) => (
+    <Snackbar
+        {...props}
+        open={!!msg}
+        message={msg}
+        autoHideDuration={autoHideDuration}
+        onClose={onClose}
+        action={actionText ? (
+            <Button 
+                color="secondary" 
+                size="small" 
+                onClick={() => onButtonClick(actionCreator)}
+            >
+                {actionText}
+            </Button>
+        ) : null
+        }
+    />
+)

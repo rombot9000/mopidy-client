@@ -2,8 +2,8 @@ import * as LibraryActions from "./LibraryActions";
 import * as PlaybackActions from "./PlaybackActions";
 import * as TracklistActions from "./TracklistActions";
 import * as ViewActions from "./ViewActions";
-import * as NetworkActions from "./NetworkActions"
-import * as NotifyActions from "./NotifyActions"
+import * as NetworkActions from "./NetworkActions";
+import * as NotifyActions from "./NotifyActions";
 
 const ACTION_TYPES = {
     LIBRARY_ACTION: 1,
