@@ -1,16 +1,13 @@
 import React from "react";
 
+import { Select, Input, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Select, Input, MenuItem, Chip } from "@material-ui/core";
-
 
 const useStyles = makeStyles(theme => ({
-    chip: {
-        marginLeft: theme.spacing(0.5),
-        marginRight: theme.spacing(0.5),
+    select: {
+        maxWidth: "100%"
     }
 }));
-
 
 /**
  * @callback SelectCallback
@@ -25,34 +22,22 @@ const useStyles = makeStyles(theme => ({
  * @param {SelectCallback} props.onSelect
  */
 export default ({options, selection, onSelect}) => {
+    const rSelection = [...selection].reverse();
     const classes = useStyles();
 
     return (
-        <React.Fragment>
-            <div>
-                {selection.map((item, i) => (
-                    <Chip
-                        key={i}
-                        className={classes.chip}
-                        label={`${i+1}. ${item}`}
-                        onDelete={(event) => {
-                            event.preventDefault();
-                            selection.splice(i,1);
-                            onSelect([...selection]);
-                        }}
-                    />
-                ))}
-            </div>
-            <Select
-                multiple
-                value={selection}
-                onChange={event => onSelect(event.target.value)}
-                input={<Input placeholder="Select sort keys..."/>}
-            >
-                {options.filter(o => !selection.includes(o)).map(key => (
-                    <MenuItem key={key} value={key}>{key}</MenuItem>
-                ))}
-            </Select>
-        </React.Fragment>
-    )
+        <Select
+            className={classes.select}
+            multiple
+            value={selection}
+            onChange={event => onSelect(event.target.value)}
+            input={<Input placeholder="Select sort keys..."/>}
+        >
+            {options.sort((a,b) => rSelection.indexOf(b)-rSelection.indexOf(a)).map(key => (
+                <MenuItem key={key} value={key}>
+                    {selection.includes(key) ? `${selection.indexOf(key) + 1}. ${key}` : key}
+                </MenuItem>
+            ))}
+        </Select>
+    );
 };
