@@ -41,8 +41,11 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: theme.spacing(2),
     },
     albumInfo : {
-        marginBottom: theme.spacing(1),
-        fontWeight: "lighter"
+        paddingBottom: theme.spacing(1),
+        fontWeight: "lighter",
+        // fix tracklist scrolling artifact issue
+        backgroundColor: "white",
+        zIndex: 1,
     },
     tracklist: {
         width: "100%",
