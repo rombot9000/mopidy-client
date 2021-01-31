@@ -1,3 +1,4 @@
+import PREVAL from "preval.macro";
 import Mopidy from "mopidy";
 
 import LibraryAPI from "./LibraryAPI";
@@ -6,12 +7,10 @@ import PlaybackAPI from "./PlaybackAPI";
 import { handleMpdEvent, handleServerEvent, handleSocketEvent } from "./EventHandler";
 
 // Creat instance of Mopidy API class
-const MPD_ARGS = {
-    autoConnect: false
-};
-if(process.env.NODE_ENV !== "production") {
-    MPD_ARGS.webSocketUrl = "ws://raspberrypi.fritz.box:8080/mopidy/ws/";
-}
+const MPD_ARGS = PREVAL`module.exports = {
+    autoConnect: false,
+    webSocketUrl: process.env.NODE_ENV === "production" ? undefined : "ws://raspberrypi.fritz.box:8080/mopidy/ws/"
+};`
 export const mopidy = new Mopidy(MPD_ARGS);
 
 // Create instances of API wrapper classes and export

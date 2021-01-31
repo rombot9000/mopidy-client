@@ -1,7 +1,8 @@
+import PREVAL from "preval.macro";
+
 import Artist from "./Artist";
 
-var SERVER_IP = process.env.NODE_ENV === "production" ? "" : "http://raspberrypi.fritz.box:8080";
-
+const SERVER_IP = PREVAL`module.exports = process.env.NODE_ENV === "production" ? "" : "http://raspberrypi.fritz.box:8080"`;
 
 /**
  * @typedef Album
