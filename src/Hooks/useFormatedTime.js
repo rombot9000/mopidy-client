@@ -1,7 +1,7 @@
 import React from "react";
 
 /**
- * @param {number} length Track length in msecs
+ * @param {number} length Track length in seconds
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} playbackState
  * @param {number} playbackTimePosition current time position in mesecs
  */
@@ -10,12 +10,17 @@ export default (length, playbackState, playbackTimePosition) => {
     const [seconds, setSeconds] = React.useReducer(
         (seconds, action) => {
             switch(action.type) {
-                case "setMillisecs": return Math.floor(action.value/1000);
-                case "increment": return seconds + 1;
+                case "set": return Math.floor(action.value/1000);
+                
+                case "inc": 
+                    if(seconds < length/1000) return seconds + 1;
+                    return seconds;
+
                 default: return seconds;
             }
         },
-        Math.floor((playbackState === "stopped" ? length/1000: playbackTimePosition/1000))
+        //initial value
+        playbackState === "stopped" ? Math.floor(length/1000) : Math.floor(playbackTimePosition/1000)
     );
 
     React.useEffect(() => {
@@ -23,16 +28,16 @@ export default (length, playbackState, playbackTimePosition) => {
         switch(playbackState) {
 
             case "stopped":
-                setSeconds({type: "setMillisecs", value: length});
+                setSeconds({type: "set", value: length});
                 return;
 
             case "paused":
-                setSeconds({type: "setMillisecs", value: playbackTimePosition});
+                setSeconds({type: "set", value: playbackTimePosition});
                 return;
             
             case "playing":
-                setSeconds({type: "setMillisecs", value: playbackTimePosition});
-                const interval = setInterval(() => setSeconds({type: "increment"}), 1000);
+                setSeconds({type: "set", value: playbackTimePosition});
+                const interval = setInterval(() => setSeconds({type: "inc"}), 1000);
                 return () => clearInterval(interval);
 
             default: console.warn("Unknonw playback state:", playbackState);
