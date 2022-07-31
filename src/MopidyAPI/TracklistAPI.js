@@ -48,15 +48,60 @@ export default class TracklistAPI extends BaseAPI {
      */
     async set(tracks) {
 
-        if(!this._api) return;
+        if(!this.clear()) return;
         
-        await this._api.clear({})
+        return await this.add(tracks);
+    }   
+
+
+    /**
+     * Clears current tracklist
+     * @returns true on success, false otherwise
+     */
+    async clear() {
+
+        if(!this._api) return false;
+        
+        await this._api.clear({});
+
+        return true;
+    }
+
+    /**
+     * Add Tracks to tracklist at given position.
+     * If position is undefined or larger than tracklist size, tracks are added to back
+     * Supports negative indexing 
+     * @param {import("ViewModel/Track").Track[]} tracks 
+     * @param {Number?} position Position in tracklist to insert
+     * @returns 
+     */
+    async add(tracks, position) {
+
+        if(!this._api) return false;
+        
+        if(position) {
+            if(position < 0)position = this._tracklist.length + position;
+            if(position > this._tracklist.length) position = this._tracklist.length;
+            else if(position < 0) position = 0;
+        }
         
         this._tracklist = await this._api.add({
             "tracks": null,
-            "at_position": null,
+            "at_position": position,
             "uris": tracks.map(t => t._uri)
         });
+
+        return true;
+    }
+
+    /**
+     * 
+     * @returns The track id of the current track playing
+     */
+    async getCurrentTrackId() {
+        if(!this._api) return null;
+
+        return await this._api.index({});
     }
 
     /**

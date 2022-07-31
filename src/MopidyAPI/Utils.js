@@ -78,9 +78,41 @@ export async function fetchTracklist() {
 
 }
 
+/**
+ * Replace current tracklist
+ * @param {import("ViewModel/Track").Track[]} tracks 
+ * @returns 
+ */
 export async function setTracklist(tracks) {
 
     return await notifyUserOnError(Tracklist.set(tracks));
+
+}
+
+/**
+ * Add to current tracklist at postion
+ * @param {import("ViewModel/Track").Track[]} tracks 
+ * @param {number} position 
+ * @returns 
+ */
+export async function addToTracklist(tracks, position) {
+
+    return await notifyUserOnError(Tracklist.add(tracks, position));
+
+}
+
+/**
+ * Add to current tracklist at postion
+ * @param {import("ViewModel/Track").Track[]} tracks 
+ * @returns 
+ */
+ export async function playNext(tracks) {
+
+    const currentTrackId = await notifyUserOnError(Tracklist.getCurrentTrackId());
+
+    const position = (currentTrackId == null) ? 0 : currentTrackId + 1; 
+
+    return await notifyUserOnError(Tracklist.add(tracks, position));
 
 }
 
