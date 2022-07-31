@@ -1,10 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 
+// Matrial ui
 import { Typography, Fab, Fade, makeStyles } from "@material-ui/core";
-import { PlayArrow } from "@material-ui/icons";
+import { PlayArrow as PlayIcon } from "@material-ui/icons";
 
+// Own
 import SquareImage from "Components/SquareImage";
+import AlbumContextMenu from "./AlbumContextMenu";
 import { PlaybackActions, ViewActions } from "Actions";
 
 /** 
@@ -20,10 +23,15 @@ const useStyles = makeStyles(theme => ({
     cover: {
         position: "relative"
     },
-    iconBar: {
+    iconLeft: {
         position: "absolute",
         bottom: theme.spacing(0.5),
         left: theme.spacing(0.5)
+    },
+    iconRight: {
+        position: "absolute",
+        bottom: theme.spacing(0.5),
+        right: theme.spacing(0.5)
     },
     artistName: {
         fontWeight: "normal"
@@ -42,6 +50,7 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
     const classes = useStyles();
 
     const [highlight, setHighlight] = React.useState(false);
+
     return (
         <React.Fragment>
             <SquareImage
@@ -53,11 +62,19 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
             >
                 <Fade in={highlight}>
                     <Fab
-                        className={classes.iconBar}
+                        className={classes.iconLeft}
                         size="small"
                         onClick={onPlayIconClick}
                     >
-                        <PlayArrow/>
+                        <PlayIcon/>
+                    </Fab>
+                </Fade>
+                <Fade in={highlight}>
+                    <Fab
+                        className={classes.iconRight}
+                        size="small"
+                    >
+                        <AlbumContextMenu album={album}/>
                     </Fab>
                 </Fade>
             </SquareImage>
