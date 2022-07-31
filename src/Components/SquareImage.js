@@ -2,6 +2,8 @@ import React from "react";
 
 import { makeStyles, Paper } from "@material-ui/core";
 
+import StopPropagation from "./StopPropagation";
+
 const useStyles = makeStyles(theme => ({
     paper: {
         width: "100%",
@@ -19,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 /**
  * @param {SquareImageProps} props 
  */
-function SquareImage({src, className, ...paperProps}) {
+function SquareImage({src, className, children, ...paperProps}) {
 
     const classes = useStyles();
 
@@ -31,6 +33,9 @@ function SquareImage({src, className, ...paperProps}) {
                 backgroundSize: "100% 100%",
                 backgroundColor: "#cccccc"
             }}>
+            <StopPropagation>
+                {children}
+            </StopPropagation>
         </Paper>
     );
 }
