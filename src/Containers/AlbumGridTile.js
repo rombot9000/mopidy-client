@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 
 // Matrial ui
-import { Typography, Fab, Fade, makeStyles } from "@material-ui/core";
-import { PlayArrow as PlayIcon } from "@material-ui/icons";
+import { Typography, Fab, Fade, makeStyles, IconButton, Grid } from "@material-ui/core";
+import { PlayArrow as PlayIcon, MoreVert as MenuIcon } from "@material-ui/icons";
 
 // Own
 import SquareImage from "Components/SquareImage";
@@ -51,14 +51,21 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
 
     const [highlight, setHighlight] = React.useState(false);
 
+    const[anchorEl, setAnchorEl] = React.useState(null);
+    const handleRef = React.useCallback(node => {
+        if (node !== null) setAnchorEl(node);
+      }, []);
+
+
     return (
-        <React.Fragment>
+        <div 
+            onMouseOver={() => {setHighlight(true)}}
+            onMouseOut={() => {setHighlight(false)}}
+        >
             <SquareImage
                 className={classes.cover}
                 src={album.cover}
                 onClick={onClick}
-                onMouseEnter={() => {setHighlight(true)}}
-                onMouseLeave={() => {setHighlight(false)}}
             >
                 <Fade in={highlight}>
                     <Fab
@@ -69,20 +76,18 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
                         <PlayIcon/>
                     </Fab>
                 </Fade>
-                <Fade in={highlight}>
-                    <Fab
-                        className={classes.iconRight}
-                        size="small"
-                    >
-                        <AlbumContextMenu album={album}/>
-                    </Fab>
-                </Fade>
             </SquareImage>
-            <div>
-                <Typography variant="subtitle2" className={classes.albumName}>{album.name}</Typography>
-                <Typography variant="subtitle2" className={classes.artistName}>{album.artist.name}</Typography>
-            </div>
-        </React.Fragment>
+            <Grid container direction="row">
+                <Grid item xs>
+                    <Typography variant="subtitle2" className={classes.albumName}>{album.name}</Typography>
+                    <Typography variant="subtitle2" className={classes.artistName}>{album.artist.name}</Typography>
+                </Grid>
+                <Grid item xs="auto">
+                    <Fade in={highlight}><IconButton ref={handleRef}><MenuIcon/></IconButton></Fade>
+                    <AlbumContextMenu album={album} anchorEl={anchorEl}/>
+                </Grid>
+            </Grid>
+        </div>
     );
 
 };
