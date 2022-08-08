@@ -71,11 +71,11 @@ export function set(tracks) {
 
 /**
  * 
- * @param {number} tlid Tracklist item id
+ * @param {import("ViewModel/Track").TracklistItem} item Tracklist item to remove
  */
- export function removeTrack(tlid) {
+ export function removeTrack(item) {
     return async dispatch => {
-        await Mopidy.addToTracklist(tlid);
+        await Mopidy.removeFromTracklist(item);
         dispatch ({
             type: ACTION_TYPES.TRACKLIST_ACTION,
             case: TRACKLIST_ACTIONS.REMOVE_TRACK,

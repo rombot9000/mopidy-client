@@ -1,14 +1,15 @@
 import React from "react";
 
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, IconButton, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
-import { PlayArrowRounded, Pause } from "@material-ui/icons";
+import { PlayArrowRounded, Pause, Clear } from "@material-ui/icons";
 
 import CoverButton from "./CoverButton";
 
 import useFormatedTime from "Hooks/useFormatedTime";
 import useHeight from "Hooks/useHeight";
 import useScrollToIfActive from "Hooks/useScrollToIfActive";
+import StopPropagation from "./StopPropagation";
 
 const useStyles = makeStyles({
     cover: {
@@ -24,12 +25,21 @@ const useStyles = makeStyles({
 
 /**
  * 
- * @param {Object} props
- * @param {import("ViewModel/Track").TracklistItem} props.item
- * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
- * @param {number} props.playbackTimePosition
+ * @typedef TracklistItemProps
+ * @property {import("ViewModel/Track").TracklistItem} props.item
+ * @property {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
+ * @property {number} props.playbackTimePosition
+ * @property {Function} props.onTrackClick
+ * @property {Function} props.onRemoveClick
+ * @property {Function} props.dispatch Filter out reducx dispatch property from grid props
  */
-const TracklistItem = ({item, playbackState, playbackTimePosition, scrollToIfActive, dispatch, ...gridProps}) => {
+
+/**
+ * 
+ * @param {TracklistItemProps} props 
+ * @returns 
+ */
+const TracklistItem = ({item, playbackState, playbackTimePosition, onTrackClick, onRemoveClick, scrollToIfActive, dispatch, ...gridProps}) => {
 
     const [hover, setHover] = React.useState(false);
 
@@ -46,13 +56,17 @@ const TracklistItem = ({item, playbackState, playbackTimePosition, scrollToIfAct
             container
             {...gridProps}
             direction="row"
-            onMouseOver={() => setHover(true)}
-            onMouseOut={() => setHover(false)}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
             spacing={2}
             alignItems="center"
+            onClick={onTrackClick}
         >
             <Grid item xs className={classes.cover}>
-               <CoverButton src={item.track.album.cover} showButton={hover}>
+               <CoverButton
+                src={item.track.album.cover}
+                showButton={hover}
+                >
                     {playbackState === "playing" ? <Pause/> : <PlayArrowRounded/>}
                 </CoverButton>
             </Grid>
@@ -60,8 +74,17 @@ const TracklistItem = ({item, playbackState, playbackTimePosition, scrollToIfAct
                 <Typography className={classes.trackName} variant="body1" align="left" noWrap>{item.track.name}</Typography>
                 <Typography className={classes.text} variant="body1" align="left" noWrap>{item.track.artist.name}</Typography>
             </Grid>
-            <Grid item xs={2} zeroMinWidth>
-                <Typography className={classes.text} variant="body1" align="right" noWrap>{timeString}</Typography>
+            <Grid item>
+                
+            </Grid>
+            <Grid item xs={2} zeroMinWidth>{hover ? 
+                <StopPropagation>
+                    <IconButton onClick={onRemoveClick}>
+                        <Clear></Clear>
+                    </IconButton>
+                </StopPropagation>
+                :
+                <Typography className={classes.text} variant="body1" align="right" noWrap>{timeString}</Typography>}
             </Grid>
         </Grid>
     );

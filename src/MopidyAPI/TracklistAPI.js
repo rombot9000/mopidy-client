@@ -94,12 +94,19 @@ export default class TracklistAPI extends BaseAPI {
         return true;
     }
 
-    async remove(tracklistId) {
+    /**
+     * 
+     * @param {import("ViewModel/Track").TracklistItem} item 
+     * @returns 
+     */
+    async remove(item) {
+        console.log(item);
+
         if(!this._api) return false;
         
-        if(!tracklistId) return false;
+        if(!item) return false;
 
-        await this._api.remove({'tlid': [tracklistId]});
+        await this._api.remove({criteria: {tlid: [item.tlid]}});
     }
 
     /**
@@ -118,6 +125,8 @@ export default class TracklistAPI extends BaseAPI {
      * @returns {number} id of tracklist item
      */
     getTrackId(track) {
+
+        console.warn("DEPRACTED FUNCTIONS!")
 
         const track_tl_item = this._tracklist.find(tl_item => tl_item.track.uri === track._uri);
 

@@ -15,18 +15,16 @@ import TracklistItem from "./TracklistItem";
  * @param {Function} props.onTrackClick
  * @param {import("ViewModel/Track").Track} props.playbackTrack
  * @param {boolean} props.scrollToActive
+ * @param {*} props.dispatch Filter out redux dispatch from forwardProps
  */
-const Tracklist = ({items, onTrackClick, playbackTrack, scrollToActive, ...forwardProps}) => {
+const Tracklist = ({items, onTrackClick, playbackTrack, scrollToActive, dispatch, ...gridProps}) => {
 
     return (
-        <GridList spacing={1} divider {...forwardProps}>
+        <GridList spacing={1} divider {...gridProps}>
             {items.map((item, index) => (
                 <TracklistItem
                     key={index}
                     item={item}
-                    onClick={() => {
-                        onTrackClick(item, item.track._uri === playbackTrack._uri)
-                    }}
                     scrollToIfActive={scrollToActive}
                 />
             ))}
@@ -42,8 +40,4 @@ const mapStateToProps = (state) => ({
     playbackTrack: state.playback.track,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    onTrackClick: (item, isActive) => dispatch(isActive ? PlaybackActions.toggle() : PlaybackActions.playTracklistItem(item))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Tracklist);
+export default connect(mapStateToProps)(Tracklist);

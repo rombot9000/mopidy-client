@@ -95,12 +95,11 @@ function MenuDrawer({open, onClose, onSettingsItemClick, onClearTracklistClick})
                 </ListItem>
                 <Divider/>
             </List>
-            //TODO: fix vertival placement of clear icon
-            <Grid
-                container
+            {/* TODO: fix vertival placement of clear icon */}
+            <Grid container
                 direction="row"
                 alignItems="center"
-                justifyContent="space-between"
+                justify="space-between"
             >
                 <Grid item xs>
                     <Typography className={classes.text} variant="h6">Now Playing</Typography>
