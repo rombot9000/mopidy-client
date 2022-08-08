@@ -3,13 +3,20 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Typography } from "@material-ui/core";
-import { QueueMusic, MusicNote, LibraryMusic, AlbumRounded, Tune } from "@material-ui/icons";
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Typography, IconButton, Grid } from "@material-ui/core";
+import {
+    QueueMusic as PlaylistIcon,
+    MusicNote as TracksIcon,
+    LibraryMusic as ArtistsIcon,
+    AlbumRounded as AlbumsIcon,
+    Tune as SettingsIcon,
+    Clear as ClearTracklistIcon
+} from "@material-ui/icons";
 
 import { ListLinkItem } from "Components";
 import Tracklist from "./Tracklist";
 
-import { ViewActions } from "Actions";
+import { ViewActions, TracklistActions } from "Actions";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -58,7 +65,7 @@ const useStyles = makeStyles(theme => ({
  * @param {Function} props.onClose
  * @param {Function} props.onSettingsItemClick
  */
-function MenuDrawer({open, onClose, onSettingsItemClick}) {
+function MenuDrawer({open, onClose, onSettingsItemClick, onClearTracklistClick}) {
 
     const classes = useStyles();
 
@@ -77,18 +84,33 @@ function MenuDrawer({open, onClose, onSettingsItemClick}) {
                     </ListItemText>
                 </ListItem>
                 <Divider/>
-                <ListLinkItem to="/albums" icon={<AlbumRounded/>} text="Albums"/>
-                <ListLinkItem to="/artists" icon={<LibraryMusic/>} text="Artists"/>
-                <ListLinkItem to="/tracks" icon={<MusicNote/>} text="Tracks"/>
-                <ListLinkItem to="/playlists" icon={<QueueMusic/>} text="Tracklists"/>
+                <ListLinkItem to="/albums" icon={<AlbumsIcon/>} text="Albums"/>
+                <ListLinkItem to="/artists" icon={<ArtistsIcon/>} text="Artists"/>
+                <ListLinkItem to="/tracks" icon={<TracksIcon/>} text="Tracks"/>
+                <ListLinkItem to="/playlists" icon={<PlaylistIcon/>} text="Playlists"/>
                 <Divider/>
                 <ListItem button onClick={onSettingsItemClick}>
-                    <ListItemIcon><Tune/></ListItemIcon>
+                    <ListItemIcon><SettingsIcon/></ListItemIcon>
                     <ListItemText>Settings</ListItemText>
                 </ListItem>
                 <Divider/>
             </List>
-            <Typography className={classes.text} variant="h6">Now Playing</Typography>
+            //TODO: fix vertival placement of clear icon
+            <Grid
+                container
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+            >
+                <Grid item xs>
+                    <Typography className={classes.text} variant="h6">Now Playing</Typography>
+                </Grid>
+                <Grid item xs="auto">
+                    <IconButton onClick={onClearTracklistClick}>
+                        <ClearTracklistIcon/>
+                    </IconButton>
+                </Grid>
+            </Grid>
             <Tracklist className={classes.tracklist} scrollToActive/>
         </Drawer>
     );
@@ -103,7 +125,8 @@ const mapStateToProps = (state) => ({
   
 const mapDispatchToProps = (dispatch) => ({
     onClose: () => dispatch(ViewActions.toggleMenuDrawer()),
-    onSettingsItemClick: () => dispatch(ViewActions.toggleSettingModal())
+    onSettingsItemClick: () => dispatch(ViewActions.toggleSettingModal()),
+    onClearTracklistClick: () => dispatch(TracklistActions.clear()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuDrawer);

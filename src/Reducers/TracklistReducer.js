@@ -30,6 +30,7 @@ export default (state = initialState, action) => {
         case TRACKLIST_ACTIONS.SET:
         case TRACKLIST_ACTIONS.ADD:
         case TRACKLIST_ACTIONS.PLAY_NEXT:
+        case TRACKLIST_ACTIONS.CLEAR:
             return state;
 
         default:
