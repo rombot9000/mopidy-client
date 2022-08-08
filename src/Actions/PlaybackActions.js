@@ -84,6 +84,18 @@ export function updateTrack(track) {
     };
 }
 
+/**
+ * Play item on tracklist
+ * @param {import("ViewModel/Track").TracklistItem} item 
+ */
+ export function playTracklistItem(item) {
+    Mopidy.playTracklistItem(item);
+    return {
+        type: ACTION_TYPES.PLAYBACK_ACTION,
+        case: PLAYBACK_ACTIONS.PLAY
+    };
+};
+
 
 /**
  * 

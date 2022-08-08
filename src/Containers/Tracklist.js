@@ -25,7 +25,7 @@ const Tracklist = ({items, onTrackClick, playbackTrack, scrollToActive, ...forwa
                     key={index}
                     item={item}
                     onClick={() => {
-                        onTrackClick(item, items, item.track._uri === playbackTrack._uri)
+                        onTrackClick(item, item.track._uri === playbackTrack._uri)
                     }}
                     scrollToIfActive={scrollToActive}
                 />
@@ -43,7 +43,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onTrackClick: (item, items, isActive) => dispatch(isActive ? PlaybackActions.toggle() : PlaybackActions.play(item.track, items))
+    onTrackClick: (item, isActive) => dispatch(isActive ? PlaybackActions.toggle() : PlaybackActions.playTracklistItem(item))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tracklist);

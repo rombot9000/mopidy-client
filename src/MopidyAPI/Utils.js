@@ -37,6 +37,17 @@ export async function playTracklist(tracks, track) {
 
 };
 
+
+/**
+ * Play track of current tracklist
+ * @param {import("ViewModel/Track").TracklistItem} item
+ */
+export async function playTracklistItem(item) {
+    
+    await notifyUserOnError(Playback.playTrack(item.tlid));
+
+}
+
 /**
  * 
  * @param {import("./PlaybackAPI").PlaybackCmd} cmd 
