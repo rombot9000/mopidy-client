@@ -11,7 +11,6 @@ export default createSelector(
      */
     (tracklistItems, libraryTracks) => {
         return tracklistItems.map(item => {
-            console.log(item);
             return {
                 tlid: item.tlid,
                 track: libraryTracks.find(t => t._uri === item.track._uri) || item.track
