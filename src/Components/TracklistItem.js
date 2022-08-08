@@ -60,6 +60,7 @@ const TracklistItem = ({item, playbackState, playbackTimePosition, onTrackClick,
             onMouseLeave={() => setHover(false)}
             spacing={2}
             alignItems="center"
+            justify="space-between"
             onClick={onTrackClick}
         >
             <Grid item xs className={classes.cover}>
@@ -77,10 +78,10 @@ const TracklistItem = ({item, playbackState, playbackTimePosition, onTrackClick,
             <Grid item>
                 
             </Grid>
-            <Grid item xs={2} zeroMinWidth>{hover ? 
+            <Grid item xs="auto" zeroMinWidth>{hover ? 
                 <StopPropagation>
-                    <IconButton onClick={onRemoveClick}>
-                        <Clear></Clear>
+                    <IconButton onClick={onRemoveClick} size="small">
+                        <Clear/>
                     </IconButton>
                 </StopPropagation>
                 :

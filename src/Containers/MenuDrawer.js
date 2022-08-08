@@ -104,8 +104,8 @@ function MenuDrawer({open, onClose, onSettingsItemClick, onClearTracklistClick})
                 <Grid item xs>
                     <Typography className={classes.text} variant="h6">Now Playing</Typography>
                 </Grid>
-                <Grid item xs="auto">
-                    <IconButton onClick={onClearTracklistClick}>
+                <Grid item xs={1}>
+                    <IconButton onClick={onClearTracklistClick} size="small">
                         <ClearTracklistIcon/>
                     </IconButton>
                 </Grid>
