@@ -7,25 +7,25 @@ import { PlaybackActions } from "Actions";
 
 import { GridList } from "Components";
 
-import TracklistTrack from "./TracklistTrack";
+import TracklistItem from "./TracklistItem";
 
 /**
  * @param {Object} props
- * @param {import("ViewModel/Track").Track[]} props.tracks 
+ * @param {import("ViewModel/Track").TracklistItem[]} props.items 
  * @param {Function} props.onTrackClick
  * @param {import("ViewModel/Track").Track} props.playbackTrack
  * @param {boolean} props.scrollToActive
  */
-const Tracklist = ({tracks, onTrackClick, playbackTrack, scrollToActive, ...forwardProps}) => {
+const Tracklist = ({items, onTrackClick, playbackTrack, scrollToActive, ...forwardProps}) => {
 
     return (
         <GridList spacing={1} divider {...forwardProps}>
-            {tracks.map((track, index) => (
-                <TracklistTrack
+            {items.map((item, index) => (
+                <TracklistItem
                     key={index}
-                    track={track}
+                    item={item}
                     onClick={() => {
-                        onTrackClick(track, tracks, track._uri === playbackTrack._uri)
+                        onTrackClick(item, items, item.track._uri === playbackTrack._uri)
                     }}
                     scrollToIfActive={scrollToActive}
                 />
@@ -38,12 +38,12 @@ const Tracklist = ({tracks, onTrackClick, playbackTrack, scrollToActive, ...forw
  * @param {import("Reducers").State} state 
  */
 const mapStateToProps = (state) => ({
-    tracks: selectTracklistTracks(state),
+    items: selectTracklistTracks(state),
     playbackTrack: state.playback.track,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onTrackClick: (track, tracks, isActive) => dispatch(isActive ? PlaybackActions.toggle() : PlaybackActions.play(track, tracks))
+    onTrackClick: (item, items, isActive) => dispatch(isActive ? PlaybackActions.toggle() : PlaybackActions.play(item.track, items))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tracklist);

@@ -7,6 +7,7 @@ export const TRACKLIST_ACTIONS = {
     FETCH: "tracklistActions.Fetch",
     SET: "tracklistActions.Set",
     CLEAR: "tracklistActions.Clear",
+    REMOVE_TRACK: "tracklistActions.RemoveTrack",
     ADD: "tracklistActions.Add",
     PLAY_NEXT: "tracklistActions.PlayNext",
 };
@@ -22,19 +23,6 @@ export function set(tracks) {
         dispatch ({
             type: ACTION_TYPES.TRACKLIST_ACTION,
             case: TRACKLIST_ACTIONS.SET,
-        });
-    };
-};
-
-/**
- * Clear current tracklist
- */
- export function clear() {
-    return async dispatch => {
-        await Mopidy.clearTracklist();
-        dispatch ({
-            type: ACTION_TYPES.TRACKLIST_ACTION,
-            case: TRACKLIST_ACTIONS.CLEAR,
         });
     };
 };
@@ -58,12 +46,39 @@ export function set(tracks) {
  * 
  * @param {import("ViewModel/Track").Track[]} tracks
  */
- export function playNext(tracks, ) {
+ export function playNext(tracks) {
     return async dispatch => {
         await Mopidy.playNext(tracks);
         dispatch ({
             type: ACTION_TYPES.TRACKLIST_ACTION,
             case: TRACKLIST_ACTIONS.PLAY_NEXT,
+        });
+    };
+};
+
+/**
+ * Clear current tracklist
+ */
+ export function clear() {
+    return async dispatch => {
+        await Mopidy.clearTracklist();
+        dispatch ({
+            type: ACTION_TYPES.TRACKLIST_ACTION,
+            case: TRACKLIST_ACTIONS.CLEAR,
+        });
+    };
+};
+
+/**
+ * 
+ * @param {number} tlid Tracklist item id
+ */
+ export function removeTrack(tlid) {
+    return async dispatch => {
+        await Mopidy.addToTracklist(tlid);
+        dispatch ({
+            type: ACTION_TYPES.TRACKLIST_ACTION,
+            case: TRACKLIST_ACTIONS.REMOVE_TRACK,
         });
     };
 };
@@ -77,6 +92,6 @@ export function fetch() {
     return async dispatch => dispatch({
         type: ACTION_TYPES.TRACKLIST_ACTION,
         case: TRACKLIST_ACTIONS.FETCH,
-        tracks: await Mopidy.fetchTracklist()
+        tracklistItems: await Mopidy.fetchTracklist()
     });
 };

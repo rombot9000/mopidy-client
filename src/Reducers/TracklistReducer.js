@@ -2,12 +2,12 @@ import { ACTION_TYPES, TRACKLIST_ACTIONS } from "Actions";
 
 /**
  * @typedef TracklistState
- * @property {import("ViewModel/Track").Track[]} tracks
+ * @property {import("ViewModel/Track").TracklistItem[]} items
  */
 
  /** @type {TracklistState} */
 const initialState = {
-    tracks: []
+    items: []
 }
 
 /**
@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
         case TRACKLIST_ACTIONS.FETCH:
             return {
                 ...state,
-                tracks: action.tracks || []
+                items: action.tracklistItems || []
             };
 
         case TRACKLIST_ACTIONS.INIT:

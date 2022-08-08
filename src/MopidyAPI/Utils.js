@@ -102,14 +102,21 @@ export async function addToTracklist(tracks, position) {
 }
 
 /**
- * 
+ * Clears current tracklist
  * @returns 
  */
  export async function clearTracklist() {
-
     return await notifyUserOnError(Tracklist.clear());
-
 }
+
+/**
+ * Removes track from current tracklist
+ * @param {import("ViewModel/Track").Track[]} tracks 
+ * @returns 
+ */
+ export async function removeFromTracklist(track) {
+    return await notifyUserOnError(Tracklist.remove(track));
+ }
 
 /**
  * Add to current tracklist at postion

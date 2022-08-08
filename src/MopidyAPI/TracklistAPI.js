@@ -37,7 +37,7 @@ export default class TracklistAPI extends BaseAPI {
 
         this._tracklist = await this._api.getTlTracks({});
 
-        return this._tracklist.map(tl_item => Track(tl_item.track));
+        return this.tracklist;
     }
 
     
@@ -94,6 +94,14 @@ export default class TracklistAPI extends BaseAPI {
         return true;
     }
 
+    async remove(tracklistId) {
+        if(!this._api) return false;
+        
+        if(!tracklistId) return false;
+
+        await this._api.remove({'tlid': [tracklistId]});
+    }
+
     /**
      * 
      * @returns The track id of the current track playing
@@ -124,6 +132,11 @@ export default class TracklistAPI extends BaseAPI {
      * @type {mpd_tracklist}
      */
     get tracklist() {
-        return this._tracklist.map(tl_item => Track(tl_item.track));
+        return this._tracklist.map(tl_item => {
+            return {
+                track: Track(tl_item.track),
+                tlid: tl_item.tlid
+            }
+        });
     }
 };

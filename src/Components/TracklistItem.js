@@ -25,19 +25,19 @@ const useStyles = makeStyles({
 /**
  * 
  * @param {Object} props
- * @param {import("ViewModel/Track").Track} props.track
+ * @param {import("ViewModel/Track").TracklistItem} props.item
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @param {number} props.playbackTimePosition
  */
-export default ({track, playbackState, playbackTimePosition, scrollToIfActive, dispatch, ...gridProps}) => {
+const TracklistItem = ({item, playbackState, playbackTimePosition, scrollToIfActive, dispatch, ...gridProps}) => {
 
     const [hover, setHover] = React.useState(false);
 
-    const timeString = useFormatedTime(track.length, playbackState, playbackTimePosition);
+    const timeString = useFormatedTime(item.track.length, playbackState, playbackTimePosition);
 
     const ref = React.useRef(null);
-    let coverWidth = useHeight(ref);
-    if(scrollToIfActive) useScrollToIfActive(ref, playbackState);
+    const coverWidth = useHeight(ref);
+    useScrollToIfActive(ref, playbackState);
 
     const classes = useStyles({playbackState, coverWidth});
 
@@ -46,19 +46,19 @@ export default ({track, playbackState, playbackTimePosition, scrollToIfActive, d
             container
             {...gridProps}
             direction="row"
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
+            onMouseOver={() => setHover(true)}
+            onMouseOut={() => setHover(false)}
             spacing={2}
             alignItems="center"
         >
             <Grid item xs className={classes.cover}>
-               <CoverButton src={track.album.cover} showButton={hover}>
+               <CoverButton src={item.track.album.cover} showButton={hover}>
                     {playbackState === "playing" ? <Pause/> : <PlayArrowRounded/>}
                 </CoverButton>
             </Grid>
             <Grid xs item ref={ref} zeroMinWidth>
-                <Typography className={classes.trackName} variant="body1" align="left" noWrap>{track.name}</Typography>
-                <Typography className={classes.text} variant="body1" align="left" noWrap>{track.artist.name}</Typography>
+                <Typography className={classes.trackName} variant="body1" align="left" noWrap>{item.track.name}</Typography>
+                <Typography className={classes.text} variant="body1" align="left" noWrap>{item.track.artist.name}</Typography>
             </Grid>
             <Grid item xs={2} zeroMinWidth>
                 <Typography className={classes.text} variant="body1" align="right" noWrap>{timeString}</Typography>
@@ -66,3 +66,5 @@ export default ({track, playbackState, playbackTimePosition, scrollToIfActive, d
         </Grid>
     );
 }
+
+export default TracklistItem;

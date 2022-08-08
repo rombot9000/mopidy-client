@@ -2,14 +2,20 @@ import { createSelector } from "reselect";
 
 export default createSelector(
     [
-        state => state.tracklist.tracks,
+        state => state.tracklist.items,
         state => state.library.tracks
     ],
     /**
-     * @param {import("ViewModel/Track").Track[]} tracklistTracks
+     * @param {import("ViewModel/Track").TracklistItem[]} tracklistItems
      * @param {import("ViewModel/Track").Track[]} libraryTracks
      */
-    (tracklistTracks, libraryTracks) => {
-        return tracklistTracks.map(tlt => libraryTracks.find(lbt => lbt._uri === tlt._uri) || tlt)
+    (tracklistItems, libraryTracks) => {
+        return tracklistItems.map(item => {
+            console.log(item);
+            return {
+                tlid: item.tlid,
+                track: libraryTracks.find(t => t._uri === item.track._uri) || item.track
+            };
+        }) 
     }
 );
