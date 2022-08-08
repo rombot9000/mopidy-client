@@ -1,5 +1,9 @@
 # Mopidy Material Client Readme
 
+## Builds
+Create builds with command `npm run build`.
+Copy the build folder into the mopidy client folder under new name static: `rm -r /path/to/client/static && cp -r build /path/to/client/static`
+
 ## FAQ
 
 ### Rebuild library index
