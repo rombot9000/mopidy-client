@@ -25,10 +25,10 @@ const useStyles = makeStyles(theme => ({
     albumGrid: {
         position: "absolute",
         top: 0,
-        paddingTop: props => props.top + theme.spacing(1),
+        paddingTop: props => props.top + theme.spacingNumber(1),
+        bottom: props => props.bottom,
         paddingLeft: theme.spacing(1),
         paddingBottom: theme.spacing(1),
-        bottom: props => props.bottom,
         width: "100%",
         overflowY: "scroll",
         overflowX: "hidden",
@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     },
     notifyBar: {
         position: "absolute",
-        bottom: props => props.bottom + theme.spacing(1),
+        bottom: props => props.bottom + theme.spacingNumber(1),
     },
 }));
 
@@ -90,7 +90,7 @@ const MainView = () => {
             <MenuDrawer/>
             <SettingsModal/>
             <AlbumDetailsModal/>
-            <PlaybackCtrlBar ref={ctrlBarRef} />
+            {/* <PlaybackCtrlBar ref={ctrlBarRef} /> */}
         </Router>
     );
 };

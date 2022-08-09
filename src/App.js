@@ -1,15 +1,14 @@
 import React from "react";
-import { Provider } from "react-redux";
+import { Provider as ReduxProvider} from "react-redux";
 
-import { ThemeProvider, createTheme } from '@mui/material';
+import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import { StyledEngineProvider } from '@mui/material/styles';
+
 
 import Store from "./Store";
 import { LibraryActions, NotifyActions, NetworkActions, PlaybackActions, TracklistActions } from "Actions";
 
-import { CssBaseline } from '@mui/material';
 import MainView from "Containers/MainView";
-
-const theme = createTheme();
 
 Store.dispatch(LibraryActions.init());
 Store.dispatch(NotifyActions.init());
@@ -20,15 +19,28 @@ window.addEventListener('focus', () => {
     Store.dispatch(PlaybackActions.fetch());
     Store.dispatch(TracklistActions.fetch());
 });
+
+const createExtendedTheme = () => {
+    const defaultTheme = createTheme();
+    const spacingNumber = (spacing) => Number(theme.spacing(spacing).slice(0, -2));
+  
+    return createTheme({
+        spacingNumber
+    });
+  };
+
+const theme = createExtendedTheme();
  
 function App() {
     return (
-        <Provider store={Store}>
-            <CssBaseline/>
-            <ThemeProvider theme={theme}>
-                <MainView/>
-            </ThemeProvider>;
-        </Provider>
+        <ReduxProvider store={Store}>
+            <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline/>
+                    <MainView/>
+                </ThemeProvider>
+            </StyledEngineProvider>
+        </ReduxProvider>
     );
 };
 
