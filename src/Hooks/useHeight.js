@@ -3,7 +3,7 @@ import React from "react";
 /**
  * @param {React.MutableRefObject} ref
  */
-export default (ref) => {
+const useHeight = (ref) => {
 
     const [height, setHeight] = React.useState(0);
     React.useEffect(() => {
@@ -13,3 +13,5 @@ export default (ref) => {
 
     return height
 };
+
+export default useHeight;

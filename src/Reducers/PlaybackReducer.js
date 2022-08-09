@@ -25,7 +25,7 @@ const initialState = {
  * @param {import("Actions").PlaybackAction} action
  * @returns {PlaybackState}
  */
-export default (state = initialState, action) => {
+const PlaybackReducer = (state = initialState, action) => {
     
     if(action.type !== ACTION_TYPES.PLAYBACK_ACTION) return state;
     
@@ -71,3 +71,5 @@ export default (state = initialState, action) => {
             return state;
     }
 };
+
+export default PlaybackReducer;

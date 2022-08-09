@@ -5,7 +5,7 @@ import React from "react";
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} playbackState
  * @param {number} playbackTimePosition current time position in mesecs
  */
-export default (length, playbackState, playbackTimePosition) => {
+const useFormatedTime = (length, playbackState, playbackTimePosition) => {
     
     const [seconds, setSeconds] = React.useReducer(
         (seconds, action) => {
@@ -47,3 +47,5 @@ export default (length, playbackState, playbackTimePosition) => {
 
     return `${Math.floor(seconds/60)}:${`00${seconds%60}`.slice(-2)}`;
 };
+
+export default useFormatedTime;

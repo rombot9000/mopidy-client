@@ -1,6 +1,6 @@
 import React from "react";
 
-import { makeStyles, Paper } from "@material-ui/core";
+import { makeStyles, Paper } from "@mui/material";
 
 import StopPropagation from "./StopPropagation";
 
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
  * @typedef {Object} SquareImagePropType
  * @property {string} src
  * 
- * @typedef {SquareImagePropType & import("@material-ui/core").PaperProps} SquareImageProps
+ * @typedef {SquareImagePropType & import("@mui/material").PaperProps} SquareImageProps
  */
 
 /**

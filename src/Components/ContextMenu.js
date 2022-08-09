@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Menu } from "@material-ui/core";
+import { Menu } from "@mui/material";
 import ContextMenuItem from "./ContextMenuItem";
 
 /**

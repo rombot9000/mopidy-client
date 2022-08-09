@@ -1,11 +1,15 @@
 import React from "react";
 import { Provider } from "react-redux";
 
+import { ThemeProvider, createTheme } from '@mui/material';
+
 import Store from "./Store";
 import { LibraryActions, NotifyActions, NetworkActions, PlaybackActions, TracklistActions } from "Actions";
 
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline } from '@mui/material';
 import MainView from "Containers/MainView";
+
+const theme = createTheme();
 
 Store.dispatch(LibraryActions.init());
 Store.dispatch(NotifyActions.init());
@@ -21,7 +25,9 @@ function App() {
     return (
         <Provider store={Store}>
             <CssBaseline/>
-            <MainView/>
+            <ThemeProvider theme={theme}>
+                <MainView/>
+            </ThemeProvider>;
         </Provider>
     );
 };

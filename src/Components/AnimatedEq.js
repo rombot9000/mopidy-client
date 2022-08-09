@@ -1,12 +1,12 @@
 import React from "react";
 
-import { SvgIcon } from "@material-ui/core";
+import { SvgIcon } from "@mui/material";
 
 /**
  * Animated eq icon
- * @param {import("@material-ui/core").SvgIconProps} props 
+ * @param {import("@mui/material").SvgIconProps} props 
  */
-export default (props) => (
+const AnimatedEq = (props) => (
     <SvgIcon {...props} viewBox="0 0 24 24">
         <line x1="3" x2="3" y1="24" y2="0" strokeWidth="6" stroke="black">
             <animate attributeName="y2" values="0;6;12;18;24;0" dur="1s" repeatCount="indefinite" />
@@ -19,3 +19,5 @@ export default (props) => (
         </line>
     </SvgIcon>
 )
+
+export default AnimatedEq;

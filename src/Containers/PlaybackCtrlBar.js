@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { makeStyles } from "@material-ui/core";
-import { Typography } from "@material-ui/core";
-import { AppBar, Toolbar, Box, ButtonGroup } from "@material-ui/core";
+import { makeStyles } from "@mui/material";
+import { Typography } from "@mui/material";
+import { AppBar, Toolbar, Box, ButtonGroup } from "@mui/material";
 
-import { PlayArrow, Pause, SkipNext, SkipPrevious } from "@material-ui/icons";
+import { PlayArrow, Pause, SkipNext, SkipPrevious } from "@mui/icons-material";
 
 import { PlaybackButton } from "Components";
 import PlaybackPositionBar from "./PlaybackPositionBar";

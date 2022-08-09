@@ -4,7 +4,7 @@ import React from "react";
  * @param {React.MutableRefObject} ref
  * @param {import("ViewModel/Track").Track} track
  */
-export default (ref, playbackState) => {
+const useScrollToIfActive = (ref, playbackState) => {
 
     React.useEffect(() => {
         
@@ -16,3 +16,5 @@ export default (ref, playbackState) => {
     }, [ref, playbackState]);
 
 };
+
+export default useScrollToIfActive;

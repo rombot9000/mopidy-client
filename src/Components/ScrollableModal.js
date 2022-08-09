@@ -1,9 +1,9 @@
 import React from "react";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 
-import { Modal, Container, Fab } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import { Modal, Container, Fab } from "@mui/material";
+import { Close } from "@mui/icons-material";
 
 // NOTE: we calc the width and height instead of using padding
 // since the translate function does not work well with paddings or margins

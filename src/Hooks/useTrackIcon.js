@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PlayArrow, Pause } from "@material-ui/icons";
+import { PlayArrow, Pause } from "@mui/icons-material";
 
 import AnimatedEq from "../Components/AnimatedEq";
 
@@ -8,7 +8,7 @@ import AnimatedEq from "../Components/AnimatedEq";
  * @param {string|number} trackNumber
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} playbackState
  */
-export default (trackNumber, playbackState) => {
+const useTrackIcon = (trackNumber, playbackState) => {
 
     const [hover, setHover] = React.useState(false);
 
@@ -28,3 +28,5 @@ export default (trackNumber, playbackState) => {
 
     return [trackIcon, setHover];
 };
+
+export default useTrackIcon;

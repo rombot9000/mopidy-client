@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Grid, Divider} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
+import { Grid, Divider} from "@mui/material";
+import { makeStyles } from "@mui/material";
 
 const useStyles = makeStyles({
     topDivider: {
@@ -16,9 +16,9 @@ const useStyles = makeStyles({
 /**
  * @param {Object} props 
  * @param {JSX.Element[]} props.children
- * @param {import("@material-ui/core").GridProps} props.gridProps
+ * @param {import("@mui/material").GridProps} props.gridProps
  */
-export default ({children, divider, ...gridProps}) => {
+const GridList = ({children, divider, ...gridProps}) => {
     const classes = useStyles();
 
     return (
@@ -35,3 +35,5 @@ export default ({children, divider, ...gridProps}) => {
         </Grid>
     );
 }
+
+export default GridList;

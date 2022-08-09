@@ -8,7 +8,7 @@ import useIntersection from "Hooks/useIntersection";
  * @param {string} [options.rootMargin]
  * @param {number} [options.threshold]
  */
-export default ({observeRef, placeholder, children, root, rootId, rootMargin, threshold}) => {
+const Placeholder =  ({observeRef, placeholder, children, root, rootId, rootMargin, threshold}) => {
     
     const [isIntersecting, setObservant] = useIntersection({
         root: root,
@@ -24,3 +24,5 @@ export default ({observeRef, placeholder, children, root, rootId, rootMargin, th
     return isIntersecting ? children : placeholder;
 
 };
+
+export default Placeholder;

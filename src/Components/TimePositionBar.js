@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useTheme, makeStyles } from "@material-ui/core";
+import { useTheme, makeStyles } from "@mui/material";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.state
  * @param {OnPositonClick} props.onPositionClick
  */
-export default ({state, position, length,  onPositionClick}) => {
+const TimePositionBar = ({state, position, length,  onPositionClick}) => {
     const classes = useStyles();
 
     /** @type {React.Ref<SVGAnimateElement>} */
@@ -76,3 +76,5 @@ export default ({state, position, length,  onPositionClick}) => {
         </div>
     );
 }
+
+export default TimePositionBar;

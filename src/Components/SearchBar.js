@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {makeStyles, Paper, IconButton, Input} from "@material-ui/core";
-import {Search, Menu, Clear} from "@material-ui/icons";
+import {makeStyles, Paper, IconButton, Input} from "@mui/material";
+import {Search, Menu, Clear} from "@mui/icons-material";
 
 const useStyles = makeStyles(theme => ({
     paper: {

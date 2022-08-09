@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Grid, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
+import { Grid, Typography } from "@mui/material";
+import { makeStyles } from "@mui/material";
 
 import useFormatedTime from "Hooks/useFormatedTime";
 import useTrackIcon from "Hooks/useTrackIcon";
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @param {number} props.playbackTimePosition
  */
-export default ({track, playbackState, playbackTimePosition, dispatch, ...gridProps}) => {
+const AlbumTrack = ({track, playbackState, playbackTimePosition, dispatch, ...gridProps}) => {
 
     const classes = useStyles({playbackState});
 
@@ -50,3 +50,5 @@ export default ({track, playbackState, playbackTimePosition, dispatch, ...gridPr
         </Grid>
     );
 }
+
+export default AlbumTrack;

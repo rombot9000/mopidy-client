@@ -17,7 +17,7 @@ const initialState = {
  * @param {import("Actions").NetworkAction} action
  * @returns {NetworkState}
  */
-export default (state = initialState, action) => {
+const NetworkReducer = (state = initialState, action) => {
 
     if(action.type !== ACTION_TYPES.NETWORK_ACTION) return state;
 
@@ -38,3 +38,5 @@ export default (state = initialState, action) => {
             return state;
     }
 };
+
+export default NetworkReducer;

@@ -49,7 +49,7 @@ const setObserverCallback = (element, callback) => {
  * @param {string} [options.rootMargin]
  * @param {number} [options.threshold]
  */
-export default (options) => {
+const useIntersection = (options) => {
 
     const [isIntersecting, setIntersecting] = React.useState(false);
     const [observant, setObservant] = React.useState(null);
@@ -86,3 +86,5 @@ export default (options) => {
 
     return [isIntersecting, setObservant];
 };
+
+export default useIntersection;

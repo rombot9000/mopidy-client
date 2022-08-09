@@ -15,7 +15,7 @@ import { FixedSizeList, areEqual } from "react-window";
  * @param {number} props.itemHeight
  * @param {ItemRenderFunction} props.itemRenderFunction
  */
-export default ({width, height, itemData, itemHeight, itemRenderFunction, ...listProps}) => {
+const VirtualizedList = ({width, height, itemData, itemHeight, itemRenderFunction, ...listProps}) => {
 
     return (
         <FixedSizeList
@@ -29,6 +29,7 @@ export default ({width, height, itemData, itemHeight, itemRenderFunction, ...lis
         >
             {React.memo(itemRenderFunction, areEqual)}
         </FixedSizeList>
-    );
-    
+    );   
 }
+
+export default VirtualizedList;

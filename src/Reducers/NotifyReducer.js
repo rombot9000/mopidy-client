@@ -24,7 +24,7 @@ const initialState = {
  * @param {import("Actions").NotifyAction} action
  * @returns {NotifyState}
  */
-export default (state = initialState, action) => {
+const NotifyReducer = (state = initialState, action) => {
 
     if(action.type !== ACTION_TYPES.NOTIFY_ACTION) return state;
 
@@ -51,3 +51,5 @@ export default (state = initialState, action) => {
             return state;
     }
 };
+
+export default NotifyReducer;

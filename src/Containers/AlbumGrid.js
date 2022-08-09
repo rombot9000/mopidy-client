@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { makeStyles } from "@material-ui/core"
-import { Skeleton } from "@material-ui/lab";
+import { makeStyles } from "@mui/material"
+import { Skeleton } from "@mui/lab";
 
 import selectSortedAndFilteredAlbums from "Selectors/selectSortedAndFilteredAlbums";
 import { ResponsiveGrid } from "Components";

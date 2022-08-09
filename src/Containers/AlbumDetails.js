@@ -1,7 +1,7 @@
 import React from "react";
 
-import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Paper, Grid } from "@material-ui/core";
+import { makeStyles } from "@mui/styles";
+import { Typography, Paper, Grid } from "@mui/material";
 
 import AlbumTracks from "./AlbumTracks";
 import SquareImage from "Components/SquareImage";
@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
  * @param {Object} props
  * @param {import("ViewModel/Album").Album} props.album
  */
-export default ({album, ...paperProps}) => {
+const AlbumDetails = ({album, ...paperProps}) => {
 
     const classes = useStyles();
 
@@ -89,3 +89,5 @@ export default ({album, ...paperProps}) => {
         </Paper>
     );
 };
+
+export default AlbumDetails;

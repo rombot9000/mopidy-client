@@ -15,7 +15,7 @@ const initialState = {
  * @param {import("Actions").TracklistAction} action
  * @returns {TracklistState}
  */
-export default (state = initialState, action) => {
+const TracklistReducer = (state = initialState, action) => {
     
     if(action.type !== ACTION_TYPES.TRACKLIST_ACTION) return state;
 
@@ -37,3 +37,5 @@ export default (state = initialState, action) => {
             return state;
     }
 };
+
+export default TracklistReducer;

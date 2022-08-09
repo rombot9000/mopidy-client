@@ -2,8 +2,8 @@ import React from "react";
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { Grid } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
+import { Grid } from "@mui/material";
+import { Skeleton } from "@mui/lab";
 
 import Placeholder from "./Placeholder";
 
@@ -35,7 +35,7 @@ const GridItem = ({children, ...placeholderProps}) => {
  * @param {Object} props
  * @param {Object} props.placeholder
  */
-export default ({children, placeholder=skeleton, ...gridProps}) => {
+const ResponsiveGrid = ({children, placeholder=skeleton, ...gridProps}) => {
     // calc classes
     const rootId = uuidv4();
     
@@ -54,3 +54,5 @@ export default ({children, placeholder=skeleton, ...gridProps}) => {
         </Grid>
     );
 };
+
+export default ResponsiveGrid;

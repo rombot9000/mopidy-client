@@ -1,12 +1,12 @@
 import React from "react";
 
-import { IconButton } from "@material-ui/core";
+import { IconButton } from "@mui/material";
 
 
 /**
  * @param {Object} props
  */
-export default (props) => {
+const PlaybackButton = (props) => {
 
     // remove warning msg
     const { fullWidth, disableElevation, children, ...filteredProps } = props;
@@ -18,3 +18,5 @@ export default (props) => {
         </IconButton>
     );
 };
+
+export default PlaybackButton;

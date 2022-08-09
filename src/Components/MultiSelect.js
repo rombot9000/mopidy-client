@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Select, Input, MenuItem } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Select, Input, MenuItem } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(theme => ({
     select: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
  * @param {string[]} props.selection
  * @param {SelectCallback} props.onSelect
  */
-export default ({options, selection, onSelect}) => {
+const Multiselect = ({options, selection, onSelect}) => {
     const rSelection = [...selection].reverse();
     const classes = useStyles();
 
@@ -41,3 +41,5 @@ export default ({options, selection, onSelect}) => {
         </Select>
     );
 };
+
+export default Multiselect;

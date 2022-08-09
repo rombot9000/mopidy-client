@@ -1,8 +1,8 @@
 import React from "react";
 import { NavLink, useRouteMatch } from "react-router-dom";
-import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
-export default (props) => {
+const LinkListItem = (props) => {
     const {to, text, icon, ...listItemProps} = props;
 
     const renderLink = React.useMemo(
@@ -21,3 +21,5 @@ export default (props) => {
         </ListItem>
     );
 }
+
+export default LinkListItem;

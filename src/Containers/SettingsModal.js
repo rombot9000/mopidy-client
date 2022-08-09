@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { Switch } from "@material-ui/core";
+import { Switch } from "@mui/material";
 
 import SettingsMenu from "Components/SettingsMenu";
 import ScrollableModal from "Components/ScrollableModal";

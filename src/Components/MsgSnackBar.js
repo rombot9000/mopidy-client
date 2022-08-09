@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Snackbar, Button } from '@material-ui/core';
+import { Snackbar, Button } from '@mui/material';
 
 /**
  * 
@@ -12,7 +12,7 @@ import { Snackbar, Button } from '@material-ui/core';
  * @param {Function} props.actionCreator
  * @param {Function} props.onButtonClick
  */
-export default ({msg, autoHideDuration, onClose, actionText, actionCreator, onButtonClick, ...props}) => (
+const MsgSnackBar = ({msg, autoHideDuration, onClose, actionText, actionCreator, onButtonClick, ...props}) => (
     <Snackbar
         {...props}
         open={!!msg}
@@ -30,4 +30,6 @@ export default ({msg, autoHideDuration, onClose, actionText, actionCreator, onBu
         ) : null
         }
     />
-)
+);
+
+export default MsgSnackBar;

@@ -23,7 +23,7 @@ const initialState = {
  * @param {import("Actions").LibraryAction} action
  * @returns {LibraryState}
  */
-export default (state = initialState, action) => {
+const LibraryReducer = (state = initialState, action) => {
 
     if(action.type !== ACTION_TYPES.LIBRARY_ACTION) return state;
 
@@ -61,3 +61,5 @@ export default (state = initialState, action) => {
             return state;
     }
 };
+
+export default LibraryReducer;

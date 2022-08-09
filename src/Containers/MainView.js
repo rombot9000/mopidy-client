@@ -2,7 +2,7 @@ import React from "react";
 
 import {HashRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 
 import TrackView from "./TrackView"; 
 import AlbumGrid from "./AlbumGrid";
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function MainView() {
+const MainView = () => {
     /*
      * Listen for view changes
      */
@@ -94,3 +94,5 @@ export default function MainView() {
         </Router>
     );
 };
+
+export default MainView;

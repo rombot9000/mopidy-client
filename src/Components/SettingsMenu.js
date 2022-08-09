@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Paper, List, ListItem, ListItemText, Divider, Box, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Paper, List, ListItem, ListItemText, Divider, Box, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(theme => ({
     container:{
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
  * @param {{text: string, input: JSX.Element}[]} props.options
  * @param {{text: string, value: string|number}[]} props.states
  */
-export default ({options, states}) =>  {
+const SettingsMenu = ({options, states}) =>  {
     const classes = useStyles();
     
     return (
@@ -53,3 +53,5 @@ export default ({options, states}) =>  {
         </Paper>
     );
 }
+
+export default SettingsMenu;

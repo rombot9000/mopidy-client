@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Paper} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
+import { Paper} from "@mui/material";
+import { makeStyles } from "@mui/material";
 import SquareImage from "./SquareImage";
 
 
@@ -34,7 +34,7 @@ const useStyles = makeStyles({
  * @param {boolean} props.showButton
  * @param {JSX.Element} props.children
  */
-export default ({src, showButton, children}) => {
+const CoverButton = ({src, showButton, children}) => {
     const classes = useStyles();
 
     return (
@@ -51,3 +51,5 @@ export default ({src, showButton, children}) => {
         </SquareImage>
     );
 };
+
+export default CoverButton;

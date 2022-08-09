@@ -21,7 +21,7 @@ const initialState = {
  * @param {import("Actions").ViewAction} action
  * @returns {ViewState}
  */
-export default (state = initialState, action) => {
+const ViewReducer = (state = initialState, action) => {
     
     if(action.type !== ACTION_TYPES.VIEW_ACTION) return state;
 
@@ -49,3 +49,5 @@ export default (state = initialState, action) => {
             return state;
     }
 };
+
+export default ViewReducer;

@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 
 // Matrial ui
-import { Typography, Fab, Fade, makeStyles, IconButton, Grid } from "@material-ui/core";
-import { PlayArrow as PlayIcon, MoreVert as MenuIcon } from "@material-ui/icons";
+import { Typography, Fab, Fade, makeStyles, IconButton, Grid } from "@mui/material";
+import { PlayArrow as PlayIcon, MoreVert as MenuIcon } from "@mui/icons-material";
 
 // Own
 import SquareImage from "Components/SquareImage";
@@ -16,7 +16,7 @@ import { PlaybackActions, ViewActions } from "Actions";
  * @property {Function} onClick
  * @property {Function} onPlayIconClick
  *
- * @typedef {AlbumProp & import("@material-ui/core").GridProps} AlbumGridTileProps
+ * @typedef {AlbumProp & import("@mui/material").GridProps} AlbumGridTileProps
  */
 
 const useStyles = makeStyles(theme => ({

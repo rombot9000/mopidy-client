@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { PlaylistAdd as AddIcon, PlaylistPlay as NextIcon, PlayArrowSharp as PlayIcon } from "@material-ui/icons";
+import { PlaylistAdd as AddIcon, PlaylistPlay as NextIcon, PlayArrowSharp as PlayIcon } from "@mui/icons-material";
 
 import ContextMenu from "../Components/ContextMenu";
 import ContextMenuItem from "../Components/ContextMenuItem";

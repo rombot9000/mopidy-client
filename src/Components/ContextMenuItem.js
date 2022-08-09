@@ -1,6 +1,6 @@
 import React from "react";
 
-import {MenuItem, ListItemIcon, ListItemText} from "@material-ui/core";
+import {MenuItem, ListItemIcon, ListItemText} from "@mui/material";
 
 const ContextMenuItem = React.forwardRef((props, ref) => {
     const {text, icon, ...menuItemProps} = props;
