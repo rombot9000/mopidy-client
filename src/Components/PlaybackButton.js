@@ -10,7 +10,7 @@ const PlaybackButton = (props) => {
 
     // remove warning msg
     const { fullWidth, disableElevation, children, ...filteredProps } = props;
-    filteredProps.fullwidth = props.fullWidth.toString();
+    //filteredProps.fullwidth = props.fullWidth.toString();
     
     return (
         <IconButton {...filteredProps} color="secondary">

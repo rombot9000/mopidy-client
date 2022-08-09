@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { makeStyles } from "@mui/styles"
-import { Skeleton } from "@mui/lab";
+import { Skeleton } from "@mui/material";
 
 import selectSortedAndFilteredAlbums from "Selectors/selectSortedAndFilteredAlbums";
 import { ResponsiveGrid } from "Components";
