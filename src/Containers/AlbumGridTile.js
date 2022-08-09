@@ -2,7 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 
 // Matrial ui
-import { Typography, Fab, Fade, makeStyles, IconButton, Grid } from "@mui/material";
+import { Typography, Fab, Fade, IconButton, Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { PlayArrow as PlayIcon, MoreVert as MenuIcon } from "@mui/icons-material";
 
 // Own

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { makeStyles, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import StopPropagation from "./StopPropagation";
 

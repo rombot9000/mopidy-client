@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { makeStyles } from "@mui/material"
+import { makeStyles } from "@mui/styles"
 import { Skeleton } from "@mui/lab";
 
 import selectSortedAndFilteredAlbums from "Selectors/selectSortedAndFilteredAlbums";

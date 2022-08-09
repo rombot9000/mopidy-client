@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Grid, IconButton, Typography } from "@mui/material";
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { PlayArrowRounded, Pause, Clear } from "@mui/icons-material";
 
 import CoverButton from "./CoverButton";

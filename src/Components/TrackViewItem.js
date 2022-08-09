@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Grid, Typography, Divider } from "@mui/material";
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import useFormatedTime from "Hooks/useFormatedTime";
 import useTrackIcon from "Hooks/useTrackIcon";

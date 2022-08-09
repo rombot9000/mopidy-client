@@ -2,7 +2,7 @@ import React from "react";
 
 import {HashRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 
-import { makeStyles } from '@mui/material';
+import { makeStyles } from "@mui/styles";
 
 import TrackView from "./TrackView"; 
 import AlbumGrid from "./AlbumGrid";

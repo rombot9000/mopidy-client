@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Grid, Divider} from "@mui/material";
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
     topDivider: {

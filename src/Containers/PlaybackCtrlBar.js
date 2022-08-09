@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { Typography } from "@mui/material";
 import { AppBar, Toolbar, Box, ButtonGroup } from "@mui/material";
 

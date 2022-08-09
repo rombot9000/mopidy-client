@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Paper} from "@mui/material";
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import SquareImage from "./SquareImage";
 
 
