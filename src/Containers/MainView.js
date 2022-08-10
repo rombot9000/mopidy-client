@@ -90,7 +90,7 @@ const MainView = () => {
             <MenuDrawer/>
             <SettingsModal/>
             <AlbumDetailsModal/>
-            {/* <PlaybackCtrlBar ref={ctrlBarRef} /> */}
+            <PlaybackCtrlBar ref={ctrlBarRef} />
         </Router>
     );
 };
