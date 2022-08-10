@@ -36,7 +36,6 @@ const ContextMenu = ({anchorEl, ...menuListProps}) => {
     return (
         <Menu
             anchorEl={anchorEl}
-            getContentAnchorEl={null}
             anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'left',
