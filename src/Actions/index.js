@@ -63,8 +63,32 @@ const NOTIFY_ACTIONS = NotifyActions.NOTIFY_ACTIONS;
  * @property {}
  */
 
+/**
+ * 
+ * @param {ACTION_TYPES} actionType 
+ * @param {*} actionCase 
+ * @param {*} actionArgs 
+ */
+const resolveAction = (actionType, actionCase, actionArgs) => {
+    switch(actionType) {
+        case ACTION_TYPES.NETWORK_ACTION: {
+            if(typeof NetworkActions[actionCase] === "function")
+                return NetworkActions[actionCase](actionArgs);
+        }
+        break;
+
+        default:
+            break;
+        }
+
+    console.warn(`Unresolved action tyype: ${actionType}-${actionCase}`);
+    return {};
+}
+
 export {
     ACTION_TYPES,
+
+    resolveAction,
     
     NETWORK_ACTIONS,
     LIBRARY_ACTIONS,

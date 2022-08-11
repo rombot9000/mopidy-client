@@ -5,7 +5,7 @@ import { ACTION_TYPES, NOTIFY_ACTIONS } from "Actions";
  * @property {boolean} enabled 
  * @property {"info"|"warn"|"error"} level 
  * @property {string} msg 
- * @property {{text: string, creator: Function}} action 
+ * @property {{text: string, type: ACTION_TYPES, case: string}} secondaryAction 
  */
 
  /** @type {NotifyState} */
@@ -13,9 +13,10 @@ const initialState = {
     enabled: true,
     level: undefined,
     msg: undefined,
-    action: {
+    secondaryAction: {
         text: undefined,
-        creator: undefined
+        type: undefined,
+        case: undefined
     }
 }
 
@@ -37,14 +38,12 @@ const NotifyReducer = (state = initialState, action) => {
             };
         
         case NOTIFY_ACTIONS.NOTIFY_USER:
+        case NOTIFY_ACTIONS.NOTIFY_USER_TO_RECONNECT:
             return {
                 ...state,
                 level: action.level,
                 msg: action.msg,
-                action: {
-                    text: action.action ? action.action.text: undefined,
-                    creator: action.action ? action.action.creator : undefined
-                }
+                secondaryAction: action.secondaryAction || {}
             };
 
         default:

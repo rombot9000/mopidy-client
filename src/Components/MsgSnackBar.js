@@ -9,10 +9,9 @@ import { Snackbar, Button } from '@mui/material';
  * @param {number} props.autoHideDuration
  * @param {Function} props.onClose
  * @param {string} props.actionText
- * @param {Function} props.actionCreator
  * @param {Function} props.onButtonClick
  */
-const MsgSnackBar = ({msg, autoHideDuration, onClose, actionText, actionCreator, onButtonClick, ...props}) => (
+const MsgSnackBar = ({msg, autoHideDuration, onClose, actionText, onActionClick, ...props}) => (
     <Snackbar
         {...props}
         open={!!msg}
@@ -23,7 +22,7 @@ const MsgSnackBar = ({msg, autoHideDuration, onClose, actionText, actionCreator,
             <Button 
                 color="secondary" 
                 size="small" 
-                onClick={() => onButtonClick(actionCreator)}
+                onClick={onActionClick}
             >
                 {actionText}
             </Button>

@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 
 import { MsgSnackBar } from "Components";
 
-import { NotifyActions } from "Actions";
+import { NotifyActions, resolveAction } from "Actions";
 
 /**
  * 
@@ -24,12 +24,11 @@ const mapStateToProps = (state, ownProps) => ({
     className: ownProps.className,
     msg: state.notify.msg,
     autoHideDuration: autoHideDuration(state.notify.level),
-    actionText: state.notify.action.text,
-    actionCreator: state.notify.action.creator
+    actionText: state.notify.secondaryAction.text,
 });
     
-const mapDispatchToProps = dispatch => ({
-    onButtonClick: (actionCreator) => dispatch(actionCreator()),
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    onActionClick: () => dispatch(resolveAction(...ownProps.secondaryAction)),
     onClose: () => dispatch(NotifyActions.notifyUser())
 });
 

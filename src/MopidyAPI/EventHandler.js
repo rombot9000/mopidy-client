@@ -49,22 +49,16 @@ function notifyUser(state) {
     // Notify user
     switch(state) {
         case "state:online":
-            return NotifyActions.notifyUser("info", "Server online.");
+            return NotifyActions.notifyUser("info", "Connected to server.");
 
         case "reconnecting":
             return NotifyActions.notifyUser("info", "Reconnecting...");
 
         case "reconnectionPending":
-            return NotifyActions.notifyUser("error", "Server offline, waiting to reconnect...", {
-                text: "Reconnect",
-                creator: NetworkActions.connectToServer
-            });
+            return NotifyActions.notifyUserToReconnect("error", "Waiting to reconnect...");
 
         case "state:offline":
-            return NotifyActions.notifyUser("error", "Server offline.", {
-                text: "Reconnect",
-                creator: NetworkActions.connectToServer
-            });
+            return NotifyActions.notifyUserToReconnect("error", "Could not connect to server.");
 
         default:
             return {};
