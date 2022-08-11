@@ -71,11 +71,10 @@ const NOTIFY_ACTIONS = NotifyActions.NOTIFY_ACTIONS;
  */
 const resolveAction = (actionType, actionCase, actionArgs) => {
     switch(actionType) {
-        case ACTION_TYPES.NETWORK_ACTION: {
+        case ACTION_TYPES.NETWORK_ACTION:
             if(typeof NetworkActions[actionCase] === "function")
                 return NetworkActions[actionCase](actionArgs);
-        }
-        break;
+            break;
 
         default:
             break;

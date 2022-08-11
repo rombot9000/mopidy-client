@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Grid, Typography, Divider } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import useFormatedTime from "Hooks/useFormatedTime";
-import useTrackIcon from "Hooks/useTrackIcon";
+//import useTrackIcon from "Hooks/useTrackIcon";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -43,7 +43,7 @@ const TrackViewItem = ({track, playbackState, playbackTimePosition, dispatch, ..
 
     const classes = useStyles({playbackState});
 
-    const [trackIcon, setHover] = useTrackIcon(track.track_no, playbackState);
+    //const [trackIcon, setHover] = useTrackIcon(track.track_no, playbackState);
     const timeString = useFormatedTime(track.length, playbackState, playbackTimePosition);
 
     return (
@@ -76,8 +76,8 @@ const TrackViewItem = ({track, playbackState, playbackTimePosition, dispatch, ..
         container
         {...gridProps}
         direction="row"
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
+        // onMouseEnter={() => setHover(true)}
+        // onMouseLeave={() => setHover(false)}
         spacing={2}
         alignItems="center"
     >

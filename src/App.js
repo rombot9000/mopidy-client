@@ -22,7 +22,7 @@ window.addEventListener('focus', () => {
 
 const createExtendedTheme = () => {
     const defaultTheme = createTheme();
-    const spacingNumber = (spacing) => Number(theme.spacing(spacing).slice(0, -2));
+    const spacingNumber = (spacing) => Number(defaultTheme.spacing(spacing).slice(0, -2));
   
     return createTheme({
         spacingNumber

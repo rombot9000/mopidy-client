@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 
 import selectTracklistTracks from "Selectors/selectTracklistTracks";
 
-import { PlaybackActions } from "Actions";
-
 import { GridList } from "Components";
 
 import TracklistItem from "./TracklistItem";
