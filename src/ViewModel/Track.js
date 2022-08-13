@@ -3,7 +3,6 @@ import Album from "./Album";
 
 /**
  * @typedef Track
- * @property {string} _uri
  * @property {string} name
  * @property {number} disc_no
  * @property {number} track_no
@@ -21,7 +20,6 @@ import Album from "./Album";
 
 /** @type {Track} */
 const emptyTrack = {
-    _uri: null,
     name: null,
     track_no: null,
     length: null,
@@ -44,7 +42,6 @@ function Track(mpd_track, artist, album) {
     const year = mpd_track.date.slice(0,4);
 
     return {
-        _uri: mpd_track.uri,
         name: mpd_track.name,
         disc_no: mpd_track.disc_no,
         track_no: mpd_track.track_no,

@@ -6,7 +6,6 @@ const SERVER_IP = PREVAL`module.exports = process.env.NODE_ENV === "production" 
 
 /**
  * @typedef Album
- * @property {string} _uri
  * @property {string} name
  * @property {string} year
  * @property {string} length
@@ -26,7 +25,6 @@ function Album(mpd_album, tracks = [], mpd_images = []) {
 
     if(!mpd_album) {
         return {
-            _uri: "",
             name: "",
             year: "",
             length: "",
@@ -50,7 +48,6 @@ function Album(mpd_album, tracks = [], mpd_images = []) {
     const cover = mpd_images[0] ? `${SERVER_IP}${mpd_images[0].uri}` : null;
     /** @type {Album} */
     const album =  {
-        _uri: mpd_album.uri,
         name: mpd_album.name,
         year: year,
         length: `${Math.floor(totalSecs/60)}:${`00${totalSecs%60}`.slice(-2)}`,

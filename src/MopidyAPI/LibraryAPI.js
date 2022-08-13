@@ -1,5 +1,8 @@
 import BaseAPI from "./BaseAPI";
 
+import PREVAL from "preval.macro";
+const SERVER_IP = PREVAL`module.exports = process.env.NODE_ENV === "production" ? "" : "http://raspberrypi.fritz.box:8080"`;
+
 /** 
  * Mopidy reference object
  * @typedef mpd_ref
@@ -55,8 +58,6 @@ import BaseAPI from "./BaseAPI";
  * @property {number} width
  */
 
-import { Album, Artist, Track } from "ViewModel";
-
 /** Handler for mopidy library API */
 class LibraryAPI extends BaseAPI {
     constructor(mopidy) {
@@ -67,7 +68,7 @@ class LibraryAPI extends BaseAPI {
     }
 
     /**
-     * @returns {Promise<[import("ViewModel/Artist").Artist[], import("ViewModel/Track").Track[], import("ViewModel/Album").Album[]]>}
+     * @returns {Promise<[import("Reducers/LibraryReducer").StoredArtist[], import("Reducers/LibraryReducer").StoredAlbum[], import("Reducers/LibraryReducer").StoredTrack[]]>}
      */
     async fetchAll() {
         if( !this._fetchPromise ) {
@@ -80,58 +81,114 @@ class LibraryAPI extends BaseAPI {
     _resetFetchPromise() {
         this._fetchPromise = null;
     }
+
     /**
-     * @returns {Promise<[import("ViewModel/Artist").Artist[], import("ViewModel/Track").Track[], import("ViewModel/Album").Album[]]>}
+     * @returns {Promise<[import("Reducers/LibraryReducer").StoredArtist[], import("Reducers/LibraryReducer").StoredAlbum[], import("Reducers/LibraryReducer").StoredTrack[]]>}
      */
     async _fetchAll() {
         try {
 
             // Get data from server
-            const mpd_albums = await this._browse("local:directory?type=album");             
-            const albumUriToTracks = await this._lookup(mpd_albums.map(ref => ref.uri));
-            const albumUriToArtworkList = await this._getImages(mpd_albums.map(ref => ref.uri));
+            /** @type {mpd_album} */
+            const mpdAlbums = await this._browse("local:directory?type=album");             
+            const albumUriToTracks = await this._lookup(mpdAlbums.map(ref => ref.uri));
+            const albumUriToArtworkList = await this._getImages(mpdAlbums.map(ref => ref.uri));
 
             // Map artists onto view model
-            /** @type {Object.<string, import("ViewModel/Artist").Artist>} */
+            /** @type {{[uri: string] : import("Reducers/LibraryReducer").StoredArtist}} */
             const uriToArtist = {};
-            /** @type {import("ViewModel/Track").Track[]} */
-            const tracks = [];
 
             // artist undefined
-            const unknownArtist =  Artist(null);
-            unknownArtist.name = "Unknown Artist";
+            //const unknownArtist =  Artist(null);
+            //unknownArtist.name = "Unknown Artist";
 
+            /** @type {import("Reducers/LibraryReducer").StoredAlbum[]} */
+            const albums = [];
+            /** @type {import("Reducers/LibraryReducer").StoredTrack[]} */
+            const tracks = [];
 
-            const albums = mpd_albums.map(mpd_album => {
-                
-
-                // handle tracks and get all distinct artists
-                const albumTracks = albumUriToTracks[mpd_album.uri].map(mpd_track => {
-                    // handle tracks without artists
-                    if(!mpd_track.artists.length) return Track(mpd_track, unknownArtist);
-
-                    if(!uriToArtist[mpd_track.artists[0].uri])  {
-                        uriToArtist[mpd_track.artists[0].uri] = Artist(mpd_track.artists[0]);
+            mpdAlbums.forEach(mpdAlbum => {
+                // Add album
+                albums.push(this.toStoredAlbum(mpdAlbum, albumUriToTracks[mpdAlbum.uri], albumUriToArtworkList[mpdAlbum.uri]));
+                // Add tracks
+                albumUriToTracks[mpdAlbum.uri].forEach(mpdTrack => {
+                    tracks.push(this.toStoredTrack(mpdTrack));
+                    // Add or complete artists
+                    if(!uriToArtist[mpdTrack.artists[0].uri])  {
+                        uriToArtist[mpdTrack.artists[0].uri] = this.toStoredArtist(mpdTrack.artists[0]);
                     }
-                    
-                    return Track(mpd_track, uriToArtist[mpd_track.artists[0].uri]);
-                });
-                tracks.push(...albumTracks);
-
-                // album
-                return Album(
-                    mpd_album,
-                    albumTracks,
-                    albumUriToArtworkList[mpd_album.uri]
-                );
+                    uriToArtist[mpdTrack.artists[0].uri].album_uris.push(mpdTrack.album.uri);
+                })
             });
 
-            return [Object.values(uriToArtist), albums, tracks];
+            // Get artist list
+            const artists = Object.values(uriToArtist);
+
+            // make list of uris unique
+            artists.forEach(a => {
+                a.album_uris = [...new Set(a.album_uris)];
+            });
+            albums.forEach(a => {
+                a.track_uris = [...new Set(a.track_uris)];
+            })
+
+            return [artists, albums, tracks];
 
         } catch(err) {
 
             console.error("Caught exception:", err);
             return [];
+        }
+    }
+
+    /**
+     * 
+     * @param {mpd_artist} mpdArtist
+     * @param {mpd_album[]} mpdAlbums
+     * @returns {import("Reducers/LibraryReducer").StoredArtist}
+     */
+    toStoredArtist(mpdArtist, mpdAlbums = []) {
+        return {
+            uri: mpdArtist.uri,
+            name: mpdArtist.name,
+            album_uris: mpdAlbums.map(a => a.uri)
+        }
+    }
+
+    /**
+     * 
+     * @param {mpd_album} mpdAlbum
+     * @param {mpd_track[]} mpdTracks
+     * @param {mpd_image[]} mpdImages
+     * @returns {import("Reducers/LibraryReducer").StoredAlbum}
+     */
+    toStoredAlbum(mpdAlbum, mpdTracks = [], mpdImages = []) {
+        return {
+            uri: mpdAlbum.uri,
+            name: mpdAlbum.name,
+            year: mpdTracks.length ? mpdTracks[0].date.slice(0,4) : "",
+            length: Math.floor(mpdTracks.reduce((l,t) => l+t.length, 0)/1000),
+            artist_uri: mpdTracks.length ? mpdTracks[0].artists[0].uri : "",
+            track_uris: mpdTracks.map(t => t.uri),
+            cover_uri: mpdImages.length ? `${SERVER_IP}${mpdImages[0].uri}` : null,
+        }
+    }
+
+    /**
+     * 
+     * @param {mpd_track} mpdTrack
+     * @returns {import("Reducers/LibraryReducer").StoredTrack}
+     */
+    toStoredTrack(mpdTrack) {
+        return {
+            uri: mpdTrack.uri,
+            name: mpdTrack.name,
+            track_no: mpdTrack.track_no,
+            disc_no: mpdTrack.disc_no,
+            length: mpdTrack.length,
+            year: mpdTrack.date.slice(0,4),
+            artist_uri: mpdTrack.artists[0].uri,
+            album_uri: mpdTrack.album.uri
         }
     }
     

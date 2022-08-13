@@ -1,10 +1,40 @@
 import { ACTION_TYPES, LIBRARY_ACTIONS } from "Actions";
 
+/** 
+ * @typedef {object} StoredArtist
+ * @property {string} uri
+ * @property {string} name
+ * @property {string[]} album_uris
+ */
+
+/** 
+ * @typedef {object} StoredAlbum
+ * @property {string} uri
+ * @property {string} name
+ * @property {string} year
+ * @property {string} length
+ * @property {string} artist_uri
+ * @property {string[]} track_uris
+ * @property {string} cover_uri
+ */
+
+/**
+ * @typedef {object} StoredTrack
+ * @property {string} uri
+ * @property {string} name
+ * @property {number} disc_no
+ * @property {number} track_no
+ * @property {string} artist_uri
+ * @property {string} album_uri
+ * @property {string} year
+ * @property {number} length
+ */
+
 /**
  * @typedef {Object} LibraryState
- * @property {import("ViewModel/Album").Album[]} albums
- * @property {import("ViewModel/Artist").Artist[]} artists
- * @property {import("ViewModel/Track").Track[]} tracks
+ * @property {StoredAlbum[]} albums
+ * @property {StoredArtist[]} artists
+ * @property {StoredTrack[]} tracks
  * @property {string[]} albumSortKeys
  * @property {string} filterToken
  */
