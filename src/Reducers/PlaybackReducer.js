@@ -40,10 +40,7 @@ const PlaybackReducer = (state = initialState, action) => {
         case PLAYBACK_ACTIONS.UPDATE:
             return {
                 ...state,
-                state: action.state || state.state,
-                timePosition: action.timePosition != null ?  action.timePosition : state.timePosition,
-                timePositionUpdated: action.timePositionUpdated != null ? action.timePositionUpdated : state.timePositionUpdated,
-                track_uri: action.track_uri || null
+                ...action.stateUpdates
             };
 
         case PLAYBACK_ACTIONS.UPDATE_STATE:

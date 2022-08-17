@@ -32,21 +32,13 @@ export function fetch() {
 };
 
 /**
- * 
- * @param {Object} param0
- * @param {import("MopidyAPI/PlaybackAPI").PlaybackState} param0.state
- * @param {string} param0.track_uri
- * @param {number} param0.timePosition
- * @param {number} param0.timePositionUpdated
+ * @param {import("Reducers/PlaybackReducer").PlaybackState} stateUpdates
  */
-export function update({state, track_uri, timePosition, timePositionUpdated}) {
+export function update(stateUpdates) {
     return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.UPDATE,
-        state: state,
-        track_uri: track_uri,
-        timePosition: timePosition,
-        timePositionUpdated: timePositionUpdated
+        stateUpdates: stateUpdates
     };
 }
 
@@ -114,7 +106,7 @@ export function play(track_uri, track_uris) {
  * 
  * @param {import("Reducers/LibraryReducer").StoredAlbum} album 
  */
-export async function playAlbum(album) {
+export function playAlbum(album) {
     Mopidy.playTracklist(album.track_uris);
     return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
