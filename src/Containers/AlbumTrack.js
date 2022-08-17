@@ -8,7 +8,7 @@ import { AlbumTrack } from "Components";
  * @param {import("Reducers").State} state
  */
 const mapStateToProps = (state, {track}) => ({
-    playbackState: track._uri === state.playback.track._uri ? state.playback.state : "stopped",
+    playbackState: track.uri === state.playback.track_uri ? state.playback.state : "stopped",
     playbackTimePosition: selectPlaybackTimePosition(state)
 });
 

@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 
 import selectPlaybackTimePosition from "Selectors/selectPlaybackTimePosition";
+import selectPlaybackTrack from "Selectors/selectPlaybackTrack";
 
 import TimePositionBar from "Components/TimePositionBar";
 
@@ -12,7 +13,7 @@ import { PlaybackActions } from "Actions";
  */
 const mapStateToProps = (state) => ({
     position: selectPlaybackTimePosition(state),
-    length: state.playback.track.length,
+    length: selectPlaybackTrack(state).length,
     state: state.playback.state
 });
   

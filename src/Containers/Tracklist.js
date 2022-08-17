@@ -11,11 +11,10 @@ import TracklistItem from "./TracklistItem";
  * @param {Object} props
  * @param {import("Reducers/TracklistReducer").StoredTracklistItem[]} props.items 
  * @param {Function} props.onTrackClick
- * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack").StoredTrack} props.playbackTrack
  * @param {boolean} props.scrollToActive
  * @param {*} props.dispatch Filter out redux dispatch from forwardProps
  */
-const Tracklist = ({items, onTrackClick, playbackTrack, scrollToActive, dispatch, ...gridProps}) => {
+const Tracklist = ({items, onTrackClick, scrollToActive, dispatch, ...gridProps}) => {
 
     return (
         <GridList spacing={1} divider {...gridProps}>
@@ -35,7 +34,6 @@ const Tracklist = ({items, onTrackClick, playbackTrack, scrollToActive, dispatch
  */
 const mapStateToProps = (state) => ({
     items: selectTracklistTracks(state),
-    playbackTrack: state.playback.track,
 });
 
 export default connect(mapStateToProps)(Tracklist);

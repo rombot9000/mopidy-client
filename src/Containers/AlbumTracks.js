@@ -5,23 +5,30 @@ import { PlaybackActions } from "Actions";
 
 import { GridList } from "Components";
 
+import selectSortedAlbumTracks from "Selectors/selectSortedAlbumTracks";
+
 import AlbumTrack from "./AlbumTrack";
 
 /**
- * @param {Object} props
- * @param {import("Reducers/LibraryReducer").StoredAlbum} props.album 
- * @param {Function} props.onTrackClick
- * @param {import("Reducers/LibraryReducer").StoredTrack} props.playbackTrack
+ * @typedef AlbumTracksProps
+ * @property {import("Reducers/LibraryReducer").StoredAlbum} album
+ * @property {import("Reducers/LibraryReducer").StoredTrack[]} tracks
+ * @property {Function} onTrackClick
+ * @property {string} playbackTrackUri
  */
-const AlbumTracks = ({album, onTrackClick, playbackTrack, ...forwardProps}) => {
+
+/**
+ * @param {AlbumTracksProps} props
+ */
+const AlbumTracks = ({album, tracks, onTrackClick, playbackTrackUri, ...forwardProps}) => {
     return (
         <GridList spacing={1} divider {...forwardProps}>
-            {album.tracks.map((track, index) => (
+            {tracks.map((track, index) => (
                 <AlbumTrack
                     key={index}
                     track={track}
                     onClick={() => {
-                        onTrackClick(track, album.tracks, track._uri === playbackTrack._uri)
+                        onTrackClick(track.uri, album.track_uris, track.uri === playbackTrackUri)
                     }}
                 />
             ))}
@@ -30,14 +37,16 @@ const AlbumTracks = ({album, onTrackClick, playbackTrack, ...forwardProps}) => {
 };
 
 /**
- * @param {import("Reducers").State} state 
+ * @param {State} state
+ * @param {AlbumTracksProps} ownProps
  */
-const mapStateToProps = (state) => ({
-    playbackTrack: state.playback.track,
+const mapStateToProps = (state, ownProps) => ({
+    tracks: selectSortedAlbumTracks(state, ownProps.album),
+    playbackTrackUri: state.playback.track_uri,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onTrackClick: (track, tracks, isActive) => dispatch(isActive ? PlaybackActions.toggle() : PlaybackActions.play(track, tracks))
+    onTrackClick: (track_uri, track_uris, isActive) => dispatch(isActive ? PlaybackActions.toggle() : PlaybackActions.play(track_uri, track_uris))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlbumTracks);

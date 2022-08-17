@@ -9,9 +9,17 @@ import ContextMenuItem from "../Components/ContextMenuItem";
 import { TracklistActions } from "Actions";
 
 /**
+ * @typedef AlbumContextMenuProps
+ * @property {import("Reducers/LibraryReducer").StoredAlbum} album
+ * @property {Element} anchorEl
+ * @property {Function} onPlay
+ * @property {Function} onPlayNext
+ * @property {Function} onAddToTracklist
+ */
+
+/**
  * 
- * @param {Object} props
- * @param {import("Reducers/LibraryReducer").StoredAlbum").StoredAlbum").StoredAlbum} props.album
+ * @param {AlbumContextMenuProps} props
  */
 const AlbumContextMenu = ({album, anchorEl, onPlay, onPlayNext, onAddToTracklist}) => {
     //const classes = useStyles();
@@ -25,11 +33,16 @@ const AlbumContextMenu = ({album, anchorEl, onPlay, onPlayNext, onAddToTracklist
     )
 };
   
-
+/**
+ * 
+ * @param {*} dispatch 
+ * @param {AlbumContextMenuProps} ownProps 
+ * @returns 
+ */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onPlay: () => dispatch(TracklistActions.set(ownProps.album.tracks)),
-    onPlayNext: () => dispatch(TracklistActions.playNext(ownProps.album.tracks)),
-    onAddToTracklist: () => dispatch(TracklistActions.add(ownProps.album.tracks))
+    onPlay: () => dispatch(TracklistActions.set(ownProps.album.track_uris)),
+    onPlayNext: () => dispatch(TracklistActions.playNext(ownProps.album.track_uris)),
+    onAddToTracklist: () => dispatch(TracklistActions.add(ownProps.album.track_uris))
 });
 
 export default connect(null, mapDispatchToProps)(AlbumContextMenu);
