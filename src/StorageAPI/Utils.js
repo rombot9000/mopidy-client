@@ -79,59 +79,59 @@ export async function writeAlbumsToDB(albums) {
     }
 }
 
-/**
- * 
- * @param {Object} obj 
- */
-function createShallowCopy(obj) {
+// /**
+//  * 
+//  * @param {Object} obj 
+//  */
+// function createShallowCopy(obj) {
 
-    const objOut = Array.isArray(obj) ? [] : {};
+//     const objOut = Array.isArray(obj) ? [] : {};
     
-    Object.entries(obj).forEach(([key,value]) => {
+//     Object.entries(obj).forEach(([key,value]) => {
 
-        if(typeof value !== "object" || value === null) {
+//         if(typeof value !== "object" || value === null) {
             
-            objOut[key] = value;
+//             objOut[key] = value;
 
-        } else if(value._uri != null) {
+//         } else if(value._uri != null) {
             
-            objOut[key] = { _uri: value._uri };
+//             objOut[key] = { _uri: value._uri };
 
-        } else {
+//         } else {
             
-            objOut[key] = createShallowCopy(value);
+//             objOut[key] = createShallowCopy(value);
 
-        }
-    })
+//         }
+//     })
 
-    return objOut;
-}
+//     return objOut;
+// }
 
-/**
- * 
- * @param {Object} obj 
- * @param {Object.<string, Object>} references 
- */
-function insertReferences(obj, references) {
-    Object.keys(obj).forEach(key => {
+// /**
+//  * 
+//  * @param {Object} obj 
+//  * @param {Object.<string, Object>} references 
+//  */
+// function insertReferences(obj, references) {
+//     Object.keys(obj).forEach(key => {
         
-        if(typeof obj[key] !== "object" || obj[key] === null) {
+//         if(typeof obj[key] !== "object" || obj[key] === null) {
             
-            return;
+//             return;
 
-        } else if(obj[key]._uri != null) {
+//         } else if(obj[key]._uri != null) {
             
-            obj[key] = references[obj[key]._uri];
+//             obj[key] = references[obj[key]._uri];
 
-        } else {
+//         } else {
             
-            insertReferences(obj[key], references);
+//             insertReferences(obj[key], references);
 
-        }
+//         }
 
-    });
+//     });
 
-}
+// }
 
 /**
  * 
@@ -143,16 +143,16 @@ export async function writeLibraryToDB(library) {
         
         const albumObjectStoreWriter = await LibraryDB.getObjectStoreWriter("Albums");
         await albumObjectStoreWriter.clear();
-        await albumObjectStoreWriter.add(library.albums.map(createShallowCopy));
+        await albumObjectStoreWriter.add(library.albums);
 
 
         const artistObjectStoreWriter = await LibraryDB.getObjectStoreWriter("Artists");
         await artistObjectStoreWriter.clear();
-        await artistObjectStoreWriter.add(library.artists.map(createShallowCopy));
+        await artistObjectStoreWriter.add(library.artists);
 
         const trackObjectStoreWriter = await LibraryDB.getObjectStoreWriter("Tracks");
         await trackObjectStoreWriter.clear();
-        await trackObjectStoreWriter.add(library.tracks.map(createShallowCopy));
+        await trackObjectStoreWriter.add(library.tracks);
 
         
     } catch(error) {
@@ -178,14 +178,14 @@ export async function readLibraryFromDB() {
         const trackObjectStoreReader = await LibraryDB.getObjectStoreReader("Tracks"); 
         const tracks = await trackObjectStoreReader.getAll();
         
-        const mapUriToObject = {};
-        [albums, tracks, artists].forEach(arr => arr.forEach(obj => {
-            mapUriToObject[obj._uri] = obj;
-        }));
+        // const mapUriToObject = {};
+        // [albums, tracks, artists].forEach(arr => arr.forEach(obj => {
+        //     mapUriToObject[obj._uri] = obj;
+        // }));
 
-        [albums, tracks, artists].forEach(arr => arr.forEach(obj => {
-            insertReferences(obj, mapUriToObject);
-        }));
+        // [albums, tracks, artists].forEach(arr => arr.forEach(obj => {
+        //     insertReferences(obj, mapUriToObject);
+        // }));
 
         return {
             albums: albums,

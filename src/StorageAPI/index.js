@@ -2,38 +2,30 @@
 import IndexedDB from "./IndexedDB";
 
 // View Model
-import { Album, Artist, Track } from "ViewModel";
+import { EmptyAlbum, EmptyArtist, EmptyTrack } from "Reducers/StoreModel";
 
+console.log("Prepare Library");
 // Library
-const LibraryDB = new IndexedDB("Library", 8);
+const LibraryDB = new IndexedDB("Library", 9);
 LibraryDB.addStore({
     name: "Albums",
-    params: {keyPath: "_uri"},
-    indexSchemes: Object.keys(Album(null)).filter(([key,value]) => {
-        return typeof value !== "object" || value === null
-    }).map(([key,value]) => {
-        return {index: key, params: null};
-    })
+    params: {keyPath: "uri"},
+    indexSchemes: Object.keys(EmptyAlbum()).map(key => { return {index: key, params: null}; })
 });
 LibraryDB.addStore({
     name: "Artists",
-    params: {keyPath: "_uri"},
-    indexSchemes: Object.entries(Artist(null)).filter(([key,value]) => {
-        return typeof value !== "object" || value === null
-    }).map(([key,value]) => {
-        return {index: key, params: null};
-    })
+    params: {keyPath: "uri"},
+    indexSchemes: Object.keys(EmptyArtist()).map(key => { return {index: key, params: null}; })
+
 });
 LibraryDB.addStore({
     name: "Tracks",
-    params: {keyPath: "_uri"},
-    indexSchemes: Object.keys(Track(null)).filter(([key,value]) => {
-        return typeof value !== "object" || value === null
-    }).map(([key,value]) => {
-        return {index: key, params: null};
-    })
+    params: {keyPath: "uri"},
+    indexSchemes: Object.keys(EmptyTrack()).map(key => { return {index: key, params: null}; })
+
 });
-LibraryDB.init();
+console.log("Initit Library");
+//LibraryDB.init();
 
 // Settings
 const SettingsDB = new IndexedDB("Settings", 4);
