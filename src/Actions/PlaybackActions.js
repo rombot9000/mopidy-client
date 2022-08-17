@@ -35,16 +35,16 @@ export function fetch() {
  * 
  * @param {Object} param0
  * @param {import("MopidyAPI/PlaybackAPI").PlaybackState} param0.state
- * @param {import("Reducers/LibraryReducer").StoredTrack} param0.track
+ * @param {string} param0.track_uri
  * @param {number} param0.timePosition
  * @param {number} param0.timePositionUpdated
  */
-export function update({state, track, timePosition, timePositionUpdated}) {
+export function update({state, track_uri, timePosition, timePositionUpdated}) {
     return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.UPDATE,
         state: state,
-        track: track,
+        track_uri: track_uri,
         timePosition: timePosition,
         timePositionUpdated: timePositionUpdated
     };
@@ -74,13 +74,13 @@ export function updateTimePosition(timePosition) {
 }
 
 /**
- * @param {import("Reducers/LibraryReducer").StoredTrack} track 
+ * @param {string} track_uri 
  */
-export function updateTrack(track) {
+export function updateTrack(track_uri) {
     return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.UPDATE_TRACK,
-        track: track
+        track_uri: track_uri
     };
 }
 
@@ -99,11 +99,11 @@ export function updateTrack(track) {
 
 /**
  * 
- * @param {import("Reducers/LibraryReducer").StoredTrack} track 
- * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracklist 
+ * @param {string} track_uri 
+ * @param {string[]} track_uris 
  */
-export function play(track, tracklist) {
-    Mopidy.playTracklist(tracklist ? tracklist : [track], track);
+export function play(track_uri, track_uris) {
+    Mopidy.playTracklist(track_uris ? track_uris : [track_uri], track_uri);
     return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.PLAY
@@ -115,7 +115,7 @@ export function play(track, tracklist) {
  * @param {import("Reducers/LibraryReducer").StoredAlbum} album 
  */
 export async function playAlbum(album) {
-    Mopidy.playTracklist(album.tracks);
+    Mopidy.playTracklist(album.track_uris);
     return {
         type: ACTION_TYPES.PLAYBACK_ACTION,
         case: PLAYBACK_ACTIONS.PLAY_ALBUM

@@ -1,5 +1,4 @@
 
-import { Track } from "ViewModel";
 import { LibraryActions, TracklistActions, PlaybackActions, NetworkActions, NotifyActions } from "Actions";
 import Store from "Store";
 
@@ -84,7 +83,7 @@ export function handleMpdEvent(event, args) {
             if(args.new_state === "stopped"){
                 Store.dispatch(PlaybackActions.update({
                     state: "stopped",
-                    track: Track(null),
+                    track_uri: null,
                     timePosition: 0,
                     timePositionUpdated: 0
                 }));
@@ -94,7 +93,7 @@ export function handleMpdEvent(event, args) {
         case "event:trackPlaybackStarted":
             Store.dispatch(PlaybackActions.update({
                 state: "playing",
-                track: Track(args.tl_track.track),
+                track_uri: args.tl_track.track.uri,
                 timePosition: 0,
                 timePositionUpdated: Date.now()
             }));

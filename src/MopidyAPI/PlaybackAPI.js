@@ -2,8 +2,6 @@ import BaseAPI from "./BaseAPI";
 
 import { UnknownPlaybackStateError } from "./Errors";
 
-import { Track } from "ViewModel";
-
 
 /** @typedef {"play"|"pause"|"resume"|"stop"|"next"|"previous"} PlaybackCmd */
 /** @typedef {"playing"|"paused"|"stopped"} PlaybackState */
@@ -27,7 +25,7 @@ export default class PlaybackAPI extends BaseAPI {
 
     /**
      * Fetch this._api info from server
-     * @returns {{state: string, track: Track, timePosition: number}}
+     * @returns {{state: string, track_uri: string, timePosition: number}}
      */
     async fetchInfo() {
 
@@ -38,7 +36,7 @@ export default class PlaybackAPI extends BaseAPI {
         if(this._state === "stopped") {
             return {
                 state: this._state,
-                track: Track(null),
+                track_uri: null,
                 timePosition: 0,
                 timePositionUpdated: 0
             }
@@ -52,7 +50,7 @@ export default class PlaybackAPI extends BaseAPI {
 
         return {
             state: this._state,
-            track: Track(tltrack.track),
+            track_uri: tltrack.track.uri,
             timePosition: timePosition,
             timePositionUpdated: Date.now()
         };

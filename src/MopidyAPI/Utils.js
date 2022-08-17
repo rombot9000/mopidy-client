@@ -24,14 +24,14 @@ async function notifyUserOnError(promise) {
 
 /**
  * Play tracklist. If track is omitted, playback starts with first track
- * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack[]} tracks 
- * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack").StoredTrack} track 
+ * @param {string[]} track_uris  Tracks to set
+ * @param {string} track_uri Track to play first
  */
-export async function playTracklist(tracks, track) {
+export async function playTracklist(track_uris, track_uri) {
 
-    await notifyUserOnError(Tracklist.set(tracks));
+    await notifyUserOnError(Tracklist.set(track_uris));
     
-    const tlid = track ? Tracklist.getTrackId(track): null;
+    const tlid = track_uri ? Tracklist.getTrackId(track_uri): null;
     
     await notifyUserOnError(Playback.playTrack(tlid));
 
@@ -91,24 +91,24 @@ export async function fetchTracklist() {
 
 /**
  * Replace current tracklist
- * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack[]} tracks 
+ * @param {string[]} track_uris
  * @returns 
  */
-export async function setTracklist(tracks) {
+export async function setTracklist(track_uris) {
 
-    return await notifyUserOnError(Tracklist.set(tracks));
+    return await notifyUserOnError(Tracklist.set(track_uris));
 
 }
 
 /**
  * Add to current tracklist at postion
- * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack").StoredTrack[]} tracks 
+ * @param {string[]} track_uris
  * @param {number} position 
  * @returns 
  */
-export async function addToTracklist(tracks, position) {
+export async function addToTracklist(track_uris, position) {
 
-    return await notifyUserOnError(Tracklist.add(tracks, position));
+    return await notifyUserOnError(Tracklist.add(track_uris, position));
 
 }
 
@@ -131,16 +131,16 @@ export async function addToTracklist(tracks, position) {
 
 /**
  * Add to current tracklist at postion
- * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack[]} tracks 
+ * @param {string[]} track_uris
  * @returns 
  */
- export async function playNext(tracks) {
+ export async function playNext(track_uris) {
 
     const currentTrackId = await notifyUserOnError(Tracklist.getCurrentTrackId());
 
     const position = (currentTrackId == null) ? 0 : currentTrackId + 1; 
 
-    return await notifyUserOnError(Tracklist.add(tracks, position));
+    return await notifyUserOnError(Tracklist.add(track_uris, position));
 
 }
 

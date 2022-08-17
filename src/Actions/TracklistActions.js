@@ -14,12 +14,11 @@ export const TRACKLIST_ACTIONS = {
 Object.freeze(TRACKLIST_ACTIONS);
 
 /**
- * 
- * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracks 
+ * @param {string[]} track_uris
  */
-export function set(tracks) {
+export function set(track_uris) {
     return async dispatch => {
-        await Mopidy.setTracklist(tracks);
+        await Mopidy.setTracklist(track_uris);
         dispatch ({
             type: ACTION_TYPES.TRACKLIST_ACTION,
             case: TRACKLIST_ACTIONS.SET,
@@ -29,12 +28,12 @@ export function set(tracks) {
 
 /**
  * 
- * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracks
+ * @param {string[]} track_uris
  * @param {number} position
  */
- export function add(tracks, position) {
+ export function add(track_uris, position) {
     return async dispatch => {
-        await Mopidy.addToTracklist(tracks, position);
+        await Mopidy.addToTracklist(track_uris, position);
         dispatch ({
             type: ACTION_TYPES.TRACKLIST_ACTION,
             case: TRACKLIST_ACTIONS.ADD,
@@ -44,11 +43,11 @@ export function set(tracks) {
 
 /**
  * 
- * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracks
+ * @param {string[]} track_uris
  */
- export function playNext(tracks) {
+ export function playNext(track_uris) {
     return async dispatch => {
-        await Mopidy.playNext(tracks);
+        await Mopidy.playNext(track_uris);
         dispatch ({
             type: ACTION_TYPES.TRACKLIST_ACTION,
             case: TRACKLIST_ACTIONS.PLAY_NEXT,

@@ -42,13 +42,13 @@ export default class TracklistAPI extends BaseAPI {
     /**
      * Sets tracklist on server to album
      * Does nothing if album is already set
-     * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracks
+     * @param {string[]} track_uris
      */
-    async set(tracks) {
+    async set(track_uris) {
 
         if(!this.clear()) return;
         
-        return await this.add(tracks);
+        return await this.add(track_uris);
     }   
 
 
@@ -69,11 +69,11 @@ export default class TracklistAPI extends BaseAPI {
      * Add Tracks to tracklist at given position.
      * If position is undefined or larger than tracklist size, tracks are added to back
      * Supports negative indexing 
-     * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracks 
+     * @param {string[]} track_uris 
      * @param {Number?} position Position in tracklist to insert
      * @returns 
      */
-    async add(tracks, position) {
+    async add(track_uris, position) {
 
         if(!this._api) return false;
         
@@ -86,7 +86,7 @@ export default class TracklistAPI extends BaseAPI {
         this._tracklist = await this._api.add({
             "tracks": null,
             "at_position": position,
-            "uris": tracks.map(t => t._uri)
+            "uris": track_uris
         });
 
         return true;
@@ -126,7 +126,7 @@ export default class TracklistAPI extends BaseAPI {
 
         console.warn("DEPRACTED FUNCTIONS!")
 
-        const track_tl_item = this._tracklist.find(tl_item => tl_item.track.uri === track._uri);
+        const track_tl_item = this._tracklist.find(tl_item => tl_item.track.uri === track.uri);
 
         if(track_tl_item) return track_tl_item.tlid;
         

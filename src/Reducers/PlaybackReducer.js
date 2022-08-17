@@ -1,13 +1,11 @@
 import { ACTION_TYPES, PLAYBACK_ACTIONS } from "Actions";
 
-import { Track } from "ViewModel";
-
 /** @typedef {"playing"|"paused"|"stopped"} MopdiyPlaybackState */
 
 /** 
  * @typedef {Object} PlaybackState
  * @property {MopdiyPlaybackState} state
- * @property {import("Reducers/LibraryReducer").StoredTrack} track
+ * @property {string} track_uri
  * @property {number} timePosition
  * @property {number} timePositionUpdated
  */
@@ -15,7 +13,7 @@ import { Track } from "ViewModel";
  /** @type {PlaybackState} */
 const initialState = {
     state: "stopped",
-    track: Track(null),
+    track_uri: null,
     timePosition: 0,
     timePositionUpdated: 0,
 }
@@ -36,7 +34,7 @@ const PlaybackReducer = (state = initialState, action) => {
                 state: action.state || "stopped",
                 timePosition: action.timePosition || 0,
                 timePositionUpdated: action.timePositionUpdated || 0,
-                track: action.track || Track(null)
+                track_uri: action.track_uri || null
             };
 
         case PLAYBACK_ACTIONS.UPDATE:
@@ -45,7 +43,7 @@ const PlaybackReducer = (state = initialState, action) => {
                 state: action.state || state.state,
                 timePosition: action.timePosition != null ?  action.timePosition : state.timePosition,
                 timePositionUpdated: action.timePositionUpdated != null ? action.timePositionUpdated : state.timePositionUpdated,
-                track: action.track || state.track
+                track_uri: action.track_uri || null
             };
 
         case PLAYBACK_ACTIONS.UPDATE_STATE:
@@ -64,7 +62,7 @@ const PlaybackReducer = (state = initialState, action) => {
         case PLAYBACK_ACTIONS.UPDATE_TRACK:
             return {
                 ...state,
-                track: action.track || Track(null)
+                track_uri: action.track_uri || null
             };
 
         default:
