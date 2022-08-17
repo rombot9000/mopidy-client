@@ -7,8 +7,8 @@ import SettingsMenu from "Components/SettingsMenu";
 import ScrollableModal from "Components/ScrollableModal";
 import MultiSelect from "Components/MultiSelect";
 
-import { Album } from "ViewModel";
 import { LibraryActions, NotifyActions, ViewActions } from "Actions";
+import { EmptyAlbum } from "Reducers/StoreModel";
 
 /**
  * @param {import("Reducers").State} state 
@@ -47,7 +47,7 @@ function SettingsModal({open, onClose, albumSortKeys, onSetAlbumSortKeys, networ
     const options = [
         {
             text: "Sort albums by",
-            input: (<MultiSelect options={Object.keys(Album(null))} selection={albumSortKeys} onSelect={onSetAlbumSortKeys}/>)
+            input: (<MultiSelect options={Object.keys(EmptyAlbum())} selection={albumSortKeys} onSelect={onSetAlbumSortKeys}/>)
         },
         {
             text: "Show server messages",

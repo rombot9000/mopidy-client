@@ -22,20 +22,24 @@ const useStyles = makeStyles(theme => ({
  * @param {SelectCallback} props.onSelect
  */
 const Multiselect = ({options, selection, onSelect}) => {
-    const rSelection = [...selection].reverse();
+    
     const classes = useStyles();
+
+    // For the rare case tha the selection holds values not included in the options array
+    const filteredSelection = selection.filter(s => options.includes(s));
+    const rSelection = [...filteredSelection].reverse()
 
     return (
         <Select
             className={classes.select}
             multiple
-            value={selection}
+            value={filteredSelection}
             onChange={event => onSelect(event.target.value)}
             input={<Input placeholder="Select sort keys..."/>}
         >
             {options.sort((a,b) => rSelection.indexOf(b)-rSelection.indexOf(a)).map(key => (
                 <MenuItem key={key} value={key}>
-                    {selection.includes(key) ? `${selection.indexOf(key) + 1}. ${key}` : key}
+                    {filteredSelection.includes(key) ? `${filteredSelection.indexOf(key) + 1}. ${key}` : key}
                 </MenuItem>
             ))}
         </Select>

@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 
-import { Album} from "ViewModel";
+import { EmptyAlbum } from "Reducers/StoreModel";
 
 /**
  * @param {import("Reducers/LibraryReducer").StoredAlbum[]} storedAlbums
@@ -50,15 +50,13 @@ function customCompare(a,b) {
  */
 function sortAlbums(albums, sortKeys) {
 
+    console.log(sortKeys);
+
     if(!sortKeys || !Array.isArray(sortKeys) || !sortKeys.length) return albums;
     
     //remove unsortable attributes from sort list
-    const album = Album(null);
-    const filteredKeys = sortKeys.filter(key => 
-        album.hasOwnProperty(key) //&&
-        // if key refers to an object, we sort using the name attribute of the object
-       // (typeof album[key] != "object" || album[key].hasOwnProperty("name"))
-    );
+    const album = EmptyAlbum();
+    const filteredKeys = sortKeys.filter(key => album.hasOwnProperty(key));
     
     let compRes = 0;
     return albums.sort((a,b) => {
