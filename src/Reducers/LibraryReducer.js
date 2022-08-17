@@ -1,14 +1,14 @@
 import { ACTION_TYPES, LIBRARY_ACTIONS } from "Actions";
 
 /** 
- * @typedef {object} StoredArtist
+ * @typedef StoredArtist
  * @property {string} uri
  * @property {string} name
  * @property {string[]} album_uris
  */
 
 /** 
- * @typedef {object} StoredAlbum
+ * @typedef StoredAlbum
  * @property {string} uri
  * @property {string} name
  * @property {string} artistName
@@ -20,7 +20,7 @@ import { ACTION_TYPES, LIBRARY_ACTIONS } from "Actions";
  */
 
 /**
- * @typedef {object} StoredTrack
+ * @typedef StoredTrack
  * @property {string} uri
  * @property {string} name
  * @property {string} albumName
@@ -34,7 +34,7 @@ import { ACTION_TYPES, LIBRARY_ACTIONS } from "Actions";
  */
 
 /**
- * @typedef {Object} LibraryState
+ * @typedef LibraryState
  * @property {StoredAlbum[]} albums
  * @property {StoredArtist[]} artists
  * @property {StoredTrack[]} tracks
@@ -49,7 +49,7 @@ const initialState = {
     tracks: [],
     albumSortKeys: [],
     filterToken: undefined
-}
+};
 
 /**
  * @param {LibraryState} state
