@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('sm')]: {
             width: theme.breakpoints.values.sm - 56,
         },
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             width: `calc(100% - 56px)`,
         },
         maxHeight: "100%",

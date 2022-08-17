@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
         left: 0,
         width: "100%",
         height: "100%",
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             overflowY: "scroll",
             "&::-webkit-scrollbar": {
                 display: "none"

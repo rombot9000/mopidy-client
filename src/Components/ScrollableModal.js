@@ -14,15 +14,15 @@ const useStyles = makeStyles(theme => ({
         position: "absolute",
         overflowX: "visible",
         overflowY: "visible",
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             top: `calc(50% + ${0.5*theme.spacingNumber(PADDING)}px)`,
             height: `calc(100% - ${theme.spacingNumber(PADDING)}px)`,
             width: `calc(100% - ${2*theme.spacingNumber(PADDING)}px)`,
-            maxWidth: 0.5*theme.breakpoints.values["md"] - theme.spacing(PADDING),
+            maxWidth: 0.5*theme.breakpoints.values["md"] - theme.spacingNumber(PADDING),
         },
         [theme.breakpoints.up('md')]: {
             top: "50%",
-            height: 0.5*theme.breakpoints.values["md"] - theme.spacing(PADDING),
+            height: 0.5*theme.breakpoints.values["md"] - theme.spacingNumber(PADDING),
             width: theme.breakpoints.values["md"] - 2*theme.spacingNumber(PADDING),
         },
         left: "50%",
