@@ -26,7 +26,8 @@ const useStyles = makeStyles({
 /**
  * 
  * @typedef TracklistItemProps
- * @property {import("ViewModel/Track").TracklistItem} props.item
+ * @property {import("Reducers/TracklistReducer").TracklistItem} props.item
+ * @property {string} props.albumCover 
  * @property {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @property {number} props.playbackTimePosition
  * @property {Function} props.onTrackClick
@@ -39,7 +40,7 @@ const useStyles = makeStyles({
  * @param {TracklistItemProps} props 
  * @returns 
  */
-const TracklistItem = ({item, playbackState, playbackTimePosition, onTrackClick, onRemoveClick, scrollToIfActive, dispatch, ...gridProps}) => {
+const TracklistItem = ({item, albumCover, playbackState, playbackTimePosition, onTrackClick, onRemoveClick, scrollToIfActive, dispatch, ...gridProps}) => {
 
     const [hover, setHover] = React.useState(false);
 
@@ -65,7 +66,7 @@ const TracklistItem = ({item, playbackState, playbackTimePosition, onTrackClick,
         >
             <Grid item xs className={classes.cover}>
                <CoverButton
-                src={item.track.album.cover}
+                src={albumCover}
                 showButton={hover}
                 >
                     {playbackState === "playing" ? <Pause/> : <PlayArrowRounded/>}
@@ -73,7 +74,7 @@ const TracklistItem = ({item, playbackState, playbackTimePosition, onTrackClick,
             </Grid>
             <Grid xs item ref={ref} zeroMinWidth>
                 <Typography className={classes.trackName} variant="body1" align="left" noWrap>{item.track.name}</Typography>
-                <Typography className={classes.text} variant="body1" align="left" noWrap>{item.track.artist.name}</Typography>
+                <Typography className={classes.text} variant="body1" align="left" noWrap>{item.track.artistName}</Typography>
             </Grid>
             <Grid item>
                 

@@ -166,6 +166,7 @@ class LibraryAPI extends BaseAPI {
         return {
             uri: mpdAlbum.uri,
             name: mpdAlbum.name,
+            artistName: mpdTracks.length ? mpdTracks[0].artists[0].name : "",
             year: mpdTracks.length ? mpdTracks[0].date.slice(0,4) : "",
             length: Math.floor(mpdTracks.reduce((l,t) => l+t.length, 0)/1000),
             artist_uri: mpdTracks.length ? mpdTracks[0].artists[0].uri : "",
@@ -187,6 +188,8 @@ class LibraryAPI extends BaseAPI {
             disc_no: mpdTrack.disc_no,
             length: mpdTrack.length,
             year: mpdTrack.date.slice(0,4),
+            artistName: mpdTrack.artists[0].name,
+            albumName: mpdTrack.album.name,
             artist_uri: mpdTrack.artists[0].uri,
             album_uri: mpdTrack.album.uri
         }

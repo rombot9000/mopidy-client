@@ -12,12 +12,6 @@ import Album from "./Album";
  * @property {number} length
  */
 
-/** 
- * @typedef TracklistItem
- * @property {Track} track Track
- * @property {number} tlid Tracklist Item Id
- */
-
 /** @type {Track} */
 const emptyTrack = {
     name: null,

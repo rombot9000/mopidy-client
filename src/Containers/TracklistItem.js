@@ -1,15 +1,18 @@
 import { connect } from "react-redux";
 
 import selectPlaybackTimePosition from "Selectors/selectPlaybackTimePosition";
+import selectAlbumCover from "Selectors/selectAlbumCover";
 
 import { TracklistItem } from "Components";
 import { TracklistActions, PlaybackActions } from "Actions";
 
 /**
  * @param {import("Reducers").State} state
+ * @param {import("Components/TracklistItem").TracklistItemProps} ownProps 
  */
-const mapStateToProps = (state, {item}) => ({
-    playbackState: item.track._uri === state.playback.track._uri ? state.playback.state : "stopped",
+const mapStateToProps = (state, ownProps) => ({
+    albumCover: selectAlbumCover(state, ownProps.item.track.album_uri),
+    playbackState: ownProps.item.track._uri === state.playback.track._uri ? state.playback.state : "stopped",
     playbackTimePosition: selectPlaybackTimePosition(state)
 });
 

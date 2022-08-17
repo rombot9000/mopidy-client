@@ -63,7 +63,7 @@ const TrackViewItem = ({track, playbackState, playbackTimePosition, dispatch, ..
         //         <Typography className={classes.name} noWrap variant="body1" align="left">{track.name}</Typography>
         //     </Grid>
         //     <Grid item xs={3} zeroMinWidth>
-        //         <Typography className={classes.name} noWrap variant="body1" align="left">{track.artist.name}</Typography>
+        //         <Typography className={classes.name} noWrap variant="body1" align="left">{track.artistName}</Typography>
         //     </Grid>
         //     <Grid item xs={3} zeroMinWidth>
         //         <Typography className={classes.name} noWrap variant="body1" align="left">{track.album.name}</Typography>
@@ -83,7 +83,7 @@ const TrackViewItem = ({track, playbackState, playbackTimePosition, dispatch, ..
     >
         <Grid xs item zeroMinWidth>
             <Typography className={classes.trackName} variant="body1" align="left" noWrap>{track.name}</Typography>
-            <Typography className={classes.text} variant="body1" align="left" noWrap>{track.artist.name}</Typography>
+            <Typography className={classes.text} variant="body1" align="left" noWrap>{track.artistName}</Typography>
         </Grid>
         <Grid item xs={2} zeroMinWidth>
             <Typography className={classes.text} variant="body1" align="right" noWrap>{timeString}</Typography>

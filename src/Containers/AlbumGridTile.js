@@ -65,7 +65,7 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
         >
             <SquareImage
                 className={classes.cover}
-                src={album.cover}
+                src={album.cover_uri}
                 onClick={onClick}
             >
                 <Fade in={highlight}>
@@ -81,7 +81,7 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
             <Grid container direction="row">
                 <Grid item xs>
                     <Typography variant="subtitle2" className={classes.albumName}>{album.name}</Typography>
-                    <Typography variant="subtitle2" className={classes.artistName}>{album.artist.name}</Typography>
+                    <Typography variant="subtitle2" className={classes.artistName}>{album.artistName}</Typography>
                 </Grid>
                 <Grid item xs="auto">
                     <Fade in={highlight}><IconButton ref={handleRef}><MenuIcon/></IconButton></Fade>

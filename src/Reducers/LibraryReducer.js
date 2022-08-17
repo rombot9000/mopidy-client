@@ -11,6 +11,7 @@ import { ACTION_TYPES, LIBRARY_ACTIONS } from "Actions";
  * @typedef {object} StoredAlbum
  * @property {string} uri
  * @property {string} name
+ * @property {string} artistName
  * @property {string} year
  * @property {string} length
  * @property {string} artist_uri
@@ -22,12 +23,14 @@ import { ACTION_TYPES, LIBRARY_ACTIONS } from "Actions";
  * @typedef {object} StoredTrack
  * @property {string} uri
  * @property {string} name
+ * @property {string} albumName
+ * @property {string} artistName
  * @property {number} disc_no
  * @property {number} track_no
- * @property {string} artist_uri
- * @property {string} album_uri
  * @property {string} year
  * @property {number} length
+ * @property {string} artist_uri
+ * @property {string} album_uri
  */
 
 /**

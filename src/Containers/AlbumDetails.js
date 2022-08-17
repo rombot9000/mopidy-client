@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
 /**
  * 
  * @param {Object} props
- * @param {import("ViewModel/Album").Album} props.album
+ * @param {import("Reducers/LibraryReducer").StoredAlbum} props.album
  */
 const AlbumDetails = ({album, ...paperProps}) => {
 
@@ -75,13 +75,13 @@ const AlbumDetails = ({album, ...paperProps}) => {
         <Paper {...paperProps} className={classes.root}>
             <Grid container className={classes.container}>
                 <Grid item sm={12} md={6} className={classes.cover}>
-                    <SquareImage src={album.cover} elevation={0} square={true}/>
+                    <SquareImage src={album.cover_uri} elevation={0} square={true}/>
                 </Grid>
                 <Grid item sm={12} md={6} className={classes.content}>
-                        <Typography variant="subtitle1">{album.artist.name}</Typography>
+                        <Typography variant="subtitle1">{album.artistName}</Typography>
                         <Typography variant="h5">{album.name}</Typography>
                         <Typography className={classes.albumInfo} variant="subtitle1">
-                            Released {album.year} | {album.tracks.length} Tracks | {album.length} Minutes
+                            Released {album.year} | {album.track_uris.length} Tracks | {album.length} Minutes
                         </Typography>
                         <AlbumTracks className={classes.tracklist} album={album}/>
                 </Grid>

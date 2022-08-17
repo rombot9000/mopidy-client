@@ -57,7 +57,7 @@ const PlaybackCtrlBar = React.forwardRef(({ onNext, onPrev, onPlay, playbackStat
                 </ButtonGroup>
                 <Box flexGrow={2}>
                     <Typography className={classes.track} variant="subtitle1" color="inherit">{playbackTrack.name}</Typography>
-                    <Typography className={classes.artist} variant="subtitle2" color="inherit">{playbackTrack.artist.name}</Typography>
+                    <Typography className={classes.artist} variant="subtitle2" color="inherit">{playbackTrack.artistName}</Typography>
                 </Box>
             </Toolbar>
         </AppBar>

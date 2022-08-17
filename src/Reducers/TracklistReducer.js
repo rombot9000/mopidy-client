@@ -1,8 +1,14 @@
 import { ACTION_TYPES, TRACKLIST_ACTIONS } from "Actions";
 
+/** 
+ * @typedef TracklistItem
+ * @property {import("./LibraryReducer").StoredTrack} track Track
+ * @property {number} tlid Tracklist Item Id
+ */
+
 /**
  * @typedef TracklistState
- * @property {import("ViewModel/Track").TracklistItem[]} items
+ * @property {TracklistItem[]} items
  */
 
  /** @type {TracklistState} */
