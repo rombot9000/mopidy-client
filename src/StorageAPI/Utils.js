@@ -62,7 +62,7 @@ export async function getAlbumsFromDB() {
 
 /**
  * 
- * @param {import("ViewModel/Album").Album[]} albums 
+ * @param {import("Reducers/LibraryReducer").StoredAlbum[]} albums 
  */
 export async function writeAlbumsToDB(albums) {
     try {

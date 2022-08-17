@@ -24,8 +24,8 @@ async function notifyUserOnError(promise) {
 
 /**
  * Play tracklist. If track is omitted, playback starts with first track
- * @param {import("ViewModel/Track").Track[]} tracks 
- * @param {import("ViewModel/Track").Track} track 
+ * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack[]} tracks 
+ * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack").StoredTrack} track 
  */
 export async function playTracklist(tracks, track) {
 
@@ -40,7 +40,7 @@ export async function playTracklist(tracks, track) {
 
 /**
  * Play track of current tracklist
- * @param {import("ViewModel/Track").TracklistItem} item
+ * @param {import("Reducers/TracklistReducer").StoredTracklistItem} item
  */
 export async function playTracklistItem(item) {
     
@@ -91,7 +91,7 @@ export async function fetchTracklist() {
 
 /**
  * Replace current tracklist
- * @param {import("ViewModel/Track").Track[]} tracks 
+ * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack[]} tracks 
  * @returns 
  */
 export async function setTracklist(tracks) {
@@ -102,7 +102,7 @@ export async function setTracklist(tracks) {
 
 /**
  * Add to current tracklist at postion
- * @param {import("ViewModel/Track").Track[]} tracks 
+ * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack").StoredTrack[]} tracks 
  * @param {number} position 
  * @returns 
  */
@@ -122,7 +122,7 @@ export async function addToTracklist(tracks, position) {
 
 /**
  * Removes track from current tracklist
- * @param {import("ViewModel/Track").TracklistItem} item 
+ * @param {import("Reducers/TracklistReducer").StoredTracklistItem} item 
  * @returns 
  */
  export async function removeFromTracklist(item) {
@@ -131,7 +131,7 @@ export async function addToTracklist(tracks, position) {
 
 /**
  * Add to current tracklist at postion
- * @param {import("ViewModel/Track").Track[]} tracks 
+ * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack[]} tracks 
  * @returns 
  */
  export async function playNext(tracks) {

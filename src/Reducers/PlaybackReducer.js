@@ -7,7 +7,7 @@ import { Track } from "ViewModel";
 /** 
  * @typedef {Object} PlaybackState
  * @property {MopdiyPlaybackState} state
- * @property {import("ViewModel/Track").Track} track
+ * @property {import("Reducers/LibraryReducer").StoredTrack} track
  * @property {number} timePosition
  * @property {number} timePositionUpdated
  */

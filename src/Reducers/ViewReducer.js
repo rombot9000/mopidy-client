@@ -4,7 +4,7 @@ import { ACTION_TYPES, VIEW_ACTIONS } from "Actions";
  * @typedef ViewState
  * @property {boolean} menuDrawerOpen 
  * @property {boolean} albumDetailsModalOpen 
- * @property {import("ViewModel/Album").Album} albumDetailsAlbum 
+ * @property {import("Reducers/LibraryReducer").StoredAlbum} albumDetailsAlbum 
  * @property {boolean} settingsMenuOpen 
  */
 

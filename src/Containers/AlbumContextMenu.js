@@ -11,7 +11,7 @@ import { TracklistActions } from "Actions";
 /**
  * 
  * @param {Object} props
- * @param {import("ViewModel/Album").Album} props.album
+ * @param {import("Reducers/LibraryReducer").StoredAlbum").StoredAlbum").StoredAlbum} props.album
  */
 const AlbumContextMenu = ({album, anchorEl, onPlay, onPlayNext, onAddToTracklist}) => {
     //const classes = useStyles();

@@ -1,13 +1,11 @@
 import BaseAPI from "./BaseAPI";
 
-import { Track } from 'ViewModel';
-
 /**
  * Mopidy tracklist item
  * @typedef mpd_tracklist_item
  * @property {string} _model_
  * @property {number} tlid
- * @property {import('./LibraryHandler').mpd_track} track
+ * @property {import('./LibraryAPI').mpd_track} track
  */
 
 /**
@@ -44,7 +42,7 @@ export default class TracklistAPI extends BaseAPI {
     /**
      * Sets tracklist on server to album
      * Does nothing if album is already set
-     * @param {import("ViewModel/Track").Track[]} tracks
+     * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracks
      */
     async set(tracks) {
 
@@ -71,7 +69,7 @@ export default class TracklistAPI extends BaseAPI {
      * Add Tracks to tracklist at given position.
      * If position is undefined or larger than tracklist size, tracks are added to back
      * Supports negative indexing 
-     * @param {import("ViewModel/Track").Track[]} tracks 
+     * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracks 
      * @param {Number?} position Position in tracklist to insert
      * @returns 
      */
@@ -96,7 +94,7 @@ export default class TracklistAPI extends BaseAPI {
 
     /**
      * 
-     * @param {import("ViewModel/Track").TracklistItem} item 
+     * @param {import("Reducers/TracklistReducer").StoredTracklistItem} item 
      * @returns 
      */
     async remove(item) {
@@ -121,7 +119,7 @@ export default class TracklistAPI extends BaseAPI {
 
     /**
      * 
-     * @param {import("ViewModel/Track").Track} track
+     * @param {import("Reducers/LibraryReducer").StoredTrack} track
      * @returns {number} id of tracklist item
      */
     getTrackId(track) {
@@ -143,7 +141,7 @@ export default class TracklistAPI extends BaseAPI {
     get tracklist() {
         return this._tracklist.map(tl_item => {
             return {
-                track: Track(tl_item.track),
+                track_uri: tl_item.track.uri,
                 tlid: tl_item.tlid
             }
         });

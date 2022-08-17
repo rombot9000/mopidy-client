@@ -8,7 +8,7 @@ import TrackViewItem from "./TrackViewItem";
 /** 
  * @param {Function} props.onTrackClick
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
- * @param {import("ViewModel/Track").Track} props.playbackTrack
+ * @param {import("Reducers/LibraryReducer").StoredTrack} props.playbackTrack
  */
      
 

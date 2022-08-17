@@ -10,7 +10,7 @@ import {ViewActions} from "Actions";
  * @param {Object} props
  * @param {boolean} open
  * @param {Function} onClose
- * @param {import("ViewModel/Album").Album} album
+ * @param {import("Reducers/LibraryReducer").StoredAlbum} album
  */
 const AlbumDetailsModal = ({open, album, onClose}) =>  (
     <ScrollableModal open={open} onClose={onClose}>

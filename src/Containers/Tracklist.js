@@ -9,9 +9,9 @@ import TracklistItem from "./TracklistItem";
 
 /**
  * @param {Object} props
- * @param {import("ViewModel/Track").TracklistItem[]} props.items 
+ * @param {import("Reducers/TracklistReducer").StoredTracklistItem[]} props.items 
  * @param {Function} props.onTrackClick
- * @param {import("ViewModel/Track").Track} props.playbackTrack
+ * @param {import("Reducers/LibraryReducer").StoredTrack").StoredTrack").StoredTrack} props.playbackTrack
  * @param {boolean} props.scrollToActive
  * @param {*} props.dispatch Filter out redux dispatch from forwardProps
  */

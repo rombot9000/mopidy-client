@@ -6,14 +6,14 @@ export default createSelector(
         state => state.library.tracks
     ],
     /**
-     * @param {import("ViewModel/Track").TracklistItem[]} tracklistItems
-     * @param {import("ViewModel/Track").Track[]} libraryTracks
+     * @param {import("Reducers/TracklistReducer").StoredTracklistItem[]} tracklistItems
+     * @param {import("Reducers/LibraryReducer").StoredTrack[]} storedTracks
      */
-    (tracklistItems, libraryTracks) => {
+    (tracklistItems, storedTracks) => {
         return tracklistItems.map(item => {
             return {
                 tlid: item.tlid,
-                track: libraryTracks.find(t => t._uri === item.track._uri) || item.track
+                track: storedTracks.find(t => t.uri === item.track_uri) || {}
             };
         }) 
     }

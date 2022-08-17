@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 /**
  * 
  * @param {Object} props
- * @param {import("ViewModel/Track").Track} props.track
+ * @param {import("Reducers/LibraryReducer").StoredTrack} props.track
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @param {number} props.playbackTimePosition
  */

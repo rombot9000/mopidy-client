@@ -25,7 +25,7 @@ const mapStateToProps = (state) => ({
 /**
  * 
  * @param {Object} props
- * @param {import("ViewModel/Album").Album[]} props.albums
+ * @param {import("Reducers/LibraryReducer").StoredAlbum[]} props.albums
  */
 const AlbumGrid = ({albums, dispatch, ...forwardProps}) => {
     const classes = useStyles();

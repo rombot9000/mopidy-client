@@ -9,9 +9,9 @@ import AlbumTrack from "./AlbumTrack";
 
 /**
  * @param {Object} props
- * @param {import("ViewModel/Album").Album} props.album 
+ * @param {import("Reducers/LibraryReducer").StoredAlbum} props.album 
  * @param {Function} props.onTrackClick
- * @param {import("ViewModel/Track").Track} props.playbackTrack
+ * @param {import("Reducers/LibraryReducer").StoredTrack} props.playbackTrack
  */
 const AlbumTracks = ({album, onTrackClick, playbackTrack, ...forwardProps}) => {
     return (

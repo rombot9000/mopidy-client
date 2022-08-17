@@ -8,7 +8,7 @@ export const VIEW_ACTIONS = {
 
 /**
  * 
- * @param {import("ViewModel/Album").Album} album 
+ * @param {import("Reducers/LibraryReducer").StoredAlbum} album 
  */
 export function toggleAlbumDetailsModal(album) {
     return {

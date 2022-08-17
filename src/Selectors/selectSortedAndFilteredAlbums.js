@@ -45,7 +45,7 @@ function customCompare(a,b) {
 
 /**
  * 
- * @param {import("ViewModel/Album").Album[]} albums 
+ * @param {import("Reducers/LibraryReducer").StoredAlbum[]} albums 
  * @param {string[]} sortKeys
  */
 function sortAlbums(albums, sortKeys) {

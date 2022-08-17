@@ -2,7 +2,7 @@ import React from "react";
 
 /**
  * @param {React.MutableRefObject} ref
- * @param {import("ViewModel/Track").Track} track
+ * @param {import("Reducers/LibraryReducer").StoredTrack} track
  */
 const useScrollToIfActive = (ref, playbackState) => {
 

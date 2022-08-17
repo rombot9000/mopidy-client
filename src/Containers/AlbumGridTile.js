@@ -13,7 +13,7 @@ import { PlaybackActions, ViewActions } from "Actions";
 
 /** 
  * @typedef {Object} AlbumProp
- * @property {import("ViewModel/Album").Album} album
+ * @property {import("Reducers/LibraryReducer").StoredAlbum} album
  * @property {Function} onClick
  * @property {Function} onPlayIconClick
  *

@@ -14,7 +14,7 @@ export default createSelector(
      * @param {import("Reducers/LibraryReducer").StoredArtist[]} storedArtists
      */
     (playbackTrack, storedTracks, storedAlbums, storedArtists) => {
-        /** @type {import("ViewModel/Track").Track} */
+        /** @type {import("Reducers/LibraryReducer").StoredTrack} */
         let track = {...storedTracks.find(t => t.uri === playbackTrack.uri)};
         track.album = storedAlbums.find(a => a.uri === playbackTrack.album_uri) || {};
         track.artist = storedArtists.find(a => a.uri === playbackTrack.artist_uri) || {};

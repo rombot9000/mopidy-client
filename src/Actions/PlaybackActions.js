@@ -35,7 +35,7 @@ export function fetch() {
  * 
  * @param {Object} param0
  * @param {import("MopidyAPI/PlaybackAPI").PlaybackState} param0.state
- * @param {import("ViewModel/Track").Track} param0.track
+ * @param {import("Reducers/LibraryReducer").StoredTrack} param0.track
  * @param {number} param0.timePosition
  * @param {number} param0.timePositionUpdated
  */
@@ -74,7 +74,7 @@ export function updateTimePosition(timePosition) {
 }
 
 /**
- * @param {import("ViewModel/Track").Track} track 
+ * @param {import("Reducers/LibraryReducer").StoredTrack} track 
  */
 export function updateTrack(track) {
     return {
@@ -86,7 +86,7 @@ export function updateTrack(track) {
 
 /**
  * Play item on tracklist
- * @param {import("ViewModel/Track").TracklistItem} item 
+ * @param {import("Reducers/TracklistReducer").StoredTracklistItem} item 
  */
  export function playTracklistItem(item) {
     Mopidy.playTracklistItem(item);
@@ -99,8 +99,8 @@ export function updateTrack(track) {
 
 /**
  * 
- * @param {import("ViewModel/Track").Track} track 
- * @param {import("ViewModel/Track").Track[]} tracklist 
+ * @param {import("Reducers/LibraryReducer").StoredTrack} track 
+ * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracklist 
  */
 export function play(track, tracklist) {
     Mopidy.playTracklist(tracklist ? tracklist : [track], track);
@@ -112,7 +112,7 @@ export function play(track, tracklist) {
 
 /**
  * 
- * @param {import("ViewModel/Album").Album} album 
+ * @param {import("Reducers/LibraryReducer").StoredAlbum} album 
  */
 export async function playAlbum(album) {
     Mopidy.playTracklist(album.tracks);

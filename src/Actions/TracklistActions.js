@@ -15,7 +15,7 @@ Object.freeze(TRACKLIST_ACTIONS);
 
 /**
  * 
- * @param {import("ViewModel/Track").Track[]} tracks 
+ * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracks 
  */
 export function set(tracks) {
     return async dispatch => {
@@ -29,7 +29,7 @@ export function set(tracks) {
 
 /**
  * 
- * @param {import("ViewModel/Track").Track[]} tracks
+ * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracks
  * @param {number} position
  */
  export function add(tracks, position) {
@@ -44,7 +44,7 @@ export function set(tracks) {
 
 /**
  * 
- * @param {import("ViewModel/Track").Track[]} tracks
+ * @param {import("Reducers/LibraryReducer").StoredTrack[]} tracks
  */
  export function playNext(tracks) {
     return async dispatch => {
@@ -71,7 +71,7 @@ export function set(tracks) {
 
 /**
  * 
- * @param {import("ViewModel/Track").TracklistItem} item Tracklist item to remove
+ * @param {import("Reducers/TracklistReducer").StoredTracklistItem} item Tracklist item to remove
  */
  export function removeTrack(item) {
     return async dispatch => {

@@ -26,7 +26,7 @@ const useStyles = makeStyles({
 /**
  * 
  * @typedef TracklistItemProps
- * @property {import("Reducers/TracklistReducer").TracklistItem} props.item
+ * @property {import("Reducers/TracklistReducer").StoredTracklistItem} props.item
  * @property {string} props.albumCover 
  * @property {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @property {number} props.playbackTimePosition
