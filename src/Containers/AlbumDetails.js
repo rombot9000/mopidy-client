@@ -5,6 +5,7 @@ import { Typography, Paper, Grid } from "@mui/material";
 
 import AlbumTracks from "./AlbumTracks";
 import SquareImage from "Components/SquareImage";
+import { useTimeString } from "Hooks";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -71,6 +72,8 @@ const AlbumDetails = ({album, ...paperProps}) => {
 
     const classes = useStyles();
 
+    const timeString = useTimeString(album.length);
+
     return (
         <Paper {...paperProps} className={classes.root}>
             <Grid container className={classes.container}>
@@ -81,7 +84,7 @@ const AlbumDetails = ({album, ...paperProps}) => {
                         <Typography variant="subtitle1">{album.artistName}</Typography>
                         <Typography variant="h5">{album.name}</Typography>
                         <Typography className={classes.albumInfo} variant="subtitle1">
-                            Released {album.year} | {album.track_uris.length} Tracks | {album.length} Minutes
+                            Released {album.year} | {album.track_uris.length} Tracks | {timeString}
                         </Typography>
                         <AlbumTracks className={classes.tracklist} album={album}/>
                 </Grid>

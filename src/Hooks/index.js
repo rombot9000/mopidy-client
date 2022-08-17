@@ -3,6 +3,7 @@ import useHeight from "./useHeight";
 import useIntersection from "./useIntersection";
 import useScrollToIfActive from "./useScrollToIfActive";
 import useTrackIcon from "./useTrackIcon";
+import useTimeString from "./useTimeString";
 
 export {
     useFormatedTime,
@@ -10,4 +11,5 @@ export {
     useIntersection,
     useScrollToIfActive,
     useTrackIcon,
+    useTimeString,
 }
