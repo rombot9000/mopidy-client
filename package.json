@@ -1,6 +1,6 @@
 {
   "name": "mopidy-client",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "homepage": "/material-client",
   "dependencies": {
@@ -17,7 +17,6 @@
     "clsx": "^1.1.1",
     "fibers": "^4.0.3",
     "mopidy": "^1.1.0",
-    "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
