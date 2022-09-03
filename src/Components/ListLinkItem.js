@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useRouteMatch } from "react-router-dom";
+import { NavLink, useMatch } from "react-router-dom";
 import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 const LinkListItem = (props) => {
@@ -12,7 +12,7 @@ const LinkListItem = (props) => {
     return (
         <ListItem
             button
-            selected={!!useRouteMatch(to)}
+            selected={!!useMatch(to)}
             {...listItemProps} 
             component={renderLink}
         >

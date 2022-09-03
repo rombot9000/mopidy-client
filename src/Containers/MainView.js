@@ -1,6 +1,6 @@
 import React from "react";
 
-import {HashRouter as Router, Switch, Route, Redirect} from "react-router-dom";
+import {HashRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 
 import { makeStyles } from "@mui/styles";
 
@@ -81,11 +81,11 @@ const MainView = () => {
     return (
         <Router>
             <AlbumSearchBar className={classes.searchBar} ref={srchBarRef} />
-            <Switch>
-                <Route path="/albums"><AlbumGrid className={classes.albumGrid}/></Route>
-                <Route path="/tracks"><TrackView className={classes.trackView} height={view.height}/></Route>
-                <Route><Redirect to="/albums"/></Route>
-            </Switch>
+            <Routes>
+                <Route path="/albums" element={<AlbumGrid className={classes.albumGrid}/>} />
+                <Route path="/tracks" element={<TrackView className={classes.trackView} height={view.height}/>} />
+                <Route element={<Navigate to="/albums" replace/>} />
+            </Routes>
             <NotifyBar className={classes.notifyBar}/>
             <MenuDrawer/>
             <SettingsModal/>
