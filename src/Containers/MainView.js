@@ -79,12 +79,12 @@ const MainView = () => {
     const classes = useStyles(view);
 
     return (
-        <Router>
+        <Router hashType="noslash">
             <AlbumSearchBar className={classes.searchBar} ref={srchBarRef} />
             <Routes>
                 <Route path="/albums" element={<AlbumGrid className={classes.albumGrid}/>} />
                 <Route path="/tracks" element={<TrackView className={classes.trackView} height={view.height}/>} />
-                <Route element={<Navigate to="/albums" replace/>} />
+                <Route path="*" element={<Navigate to="/albums"/>} />
             </Routes>
             <NotifyBar className={classes.notifyBar}/>
             <MenuDrawer/>
