@@ -79,9 +79,9 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
                 </Fade>
             </SquareImage>
             <Grid container direction="row">
-                <Grid item xs>
-                    <Typography variant="subtitle2" className={classes.albumName}>{album.name}</Typography>
-                    <Typography variant="subtitle2" className={classes.artistName}>{album.artistName}</Typography>
+                <Grid item xs zeroMinWidth>
+                    <Typography variant="subtitle2" className={classes.albumName} noWrap>{album.name}</Typography>
+                    <Typography variant="subtitle2" className={classes.artistName} noWrap>{album.artistName}</Typography>
                 </Grid>
                 <Grid item xs="auto">
                     <Fade in={highlight}><IconButton ref={handleRef}><MenuIcon/></IconButton></Fade>
