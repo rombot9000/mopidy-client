@@ -32,7 +32,7 @@ export default class IndexedDB {
     async init() {
         try {
             
-            console.log(`connecting to ${this._name} v${this._version}...`);
+            console.log(`Connecting to ${this._name} v${this._version}...`);
             await this._connect();
 
         } catch (error) {
@@ -48,7 +48,7 @@ export default class IndexedDB {
         if(!this._connected) this._connected = new Promise( (resolve, reject) => {
             // Check if supported
             if (!window.indexedDB) {
-                reject("This browser does not support a stable version of IndexedDB.");
+                reject(new Error("This browser does not support a stable version of IndexedDB."));
             }
             
             // open request
@@ -60,12 +60,18 @@ export default class IndexedDB {
             };
 
             openDbRequest.onerror = (event) => {
-                
+
+                // check event object
+                if(!event || !event.target || !event.target.error) {
+                    reject(new Error("Could not open db connection: unknown error"));
+                    return;
+                }
+
                 // create new database if unknown error
                 if(event.target.error.code === 0) window.indexedDB.deleteDatabase(this._name);
                 
                 // reject connection
-                reject("Could not open db connection: ", event.target.error.message);
+                reject(new Error("Could not open db connection: ", event.target.error.message));
 
             };
 
