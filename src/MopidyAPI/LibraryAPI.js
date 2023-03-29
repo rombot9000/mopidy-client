@@ -158,44 +158,47 @@ class LibraryAPI extends BaseAPI {
     /**
      * 
      * @param {mpd_track[]} mpdTracks 
-     * @returns {mpd_artist}
+     * @returns {mpd_artist[]}
      */
-    getAlbumArtist(mpdTracks) {
+    getAllArtistsFromTracks(mpdTracks) {
 
-        if(!Array.isArray(mpdTracks) || (mpdTracks.length === 0)) return "";
+        if(!Array.isArray(mpdTracks) || (mpdTracks.length === 0)) return [];
 
         /** @type {[string: mpd_artist]} */
         const mapUriToArtist = {};
 
         mpdTracks.forEach(t => {
             t.artists.forEach(a => {
-                
                 if(!mapUriToArtist.hasOwnProperty(a.uri)) {
                     mapUriToArtist[a.uri] = a;
                 }
             });
         });
 
-        // No artist found
-        if(mapUriToArtist.length === 0) return null;
+        return Object.values(mapUriToArtist);
+    }
 
-        // create list of artists
-        const listOfArtists = Object.values(mapUriToArtist);
+    /**
+     * 
+     * @param {mpd_artist[]} mpdArtists 
+     * @returns {mpd_artist}
+     */
+    getAlbumArtist(mpdArtists) {
 
         // Only one artist found -> return first non-empty entry
-        if(listOfArtists.length === 1) {
-           return listOfArtists[0];
+        if(mpdArtists.length === 1) {
+           return mpdArtists[0];
         }
 
         // sort artists by length of name
-        listOfArtists.sort((a,b) => a.name.length - b.name.length);
+        mpdArtists.sort((a,b) => a.name.length - b.name.length);
 
         // check if shortest name included in all other names
         let i=1;
-        for(i=1; i<listOfArtists.length; i++) {
-            if(!listOfArtists[i].name.includes(listOfArtists[0].name)) break;
+        for(i=1; i<mpdArtists.length; i++) {
+            if(!mpdArtists[i].name.includes(mpdArtists[0].name)) break;
         }
-        if(i === listOfArtists.length) return listOfArtists[0];
+        if(i === mpdArtists.length) return mpdArtists[0];
 
         return {
             name: "Various Artists",
@@ -212,7 +215,9 @@ class LibraryAPI extends BaseAPI {
      */
     toStoredAlbum(mpdAlbum, mpdTracks = [], mpdImages = []) {
 
-        const albumArtist = this.getAlbumArtist(mpdTracks);
+        const albumArtists = this.getAllArtistsFromTracks(mpdTracks);
+        
+        const albumArtist = this.getAlbumArtist(albumArtists);
 
         return {
             uri: mpdAlbum.uri,
@@ -220,7 +225,7 @@ class LibraryAPI extends BaseAPI {
             artistName: albumArtist ? albumArtist.name : "",
             year: mpdTracks.length ? mpdTracks[0].date.slice(0,4) : "",
             length: Math.floor(mpdTracks.reduce((l,t) => l+t.length, 0)/1000),
-            artist_uri: albumArtist ? albumArtist.uri : "",
+            artist_uris: albumArtists.map(a => a.uri),
             track_uris: mpdTracks.map(t => t.uri),
             cover_uri: mpdImages.length ? `${SERVER_IP}${mpdImages[0].uri}` : null,
         }

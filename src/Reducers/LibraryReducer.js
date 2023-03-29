@@ -14,7 +14,7 @@ import { ACTION_TYPES, LIBRARY_ACTIONS } from "Actions";
  * @property {string} artistName
  * @property {string} year
  * @property {string} length
- * @property {string} artist_uri
+ * @property {string[]} artist_uris
  * @property {string[]} track_uris
  * @property {string} cover_uri
  */

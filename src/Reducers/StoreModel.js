@@ -8,7 +8,7 @@
  * @property {import("./PlaybackReducer").PlaybackState} playback
  */
 
-/** @returns {StoredArtist} */
+/** @returns {import("./LibraryReducer").StoredArtist} */
 export const EmptyArtist = () => {
     return {
         uri: null,
@@ -17,7 +17,7 @@ export const EmptyArtist = () => {
     }
 };
 
-/** @returns {StoredAlbum} */
+/** @returns {import("./LibraryReducer").StoredAlbum} */
 export const EmptyAlbum = () => {
     return {
         uri: null,
@@ -27,11 +27,11 @@ export const EmptyAlbum = () => {
         length: null,
         artist_uri: null,
         track_uris: [],
-        cover_uri: null
+        cover_uri: null,
     }
 };
 
-/** @returns {StoredTrack} */
+/** @returns {import("./LibraryReducer").StoredTrack} */
 export const EmptyTrack = () => {
     return {
         uri: null,

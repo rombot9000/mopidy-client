@@ -27,6 +27,7 @@ const AlbumTracks = ({album, tracks, onTrackClick, playbackTrackUri, ...forwardP
                 <AlbumTrack
                     key={index}
                     track={track}
+                    showArtist={album.artist_uris.length > 1}
                     onClick={() => {
                         onTrackClick(track.uri, album.track_uris, track.uri === playbackTrackUri)
                     }}

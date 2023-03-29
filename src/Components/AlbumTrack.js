@@ -19,10 +19,11 @@ const useStyles = makeStyles({
  * 
  * @param {Object} props
  * @param {import("Reducers/LibraryReducer").StoredTrack} props.track
+ * @param {boolean} props.showArtist
  * @param {import("Reducers/PlaybackReducer").MopdiyPlaybackState} props.playbackState
  * @param {number} props.playbackTimePosition
  */
-const AlbumTrack = ({track, playbackState, playbackTimePosition, dispatch, ...gridProps}) => {
+const AlbumTrack = ({track, showArtist, playbackState, playbackTimePosition, dispatch, ...gridProps}) => {
 
     const classes = useStyles({playbackState});
 
@@ -41,8 +42,9 @@ const AlbumTrack = ({track, playbackState, playbackTimePosition, dispatch, ...gr
             <Grid item xs={1}>
                 <Typography className={classes.text} variant="body1" align="center">{trackIcon}</Typography>
             </Grid>
-            <Grid item xs>
+            <Grid item xs zeroMinWidth>
                 <Typography className={classes.name} variant="body1" align="left">{track.name}</Typography>
+                {showArtist ? <Typography className={classes.text} variant="body1" align="left">{track.artistName}</Typography> : null }
             </Grid>
             <Grid item xs={2}>
                 <Typography className={classes.text} variant="body1" align="right">{timeString}</Typography>
