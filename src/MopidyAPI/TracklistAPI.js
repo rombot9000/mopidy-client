@@ -119,14 +119,12 @@ export default class TracklistAPI extends BaseAPI {
 
     /**
      * 
-     * @param {import("Reducers/LibraryReducer").StoredTrack} track
+     * @param {string} track_uri
      * @returns {number} id of tracklist item
      */
-    getTrackId(track) {
+    getTrackId(track_uri) {
 
-        console.warn("DEPRACTED FUNCTIONS!")
-
-        const track_tl_item = this._tracklist.find(tl_item => tl_item.track.uri === track.uri);
+        const track_tl_item = this._tracklist.find(tl_item => tl_item.track.uri === track_uri);
 
         if(track_tl_item) return track_tl_item.tlid;
         
