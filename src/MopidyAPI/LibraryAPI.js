@@ -157,19 +157,70 @@ class LibraryAPI extends BaseAPI {
 
     /**
      * 
+     * @param {mpd_track[]} mpdTracks 
+     * @returns {mpd_artist}
+     */
+    getAlbumArtist(mpdTracks) {
+
+        if(!Array.isArray(mpdTracks) || (mpdTracks.length === 0)) return "";
+
+        /** @type {[string: mpd_artist]} */
+        const mapUriToArtist = {};
+
+        mpdTracks.forEach(t => {
+            t.artists.forEach(a => {
+                
+                if(!mapUriToArtist.hasOwnProperty(a.uri)) {
+                    mapUriToArtist[a.uri] = a;
+                }
+            });
+        });
+
+        // No artist found
+        if(mapUriToArtist.length === 0) return null;
+
+        // create list of artists
+        const listOfArtists = Object.values(mapUriToArtist);
+
+        // Only one artist found -> return first non-empty entry
+        if(listOfArtists.length === 1) {
+           return listOfArtists[0];
+        }
+
+        // sort artists by length of name
+        listOfArtists.sort((a,b) => a.name.length - b.name.length);
+
+        // check if shortest name included in all other names
+        let i=1;
+        for(i=1; i<listOfArtists.length; i++) {
+            if(!listOfArtists[i].name.includes(listOfArtists[0].name)) break;
+        }
+        if(i === listOfArtists.length) return listOfArtists[0];
+
+        return {
+            name: "Various Artists",
+            uri: ""
+        };
+    }
+
+    /**
+     * 
      * @param {mpd_album} mpdAlbum
      * @param {mpd_track[]} mpdTracks
      * @param {mpd_image[]} mpdImages
      * @returns {import("Reducers/LibraryReducer").StoredAlbum}
      */
     toStoredAlbum(mpdAlbum, mpdTracks = [], mpdImages = []) {
+
+        const albumArtist = this.getAlbumArtist(mpdTracks);
+
         return {
             uri: mpdAlbum.uri,
             name: mpdAlbum.name,
-            artistName: mpdTracks.length ? mpdTracks[0].artists[0].name : "",
+            artistName: albumArtist ? albumArtist.name : "",
             year: mpdTracks.length ? mpdTracks[0].date.slice(0,4) : "",
             length: Math.floor(mpdTracks.reduce((l,t) => l+t.length, 0)/1000),
-            artist_uri: mpdTracks.length ? mpdTracks[0].artists[0].uri : "",
+            artist_uri: albumArtist ? albumArtist.uri : "",
             track_uris: mpdTracks.map(t => t.uri),
             cover_uri: mpdImages.length ? `${SERVER_IP}${mpdImages[0].uri}` : null,
         }
