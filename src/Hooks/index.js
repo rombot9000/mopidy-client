@@ -4,7 +4,8 @@ import useIntersection from "./useIntersection";
 import useScrollToIfActive from "./useScrollToIfActive";
 import useTrackIcon from "./useTrackIcon";
 import useTimeString from "./useTimeString";
-import useReadableString from "./useReadableString"
+import useReadableString from "./useReadableString";
+import useLongPress from "./useLongPress";
 
 export {
     useFormatedTime,
@@ -14,4 +15,5 @@ export {
     useTrackIcon,
     useTimeString,
     useReadableString,
+    useLongPress
 }
