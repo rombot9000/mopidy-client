@@ -13,9 +13,18 @@ import { FixedSizeList, areEqual } from "react-window";
  * @param {Object} props
  * @param {Object[]} props.itemData
  * @param {number} props.itemHeight
- * @param {ItemRenderFunction} props.itemRenderFunction
+ * @param {JSX.Element} props.item
  */
-const VirtualizedList = ({width, height, itemData, itemHeight, itemRenderFunction, ...listProps}) => {
+const VirtualizedList = ({width, height, itemData, itemHeight, item, ...listProps}) => {
+
+    const renderFunction = ({index, style, data}) => (
+        <item
+            key={index}
+            style={style}
+            data={data[index]}
+            // onClick={() => {onTrackClick(data[index], data, data[index]._uri === playbackTrack._uri)}}
+        />
+    );
 
     return (
         <FixedSizeList
@@ -27,7 +36,7 @@ const VirtualizedList = ({width, height, itemData, itemHeight, itemRenderFunctio
             itemSize={itemHeight}
             overscanCount={10}
         >
-            {React.memo(itemRenderFunction, areEqual)}
+            {React.memo(renderFunction, areEqual)}
         </FixedSizeList>
     );   
 }
