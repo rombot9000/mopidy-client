@@ -10,6 +10,8 @@ import { PlayArrow as PlayIcon, MoreVert as MenuIcon } from "@mui/icons-material
 import SquareImage from "Components/SquareImage";
 import AlbumContextMenu from "./AlbumContextMenu";
 import { PlaybackActions, ViewActions } from "Actions";
+import { useLongPress } from "Hooks";
+import StopPropagation from "Components/StopPropagation";
 
 /** 
  * @typedef {Object} AlbumProp
@@ -55,7 +57,11 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
     const[anchorEl, setAnchorEl] = React.useState(null);
     const handleRef = React.useCallback(node => {
         if (node !== null) setAnchorEl(node);
-      }, []);
+    }, []);
+
+    const onLongPress = () => {
+        window.alert("Long press registered!");
+    }
 
 
     return (
@@ -66,17 +72,19 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
             <SquareImage
                 className={classes.cover}
                 src={album.cover_uri}
-                onClick={onClick}
+                {...useLongPress(onLongPress, onClick)}
             >
-                <Fade in={highlight}>
-                    <Fab
-                        className={classes.iconLeft}
-                        size="small"
-                        onClick={onPlayIconClick}
-                    >
-                        <PlayIcon/>
-                    </Fab>
-                </Fade>
+                <StopPropagation>
+                    <Fade in={highlight}>
+                        <Fab
+                            className={classes.iconLeft}
+                            size="small"
+                            onClick={onPlayIconClick}
+                        >
+                            <PlayIcon/>
+                        </Fab>
+                    </Fade>
+                </StopPropagation>
             </SquareImage>
             <Grid container direction="row">
                 <Grid item xs zeroMinWidth>
