@@ -1,16 +1,19 @@
 import React from "react";
 
-import { Menu } from "@mui/material";
+import { Dialog, Menu, MenuList } from "@mui/material";
+import { BrowserView, MobileView } from "react-device-detect";
 
 /**
  * 
  * @param {Object} param
- * @param {Element} param.anchorEl
+ * @param {Element} param.anchorEl Anchor element to use in browser view
+ * @param {boolean} param.open Open state in mobile view
+ * @param {Function} param.onClose onClose callback for mobile view
  * @returns 
  */
-const ContextMenu = ({anchorEl, ...menuListProps}) => {
+const ContextMenu = ({anchorEl, open, onClose, ...menuListProps}) => {
     
-    const [open, setOpen] = React.useState(false);
+    const [menuOpen, setMenuOpen] = React.useState(false);
 
     React.useEffect(() => {
 
@@ -18,35 +21,47 @@ const ContextMenu = ({anchorEl, ...menuListProps}) => {
 
         anchorEl.onclick = (event) => {
             event.stopPropagation()
-            setOpen(!open);
+            setMenuOpen(!menuOpen);
         };
 
         return () => {
             anchorEl.onclick = () => {};
         };
 
-    }, [anchorEl, open]);
+    }, [anchorEl, menuOpen]);
 
     const handleClose = (event) => {
         event.stopPropagation()
-        setOpen(false);
+        setMenuOpen(false);
     };
     
     return (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-            }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-            }}
-            open={open}
-            onClick={handleClose}
-            {...menuListProps}
-        />
+        <>
+            <BrowserView>
+                <Menu
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={menuOpen}
+                    onClick={handleClose}
+                    {...menuListProps}
+                />
+            </BrowserView>
+            <MobileView>
+                <Dialog open={open} onClose={onClose}>
+                    <MenuList
+                        onClick={onClose}
+                        {...menuListProps}
+                    />
+                </Dialog>
+            </MobileView>
+        </>
     )
 }
 

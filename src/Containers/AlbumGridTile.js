@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import { BrowserView } from 'react-device-detect';
+
 // Matrial ui
 import { Typography, Fab, Fade, IconButton, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -60,13 +62,14 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
 
     const [highlight, setHighlight] = React.useState(false);
 
-    const[anchorEl, setAnchorEl] = React.useState(null);
+    const[menuAnchorEl, setMenuAnchorEl] = React.useState(null);
     const handleRef = React.useCallback(node => {
-        if (node !== null) setAnchorEl(node);
+        if (node !== null) setMenuAnchorEl(node);
     }, []);
 
+    const[menuDialogOpen, setMenuDialogOpen] = React.useState(false);
     const onLongPress = () => {
-        window.alert("Long press registered!");
+        setMenuDialogOpen(true);
     }
 
 
@@ -81,28 +84,37 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
                 src={album.cover_uri}
                 {...useLongPress(onLongPress, onClick)}
             >
-                <StopPropagation>
-                    <Fade in={highlight}>
-                        <Fab
-                            className={classes.iconLeft}
-                            size="small"
-                            onClick={onPlayIconClick}
-                        >
-                            <PlayIcon/>
-                        </Fab>
-                    </Fade>
-                </StopPropagation>
+                <BrowserView>
+                    <StopPropagation>
+                        <Fade in={highlight}>
+                            <Fab
+                                className={classes.iconLeft}
+                                size="small"
+                                onClick={onPlayIconClick}
+                            >
+                                <PlayIcon/>
+                            </Fab>
+                        </Fade>
+                    </StopPropagation>
+                </BrowserView>
             </SquareImage>
             <Grid container direction="row">
                 <Grid item xs zeroMinWidth>
                     <Typography variant="subtitle2" className={classes.albumName} noWrap>{album.name}</Typography>
                     <Typography variant="subtitle2" className={classes.artistName} noWrap>{album.artistName}</Typography>
                 </Grid>
-                <Grid item xs="auto">
-                    <Fade in={highlight}><IconButton ref={handleRef}><MenuIcon/></IconButton></Fade>
-                    <AlbumContextMenu album={album} anchorEl={anchorEl}/>
-                </Grid>
+                <BrowserView>
+                    <Grid item xs="auto">
+                        <Fade in={highlight}><IconButton ref={handleRef}><MenuIcon/></IconButton></Fade>
+                    </Grid>
+                </BrowserView>
             </Grid>
+            <AlbumContextMenu
+                album={album}
+                open={menuDialogOpen}
+                onClose={() => {setMenuDialogOpen(false)}}
+                anchorEl={menuAnchorEl}
+            />
         </div>
     );
 

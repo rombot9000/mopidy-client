@@ -11,7 +11,6 @@ import { TracklistActions } from "Actions";
 /**
  * @typedef AlbumContextMenuProps
  * @property {import("Reducers/LibraryReducer").StoredAlbum} album
- * @property {Element} anchorEl
  * @property {Function} onPlay
  * @property {Function} onPlayNext
  * @property {Function} onAddToTracklist
@@ -21,11 +20,9 @@ import { TracklistActions } from "Actions";
  * 
  * @param {AlbumContextMenuProps} props
  */
-const AlbumContextMenu = ({album, anchorEl, onPlay, onPlayNext, onAddToTracklist}) => {
-    //const classes = useStyles();
-
+const AlbumContextMenu = ({album, onPlay, onPlayNext, onAddToTracklist, ...contextMenuProps}) => {
     return (
-        <ContextMenu anchorEl={anchorEl}>
+        <ContextMenu {...contextMenuProps}>
             <ContextMenuItem onClick={onPlay} text="Play" icon={<PlayIcon/>}/>
             <ContextMenuItem onClick={onPlayNext} text="Play next" icon={<NextIcon/>}/>
             <ContextMenuItem onClick={onAddToTracklist} text="Add to tracklist" icon={<AddIcon/>}/>

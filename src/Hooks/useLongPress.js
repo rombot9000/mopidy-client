@@ -3,6 +3,7 @@
  */
 
 import React from "react";
+import { isDesktop } from "react-device-detect";
 
 const useLongPress = (
     onLongPress = (event) => {},
@@ -46,6 +47,10 @@ const useLongPress = (
         }
     },[shouldPreventDefault, onClick, longPressTriggered, clickCanceled]);
 
+    // Do not use on desktop
+    if(isDesktop) return {};
+
+    // return 
     return {
         // start long press timer
         onMouseDown: e => start(e),
