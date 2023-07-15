@@ -6,7 +6,7 @@ import { EmptyAlbum, EmptyArtist, EmptyTrack } from "Reducers/StoreModel";
 
 console.log("Prepare Library");
 // Library
-const LibraryDB = new IndexedDB("Library", 9);
+const LibraryDB = new IndexedDB("Library", 10);
 LibraryDB.addStore({
     name: "Albums",
     params: {keyPath: "uri"},
@@ -24,8 +24,8 @@ LibraryDB.addStore({
     indexSchemes: Object.keys(EmptyTrack()).map(key => { return {index: key, params: null}; })
 
 });
-console.log("Initit Library");
-//LibraryDB.init();
+console.log("Init Library");
+LibraryDB.init();
 
 // Settings
 const SettingsDB = new IndexedDB("Settings", 4);
