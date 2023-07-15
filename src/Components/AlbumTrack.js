@@ -5,13 +5,22 @@ import { makeStyles } from "@mui/styles";
 
 import useFormatedTime from "Hooks/useFormatedTime";
 import useTrackIcon from "Hooks/useTrackIcon";
+import clsx from "clsx";
 
 const useStyles = makeStyles({
     name: {
-        fontWeight: props => props.playbackState === "stopped" ? "normal" : "bolder"
+        fontWeight: props => props.playbackState === "stopped" ? "normal" : "bolder",
     },
     text: {
-        fontWeight: props => props.playbackState === "stopped" ? "lighter" : "normal"
+        fontWeight: props => props.playbackState === "stopped" ? "lighter" : "normal",
+    },
+    breakWords: {
+        overflowWrap: "break-word",
+        wordWrap: "break-word",
+        "-webkitHyphens": "auto",
+        "-msHyphens": "auto",
+        "-mozHyphens": "auto",
+        hyphens: "auto",
     }
 });
 
@@ -40,14 +49,14 @@ const AlbumTrack = ({track, showArtist, playbackState, playbackTimePosition, dis
             spacing={1}
         >
             <Grid item xs={1}>
-                <Typography className={classes.text} variant="body1" align="center">{trackIcon}</Typography>
+                <Typography className={clsx(classes.text, classes.breakWords)} variant="body1" align="center">{trackIcon}</Typography>
             </Grid>
             <Grid item xs zeroMinWidth>
-                <Typography className={classes.name} variant="body1" align="left">{track.name}</Typography>
-                {showArtist ? <Typography className={classes.text} variant="body1" align="left">{track.artistName}</Typography> : null }
+                <Typography className={clsx(classes.name, classes.breakWords)} variant="body1" align="left">{track.name}</Typography>
+                {showArtist ? <Typography className={clsx(classes.text, classes.breakWords)} variant="body1" align="left">{track.artistName}</Typography> : null }
             </Grid>
             <Grid item xs={2}>
-                <Typography className={classes.text} variant="body1" align="right">{timeString}</Typography>
+                <Typography className={clsx(classes.text, classes.breakWords)} variant="body1" align="right">{timeString}</Typography>
             </Grid>
         </Grid>
     );

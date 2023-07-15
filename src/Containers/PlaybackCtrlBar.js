@@ -33,7 +33,10 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         height: theme.spacing(0.5),
         zIndex: theme.zIndex["appBar"],
-    }
+    },
+    restrictSize: {
+        overflowX: "hidden"
+    },
 }));
 
 const PlaybackCtrlBar = React.forwardRef(({ onNext, onPrev, onPlay, playbackState, playbackTrack, ...appBarProps }, ref) => {
@@ -43,7 +46,7 @@ const PlaybackCtrlBar = React.forwardRef(({ onNext, onPrev, onPlay, playbackStat
             <div className={classes.slider}>
                 <PlaybackPositionBar/>
             </div>
-            <Toolbar>
+            <Toolbar >
                 <ButtonGroup>
                     <PlaybackButton onClick={onPrev}>
                         <SkipPrevious/>
@@ -55,9 +58,9 @@ const PlaybackCtrlBar = React.forwardRef(({ onNext, onPrev, onPlay, playbackStat
                         <SkipNext/>
                     </PlaybackButton>
                 </ButtonGroup>
-                <Box flexGrow={2}>
-                    <Typography className={classes.track} variant="subtitle1" color="inherit">{playbackTrack.name}</Typography>
-                    <Typography className={classes.artist} variant="subtitle2" color="inherit">{playbackTrack.artistName}</Typography>
+                <Box flexGrow={2} className={classes.restrictSize}>
+                    <Typography className={classes.track} variant="subtitle1" color="inherit" noWrap>{playbackTrack.name}</Typography>
+                    <Typography className={classes.artist} variant="subtitle2" color="inherit" noWrap>{playbackTrack.artistName}</Typography>
                 </Box>
             </Toolbar>
         </AppBar>
