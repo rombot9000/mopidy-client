@@ -41,7 +41,13 @@ const useStyles = makeStyles(theme => ({
     },
     albumName: {
         fontWeight: 500
-    }
+    },
+    disableTextSelection: {
+        "-moz-user-select": "none", /* firefox */
+        "-webkit-user-select":"none", /* Safari */
+        "-ms-user-select": "none", /* IE*/
+        "user-select": "none", /* Standard syntax */
+     }
 }));
 
 
@@ -68,6 +74,7 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
         <div 
             onMouseOver={() => {setHighlight(true)}}
             onMouseOut={() => {setHighlight(false)}}
+            className={classes.disableTextSelection}
         >
             <SquareImage
                 className={classes.cover}
