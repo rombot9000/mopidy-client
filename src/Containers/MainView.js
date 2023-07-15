@@ -64,7 +64,7 @@ const MainView = () => {
     React.useEffect(() => {
         const ctrlBarHeight = ctrlBarRef.current ? ctrlBarRef.current.offsetHeight : 0;
         const srchBarHeight = srchBarRef.current ? srchBarRef.current.offsetHeight : 0;
-        console.log({
+        console.debug({
             bottom: ctrlBarHeight,
             top: srchBarHeight,
             height: window.innerHeight - ctrlBarHeight - srchBarHeight
