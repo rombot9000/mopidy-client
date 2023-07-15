@@ -2,51 +2,66 @@
  * Copied from https://stackoverflow.com/questions/48048957/react-long-press-event 
  */
 
-import { useCallback, useRef, useState } from "react";
+import React from "react";
+import { isDesktop } from "react-device-detect";
 
 const useLongPress = (
-    onLongPress,
-    onClick,
+    onLongPress = (event) => {},
+    onClick = (event) => {},
     { shouldPreventDefault = true, delay = 300 } = {}
-    ) => {
-    const [longPressTriggered, setLongPressTriggered] = useState(false);
-    const timeout = useRef();
-    const target = useRef();
+) => {
+    const [longPressTriggered, setLongPressTriggered] = React.useState(false);
+    const [clickCanceled, setClickCanceled] = React.useState(false);
+    const timeout = React.useRef();
+    const target = React.useRef();
 
-    const start = useCallback(
-        event => {
-            if (shouldPreventDefault && event.target) {
-                    event.target.addEventListener("touchend", preventDefault, {
-                    passive: false
-                });
-                target.current = event.target;
-            }
-            timeout.current = setTimeout(() => {
-                onLongPress(event);
-                setLongPressTriggered(true);
-            }, delay);
-        },
-        [onLongPress, delay, shouldPreventDefault]
-    );
+    const start = React.useCallback(event => {
+        // keep track of new clicks
+        setClickCanceled(false);
+        //
+        if (shouldPreventDefault && event.target) {
+            event.target.addEventListener("touchend", preventDefault, {
+                passive: false
+            });
+            target.current = event.target;
+        }
+        // Start timeout for longpress
+        timeout.current = setTimeout(() => {
+            onLongPress(event);
+            setLongPressTriggered(true);
+        }, delay);
+    }, [onLongPress, delay, shouldPreventDefault]);
 
-    const clear = useCallback(
-        (event, shouldTriggerClick = true) => {
-            timeout.current && clearTimeout(timeout.current);
-            shouldTriggerClick && !longPressTriggered && onClick();
-            setLongPressTriggered(false);
-            if (shouldPreventDefault && target.current) {
-                target.current.removeEventListener("touchend", preventDefault);
-            }
-        },
-        [shouldPreventDefault, onClick, longPressTriggered]
-    );
+    const clear = React.useCallback((event, shouldTriggerClick = true) => {
+        // Clear timeout
+        if(timeout.current) clearTimeout(timeout.current);
+        // check if cancel
+        if(!shouldTriggerClick) setClickCanceled(true);
+        // check if short press -> call onClick
+        else if(!longPressTriggered && !clickCanceled) onClick(event);
+        // set state
+        setLongPressTriggered(false);
+        // prevent default
+        if (shouldPreventDefault && target.current) {
+            target.current.removeEventListener("touchend", preventDefault);
+        }
+    },[shouldPreventDefault, onClick, longPressTriggered, clickCanceled]);
 
+    // Do not use on desktop
+    if(isDesktop) return {};
+
+    // return 
     return {
+        // start long press timer
         onMouseDown: e => start(e),
         onTouchStart: e => start(e),
+        // clear timer and trigger click if no long press
         onMouseUp: e => clear(e),
+        onTouchEnd: e => clear(e),
+        // Do not trigger click or long press event in these cases
         onMouseLeave: e => clear(e, false),
-        onTouchEnd: e => clear(e)
+        onTouchCancel: e => clear(e, false),
+        onTouchMove: e => clear(e, false),
     };
 };
 

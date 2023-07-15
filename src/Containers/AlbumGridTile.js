@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import { BrowserView } from 'react-device-detect';
+
 // Matrial ui
 import { Typography, Fab, Fade, IconButton, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -10,6 +12,8 @@ import { PlayArrow as PlayIcon, MoreVert as MenuIcon } from "@mui/icons-material
 import SquareImage from "Components/SquareImage";
 import AlbumContextMenu from "./AlbumContextMenu";
 import { PlaybackActions, ViewActions } from "Actions";
+import { useLongPress } from "Hooks";
+import StopPropagation from "Components/StopPropagation";
 
 /** 
  * @typedef {Object} AlbumProp
@@ -39,7 +43,13 @@ const useStyles = makeStyles(theme => ({
     },
     albumName: {
         fontWeight: 500
-    }
+    },
+    disableTextSelection: {
+        "-moz-user-select": "none", /* firefox */
+        "-webkit-user-select":"none", /* Safari */
+        "-ms-user-select": "none", /* IE*/
+        "user-select": "none", /* Standard syntax */
+     }
 }));
 
 
@@ -52,42 +62,59 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
 
     const [highlight, setHighlight] = React.useState(false);
 
-    const[anchorEl, setAnchorEl] = React.useState(null);
+    const[menuAnchorEl, setMenuAnchorEl] = React.useState(null);
     const handleRef = React.useCallback(node => {
-        if (node !== null) setAnchorEl(node);
-      }, []);
+        if (node !== null) setMenuAnchorEl(node);
+    }, []);
+
+    const[menuDialogOpen, setMenuDialogOpen] = React.useState(false);
+    const onLongPress = () => {
+        setMenuDialogOpen(true);
+    }
 
 
     return (
         <div 
             onMouseOver={() => {setHighlight(true)}}
             onMouseOut={() => {setHighlight(false)}}
+            className={classes.disableTextSelection}
         >
             <SquareImage
                 className={classes.cover}
                 src={album.cover_uri}
-                onClick={onClick}
+                {...useLongPress(onLongPress, onClick)}
             >
-                <Fade in={highlight}>
-                    <Fab
-                        className={classes.iconLeft}
-                        size="small"
-                        onClick={onPlayIconClick}
-                    >
-                        <PlayIcon/>
-                    </Fab>
-                </Fade>
+                <BrowserView>
+                    <StopPropagation>
+                        <Fade in={highlight}>
+                            <Fab
+                                className={classes.iconLeft}
+                                size="small"
+                                onClick={onPlayIconClick}
+                            >
+                                <PlayIcon/>
+                            </Fab>
+                        </Fade>
+                    </StopPropagation>
+                </BrowserView>
             </SquareImage>
             <Grid container direction="row">
                 <Grid item xs zeroMinWidth>
                     <Typography variant="subtitle2" className={classes.albumName} noWrap>{album.name}</Typography>
                     <Typography variant="subtitle2" className={classes.artistName} noWrap>{album.artistName}</Typography>
                 </Grid>
-                <Grid item xs="auto">
-                    <Fade in={highlight}><IconButton ref={handleRef}><MenuIcon/></IconButton></Fade>
-                    <AlbumContextMenu album={album} anchorEl={anchorEl}/>
-                </Grid>
+                <BrowserView>
+                    <Grid item xs="auto">
+                        <Fade in={highlight}><IconButton ref={handleRef}><MenuIcon/></IconButton></Fade>
+                    </Grid>
+                </BrowserView>
             </Grid>
+            <AlbumContextMenu
+                album={album}
+                open={menuDialogOpen}
+                onClose={() => {setMenuDialogOpen(false)}}
+                anchorEl={menuAnchorEl}
+            />
         </div>
     );
 
