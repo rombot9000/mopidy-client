@@ -84,10 +84,10 @@ function MenuDrawer({open, onClose, onSettingsItemClick, onClearTracklistClick})
                     </ListItemText>
                 </ListItem>
                 <Divider/>
-                <ListLinkItem to="/albums" icon={<AlbumsIcon/>} text="Albums"/>
-                <ListLinkItem to="/artists" icon={<ArtistsIcon/>} text="Artists"/>
-                <ListLinkItem to="/tracks" icon={<TracksIcon/>} text="Tracks"/>
-                <ListLinkItem to="/playlists" icon={<PlaylistIcon/>} text="Playlists"/>
+                <ListLinkItem onClick={onClose} to="/albums" icon={<AlbumsIcon/>} text="Albums"/>
+                <ListLinkItem onClick={onClose} to="/artists" icon={<ArtistsIcon/>} text="Artists"/>
+                <ListLinkItem onClick={onClose} to="/tracks" icon={<TracksIcon/>} text="Tracks"/>
+                <ListLinkItem onClick={onClose} to="/playlists" icon={<PlaylistIcon/>} text="Playlists"/>
                 <Divider/>
                 <ListItem button onClick={onSettingsItemClick}>
                     <ListItemIcon><SettingsIcon/></ListItemIcon>
