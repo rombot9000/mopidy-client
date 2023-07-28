@@ -130,15 +130,34 @@ export async function addToTracklist(track_uris, position) {
  }
 
 /**
- * Add to current tracklist at postion
+ * Add to current tracklist after current track
  * @param {string[]} track_uris
  * @returns 
  */
  export async function playNext(track_uris) {
 
-    const currentTrackId = await notifyUserOnError(Tracklist.getCurrentTrackId());
+    const currentTrackIndex = await notifyUserOnError(Tracklist.getCurrentTrackIndex());
 
-    const position = (currentTrackId == null) ? 0 : currentTrackId + 1; 
+    const position = (currentTrackIndex == null) ? 0 : currentTrackIndex + 1; 
+
+    return await notifyUserOnError(Tracklist.add(track_uris, position));
+
+}
+
+/**
+ * Add to current tracklist after current album
+ * @param {string[]} track_uris
+ * @returns 
+ */
+export async function playAfterCurrentAlbum(track_uris) {
+
+    // Get current track
+    const currentTrackIndex = await notifyUserOnError(Tracklist.getCurrentTrackIndex());
+
+    // Get last track of current album
+    const lastTrackIndexOfAlbum = await notifyUserOnError(Tracklist.getLastTrackOfAlbumByIndex(currentTrackIndex));
+
+    const position = (lastTrackIndexOfAlbum == null) ? 0 : lastTrackIndexOfAlbum + 1;
 
     return await notifyUserOnError(Tracklist.add(track_uris, position));
 
