@@ -47,8 +47,10 @@ const useLongPress = (
         }
     },[shouldPreventDefault, onClick, longPressTriggered, clickCanceled]);
 
-    // Do not use on desktop
-    if(isDesktop) return {};
+    // Do not use on desktop but pass on onClick prop!
+    if(isDesktop) return {
+        onClick: onClick
+    };
 
     // return 
     return {
