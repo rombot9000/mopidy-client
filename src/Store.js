@@ -26,6 +26,9 @@ if(process.env.NODE_ENV !== "production") {
     middleware.push(logger);
 }
 
+// Toggle redux built in state checks
+const useStateChecks = false; 
+
 export default configureStore({ 
     reducer: {
         library: libraryReducer,
@@ -35,6 +38,10 @@ export default configureStore({
         tracklist: tracklistReducer,
         playback: playbackReducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        immutableCheck: process.env.NODE_ENV !== "production" && useStateChecks,
+        serializableCheck: process.env.NODE_ENV !== "production" && useStateChecks,
+        actionCreatorCheck: process.env.NODE_ENV !== "production" && useStateChecks,
+    }).concat(middleware),
     devTools: process.env.NODE_ENV !== 'production',
 })
