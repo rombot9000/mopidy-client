@@ -1,12 +1,27 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import { Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { PlaylistAdd as AddIcon, PlaylistPlay as NextIcon, PlayArrowSharp as PlayIcon } from "@mui/icons-material";
 
-import ContextMenu from "../Components/ContextMenu";
-import ContextMenuItem from "../Components/ContextMenuItem";
-
 import { TracklistActions } from "Actions";
+import { ContextMenu, ContextMenuItem, ContextMenuTitle } from "Components";
+
+const useStyles = makeStyles(theme => ({
+    artistName: {
+        fontWeight: "normal"
+    },
+    albumName: {
+        fontWeight: 500
+    },
+    disableTextSelection: {
+        "-moz-user-select": "none", /* firefox */
+        "-webkit-user-select":"none", /* Safari */
+        "-ms-user-select": "none", /* IE*/
+        "user-select": "none", /* Standard syntax */
+     }
+}));
 
 /**
  * @typedef AlbumContextMenuProps
@@ -20,11 +35,19 @@ import { TracklistActions } from "Actions";
  * 
  * @param {AlbumContextMenuProps} props
  */
-const AlbumContextMenu = ({album, onPlay, onPlayNext, onAddToTracklist, ...contextMenuProps}) => {
+const AlbumContextMenu = ({album, onPlay, onPlayNext, onPlayAfter, onAddToTracklist, ...contextMenuProps}) => {
+
+    const classes = useStyles();
+
     return (
-        <ContextMenu {...contextMenuProps}>
+        <ContextMenu {...contextMenuProps} className={classes.disableTextSelection}>
+            <ContextMenuTitle>
+                <Typography className={classes.albumName}>{album.name}</Typography>
+                <Typography className={classes.artistName}>{album.artistName}</Typography>
+            </ContextMenuTitle>
             <ContextMenuItem onClick={onPlay} text="Play" icon={<PlayIcon/>}/>
             <ContextMenuItem onClick={onPlayNext} text="Play next" icon={<NextIcon/>}/>
+            <ContextMenuItem onClick={onPlayAfter} text="Play after current album" icon={<NextIcon/>}/>
             <ContextMenuItem onClick={onAddToTracklist} text="Add to tracklist" icon={<AddIcon/>}/>
         </ContextMenu>
     )
@@ -39,6 +62,7 @@ const AlbumContextMenu = ({album, onPlay, onPlayNext, onAddToTracklist, ...conte
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onPlay: () => dispatch(TracklistActions.set(ownProps.album.track_uris)),
     onPlayNext: () => dispatch(TracklistActions.playNext(ownProps.album.track_uris)),
+    onPlayAfter: () => dispatch(TracklistActions.playAfterCurrentAlbum(ownProps.album.track_uris)),
     onAddToTracklist: () => dispatch(TracklistActions.add(ownProps.album.track_uris))
 });
 

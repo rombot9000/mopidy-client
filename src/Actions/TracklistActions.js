@@ -10,6 +10,7 @@ export const TRACKLIST_ACTIONS = {
     REMOVE_TRACK: "tracklistActions.RemoveTrack",
     ADD: "tracklistActions.Add",
     PLAY_NEXT: "tracklistActions.PlayNext",
+    PLAY_AFTER_CURRENT_ALBUM: "tracklistActions.PlayAfterCurrentAlbum",
 };
 Object.freeze(TRACKLIST_ACTIONS);
 
@@ -41,6 +42,7 @@ export function set(track_uris) {
     };
 };
 
+
 /**
  * 
  * @param {string[]} track_uris
@@ -51,6 +53,20 @@ export function set(track_uris) {
         dispatch ({
             type: ACTION_TYPES.TRACKLIST_ACTION,
             case: TRACKLIST_ACTIONS.PLAY_NEXT,
+        });
+    };
+};
+
+/**
+ * 
+ * @param {string[]} track_uris
+ */
+export function playAfterCurrentAlbum(track_uris) {
+    return async dispatch => {
+        await Mopidy.playAfterCurrentAlbum(track_uris);
+        dispatch ({
+            type: ACTION_TYPES.TRACKLIST_ACTION,
+            case: TRACKLIST_ACTIONS.PLAY_AFTER_CURRENT_ALBUM,
         });
     };
 };

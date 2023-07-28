@@ -10,6 +10,9 @@ import TimePositionBar from "./TimePositionBar";
 import AlbumTrack from "./AlbumTrack";
 import TracklistItem from "./TracklistItem";
 import TrackViewItem from "./TrackViewItem";
+import ContextMenu from "./ContextMenu";
+import ContextMenuItem from "./ContextMenuItem";
+import ContextMenuTitle from "./ContextMenuTitle";
 
 export {
     SearchBar,
@@ -23,5 +26,8 @@ export {
     TimePositionBar,
     AlbumTrack,
     TracklistItem,
-    TrackViewItem
+    TrackViewItem,
+    ContextMenu,
+    ContextMenuItem,
+    ContextMenuTitle,
 };

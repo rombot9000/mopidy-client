@@ -98,7 +98,6 @@ export default class TracklistAPI extends BaseAPI {
      * @returns 
      */
     async remove(item) {
-        console.log(item);
 
         if(!this._api) return false;
         
@@ -111,7 +110,7 @@ export default class TracklistAPI extends BaseAPI {
      * 
      * @returns The track id of the current track playing
      */
-    async getCurrentTrackId() {
+    async getCurrentTrackIndex() {
         if(!this._api) return null;
 
         return await this._api.index({});
@@ -129,6 +128,24 @@ export default class TracklistAPI extends BaseAPI {
         if(track_tl_item) return track_tl_item.tlid;
         
         return null;
+    }
+
+    /**
+     * 
+     * @returns 
+     */
+    getLastTrackOfAlbumByIndex(index) {
+
+        if(!this._tracklist[index]) return null;
+
+        let indexAlbumUri = this._tracklist[index].track.album.uri;
+
+        for(let i = index + 1; i < this._tracklist.length; i++) {
+            // break loop if next album is found
+            if(this._tracklist[i].track.album.uri !== indexAlbumUri) return i - 1;
+        }
+
+        return this._tracklist.length - 1;
     }
 
     /**
