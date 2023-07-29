@@ -9,11 +9,13 @@ import { makeStyles } from "@mui/styles";
 import { PlayArrow as PlayIcon, MoreVert as MenuIcon } from "@mui/icons-material";
 
 // Own
-import SquareImage from "Components/SquareImage";
+import { SquareImage, StopPropagation } from "Components";
 import AlbumContextMenu from "./AlbumContextMenu";
 import { PlaybackActions, ViewActions } from "Actions";
 import { useLongPress } from "Hooks";
-import StopPropagation from "Components/StopPropagation";
+import { styledNoTextSelection } from "Styles";
+
+const NoTextSelection = styledNoTextSelection('div');
 
 /** 
  * @typedef {Object} AlbumProp
@@ -43,13 +45,7 @@ const useStyles = makeStyles(theme => ({
     },
     albumName: {
         fontWeight: 500
-    },
-    disableTextSelection: {
-        "-moz-user-select": "none", /* firefox */
-        "-webkit-user-select":"none", /* Safari */
-        "-ms-user-select": "none", /* IE*/
-        "user-select": "none", /* Standard syntax */
-     }
+    }
 }));
 
 
@@ -74,10 +70,9 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
 
 
     return (
-        <div 
+        <NoTextSelection 
             onMouseOver={() => {setHighlight(true)}}
             onMouseOut={() => {setHighlight(false)}}
-            className={classes.disableTextSelection}
         >
             <SquareImage
                 className={classes.cover}
@@ -115,7 +110,7 @@ const AlbumGridTile = ({album, onClick, onPlayIconClick}) => {
                 onClose={() => {setMenuDialogOpen(false)}}
                 anchorEl={menuAnchorEl}
             />
-        </div>
+        </NoTextSelection>
     );
 
 };

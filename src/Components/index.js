@@ -13,6 +13,8 @@ import TrackViewItem from "./TrackViewItem";
 import ContextMenu from "./ContextMenu";
 import ContextMenuItem from "./ContextMenuItem";
 import ContextMenuTitle from "./ContextMenuTitle";
+import SquareImage from "./SquareImage";
+import StopPropagation from "./StopPropagation";
 
 export {
     SearchBar,
@@ -30,4 +32,6 @@ export {
     ContextMenu,
     ContextMenuItem,
     ContextMenuTitle,
+    SquareImage,
+    StopPropagation,
 };
