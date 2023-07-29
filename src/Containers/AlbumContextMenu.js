@@ -14,13 +14,7 @@ const useStyles = makeStyles(theme => ({
     },
     albumName: {
         fontWeight: 500
-    },
-    disableTextSelection: {
-        "-moz-user-select": "none", /* firefox */
-        "-webkit-user-select":"none", /* Safari */
-        "-ms-user-select": "none", /* IE*/
-        "user-select": "none", /* Standard syntax */
-     }
+    }
 }));
 
 /**
@@ -40,7 +34,7 @@ const AlbumContextMenu = ({album, onPlay, onPlayNext, onPlayAfter, onAddToTrackl
     const classes = useStyles();
 
     return (
-        <ContextMenu {...contextMenuProps} className={classes.disableTextSelection}>
+        <ContextMenu {...contextMenuProps}>
             <ContextMenuTitle>
                 <Typography className={classes.albumName}>{album.name}</Typography>
                 <Typography className={classes.artistName}>{album.artistName}</Typography>

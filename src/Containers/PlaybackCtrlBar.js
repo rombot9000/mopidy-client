@@ -4,15 +4,16 @@ import { connect } from "react-redux";
 import { makeStyles } from "@mui/styles";
 import { Typography } from "@mui/material";
 import { AppBar, Toolbar, Box, ButtonGroup } from "@mui/material";
-
 import { PlayArrow, Pause, SkipNext, SkipPrevious } from "@mui/icons-material";
 
 import { PlaybackButton } from "Components";
-import PlaybackPositionBar from "./PlaybackPositionBar";
-
 import { PlaybackActions } from "Actions";
+import { styledNoTextSelection } from "Styles";
 
 import selectPlaybackTrack from "Selectors/selectPlaybackTrack";
+import PlaybackPositionBar from "./PlaybackPositionBar";
+
+const NoTextSelection = styledNoTextSelection(Typography);
 
 const useStyles = makeStyles(theme => ({
     appbar: {
@@ -59,8 +60,8 @@ const PlaybackCtrlBar = React.forwardRef(({ onNext, onPrev, onPlay, playbackStat
                     </PlaybackButton>
                 </ButtonGroup>
                 <Box flexGrow={2} className={classes.restrictSize}>
-                    <Typography className={classes.track} variant="subtitle1" color="inherit" noWrap>{playbackTrack.name}</Typography>
-                    <Typography className={classes.artist} variant="subtitle2" color="inherit" noWrap>{playbackTrack.artistName}</Typography>
+                    <NoTextSelection className={classes.track} variant="subtitle1" color="inherit" noWrap>{playbackTrack.name}</NoTextSelection>
+                    <NoTextSelection className={classes.artist} variant="subtitle2" color="inherit" noWrap>{playbackTrack.artistName}</NoTextSelection>
                 </Box>
             </Toolbar>
         </AppBar>

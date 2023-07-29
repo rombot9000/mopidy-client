@@ -3,6 +3,10 @@ import React from "react";
 import { Dialog, Menu, MenuList } from "@mui/material";
 import { BrowserView, MobileView } from "react-device-detect";
 
+import { styledNoTextSelection } from "Styles";
+const MenuNoTextSelection = styledNoTextSelection(Menu);
+const MenuListNoTextSelection = styledNoTextSelection(MenuList);
+
 /**
  * 
  * @param {Object} param
@@ -38,7 +42,7 @@ const ContextMenu = ({anchorEl, open, onClose, ...menuListProps}) => {
     return (
         <>
             <BrowserView>
-                <Menu
+                <MenuNoTextSelection
                     anchorEl={anchorEl}
                     anchorOrigin={{
                         vertical: 'bottom',
@@ -55,7 +59,7 @@ const ContextMenu = ({anchorEl, open, onClose, ...menuListProps}) => {
             </BrowserView>
             <MobileView>
                 <Dialog open={open} onClose={onClose}>
-                    <MenuList
+                    <MenuListNoTextSelection
                         onClick={onClose}
                         {...menuListProps}
                     />
