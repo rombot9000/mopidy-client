@@ -5,7 +5,7 @@ import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { PlaylistAdd as AddIcon, PlaylistPlay as NextIcon, PlayArrowSharp as PlayIcon } from "@mui/icons-material";
 
-import { TracklistActions } from "Actions";
+import { PlaybackActions, TracklistActions } from "Actions";
 import { ContextMenu, ContextMenuItem, ContextMenuTitle } from "Components";
 
 const useStyles = makeStyles(theme => ({
@@ -54,7 +54,7 @@ const AlbumContextMenu = ({album, onPlay, onPlayNext, onPlayAfter, onAddToTrackl
  * @returns 
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onPlay: () => dispatch(TracklistActions.set(ownProps.album.track_uris)),
+    onPlay: () => dispatch(PlaybackActions.playAlbum(ownProps.album)),
     onPlayNext: () => dispatch(TracklistActions.playNext(ownProps.album.track_uris)),
     onPlayAfter: () => dispatch(TracklistActions.playAfterCurrentAlbum(ownProps.album.track_uris)),
     onAddToTracklist: () => dispatch(TracklistActions.add(ownProps.album.track_uris))
