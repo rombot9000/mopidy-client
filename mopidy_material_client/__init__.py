@@ -33,6 +33,6 @@ class Extension(ext.Extension):
             "http:static",
             {
                 "name": self.ext_name,
-                "path": str(pathlib.Path(__file__).parent / "static"),
+                "path": str(pathlib.Path(__file__).parent / "public"),
             },
         )
