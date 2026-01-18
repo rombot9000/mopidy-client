@@ -17,10 +17,33 @@ npm run build
 ```
 This creates the react app in the folder `^/mopidy_material_client/public`.
 
-## Builds
-Create builds with command `npm run build`.
-Copy the build folder into the Mopidy client folder under new name static: `rm -r /path/to/client/static && cp -r build /path/to/client/static`
-Alternatively, create a static link to the build folder: `ln -sfrn /path/to/build /path/to/client/static`  
+### Pip package
+Run the following command
+```
+python3 setup.py sdist bdist_wheel
+```
+This will create the pip packages in the dist folder,
+```
+.
+├── dist
+│   ├── Mopidy-Material-Client-X.Y.Z.tar.gz
+│   └── Mopidy_Material_Client-X.Y.Z-py3-none-any.whl
+└── ...
+```
+where `X.Y.Z` is the version set in `^/setup.cfg`
+
+### Install local pip package
+In order to install a locally built pip package, use
+```
+python3 pip install /path/to/Mopidy-Material-Client-X.Y.Z.tar.gz
+```
+
+### Enable Extension in Mopidy Config
+To enable the extension, add the following line to your `mopidy.conf`,
+```
+[material-client]
+enabled = true
+```
 
 ## FAQ
 
