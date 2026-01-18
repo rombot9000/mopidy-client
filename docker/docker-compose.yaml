@@ -1,0 +1,16 @@
+services:
+  nodejs:
+    build:
+      context: .
+      tags:
+        - "nodejs:latest"
+    container_name: nodejs
+    working_dir: /work
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    volumes:
+      #- <host>:<container>
+      - type: bind
+        source: ../
+        target: /work
+        read_only: false

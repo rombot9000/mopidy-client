@@ -1,5 +1,22 @@
 # Mopidy Material Client Readme
 
+## Docker Build container
+
+### Start container
+Start the docker build container with
+```
+docker compose -f docker/docker-compose.yaml run nodejs bash
+```
+
+### React Web App
+Switch to the react folder, install the packages and build the react app,
+```
+cd react
+npm install
+npm run build
+```
+This creates the react app in the folder `^/mopidy_material_client/public`.
+
 ## Builds
 Create builds with command `npm run build`.
 Copy the build folder into the Mopidy client folder under new name static: `rm -r /path/to/client/static && cp -r build /path/to/client/static`
