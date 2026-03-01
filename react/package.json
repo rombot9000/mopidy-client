@@ -7,7 +7,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.8",
-    "@mui/lab": "^7.0.0",
+    "@mui/lab": "^7.0.1-beta.22",
     "@mui/material": "^7.3.8",
     "@mui/styled-engine-sc": "^7.3.8",
     "@mui/styles": "^6.5.0",
@@ -53,7 +53,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-private-property-in-object": "^7.28.6",
     "babel-plugin-macros": "^3.1.0",
     "preval.macro": "^5.0.0"
   }
